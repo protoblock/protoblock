@@ -5,7 +5,10 @@ include($$PWD/../../share/protos.pri)
 
 QT += core network websockets qml
 CONFIG += qt c++11 static
-TEMPLATE = lib
+
+CONFIG += openssl-linked
+
+TEMPLATE = app
 TARGET = protoblockd
 
 !contains(DEFINES, PRODFOOTBALL){

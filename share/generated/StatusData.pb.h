@@ -85,11 +85,12 @@ inline bool GameStatus_Status_Parse(
 }
 enum GlobalState_State {
   GlobalState_State_OFFSEASON = 10,
-  GlobalState_State_INSEASON = 30
+  GlobalState_State_INSEASON = 30,
+  GlobalState_State_PLAYOFFS = 40
 };
 bool GlobalState_State_IsValid(int value);
 const GlobalState_State GlobalState_State_State_MIN = GlobalState_State_OFFSEASON;
-const GlobalState_State GlobalState_State_State_MAX = GlobalState_State_INSEASON;
+const GlobalState_State GlobalState_State_State_MAX = GlobalState_State_PLAYOFFS;
 const int GlobalState_State_State_ARRAYSIZE = GlobalState_State_State_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor();
@@ -605,6 +606,7 @@ class GlobalState : public ::google::protobuf::Message {
   typedef GlobalState_State State;
   static const State OFFSEASON = GlobalState_State_OFFSEASON;
   static const State INSEASON = GlobalState_State_INSEASON;
+  static const State PLAYOFFS = GlobalState_State_PLAYOFFS;
   static inline bool State_IsValid(int value) {
     return GlobalState_State_IsValid(value);
   }

@@ -530,7 +530,7 @@ Bootstrap Node::getLastLocalBoot() {
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_MINUS1
     week--;
 #endif
-    Bootstrap head;
+    Bootstrap head{};
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
     string localhead = ldb.read("head");

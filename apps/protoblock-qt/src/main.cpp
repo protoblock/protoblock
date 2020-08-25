@@ -45,6 +45,10 @@ void messageHandler(QtMsgType type,
 
 int main(int argc, char *argv[])
 {
+#ifdef INTEL_KLUDGE
+    QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
+#endif
+
     RunGuard guard( "protoblockqtprodapp" );
         if ( !guard.tryToRun() )
             return 0;
@@ -52,9 +56,6 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-#ifdef INTEL_KLUDGE
-    QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
-#endif
 
 #ifndef NO_DEBUG_FILE_OUT
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());

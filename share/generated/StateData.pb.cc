@@ -326,13 +326,16 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LeaderBoardMeta));
   FantasyNameBalMeta_descriptor_ = file->message_type(6);
-  static const int FantasyNameBalMeta_offsets_[10] = {
+  static const int FantasyNameBalMeta_offsets_[13] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, txmetaid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, trmetaid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, public_key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, bits_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, stake_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, block_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, count_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, nonce_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, awardmetaroot_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, pnlmetaroot_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBalMeta, prev_),
@@ -1613,188 +1616,189 @@ void protobuf_AddDesc_StateData_2eproto() {
     "ameData\"<\n\010DataMeta\022\020\n\010txmetaid\030\n \001(\014\022\036\n"
     "\004data\030\024 \001(\0132\020.fantasybit.Data\"R\n\017LeaderB"
     "oardMeta\022\014\n\004week\030\n \001(\r\022\025\n\rfnbalmetaroot\030"
-    "\024 \001(\014\022\014\n\004prev\030\036 \001(\014\022\014\n\004next\030( \001(\014\"\277\001\n\022Fa"
+    "\024 \001(\014\022\014\n\004prev\030\036 \001(\014\022\014\n\004next\030( \001(\014\"\354\001\n\022Fa"
     "ntasyNameBalMeta\022\020\n\010txmetaid\030\n \001(\014\022\020\n\010tr"
     "metaid\030\024 \001(\014\022\014\n\004name\030\031 \001(\t\022\022\n\npublic_key"
-    "\030\036 \001(\t\022\014\n\004bits\030# \001(\004\022\r\n\005stake\030( \001(\003\022\025\n\ra"
-    "wardmetaroot\0302 \001(\014\022\023\n\013pnlmetaroot\030< \001(\014\022"
-    "\014\n\004prev\030F \001(\014\022\014\n\004next\030P \001(\014\"\257\001\n\020FantasyN"
-    "ameState\022\014\n\004name\030\001 \001(\t\022\034\n\024fantasynamebal"
-    "metaid\030\n \001(\014\022\023\n\013posmetaroot\030\024 \001(\014\022\026\n\016ord"
-    "ersmetaroot\030\036 \001(\014\022\024\n\014projmetaroot\030( \001(\014\022"
-    "\014\n\004prev\030F \001(\014\022\014\n\004next\030P \001(\014\022\020\n\010txmetaid\030"
-    "2 \001(\014\"\222\001\n\022WeekGameStatusMeta\022\014\n\004week\030\n \001"
-    "(\r\022\032\n\022gameresultmetaroot\030\024 \001(\014\022\032\n\022ingame"
-    "projmetaroot\030\036 \001(\014\022\032\n\022opengamestatusroot"
-    "\030( \001(\014\022\014\n\004prev\0302 \001(\014\022\014\n\004next\030< \001(\014\"~\n\016In"
-    "GameProjMeta\022\016\n\006gameid\030\024 \001(\t\022\030\n\020gamestat"
-    "usmetaid\030( \001(\014\022\024\n\014homeprojmeta\030< \001(\014\022\024\n\014"
-    "awayprojmeta\030F \001(\014\022\026\n\016gamedatametaid\0302 \001"
-    "(\014\"\205\001\n\017GameResultsMeta\022\016\n\006gameid\030\024 \001(\t\022\030"
-    "\n\020gamestatusmetaid\030( \001(\014\022\026\n\016homeresultme"
-    "ta\030< \001(\014\022\026\n\016awayresultmeta\030F \001(\014\022\030\n\020resu"
-    "ltdatametaid\0302 \001(\014\"\321\001\n\016GameStatusMeta\022\n\n"
-    "\002id\030\001 \001(\t\022\014\n\004week\030\002 \001(\005\022&\n\010gameinfo\030\n \001("
-    "\0132\024.fantasybit.GameInfo\022)\n\tgamesatus\030\024 \001"
-    "(\0132\026.fantasybit.GameStatus\022\022\n\ngamemetaid"
-    "\030\036 \001(\014\022\022\n\ndatametaid\030( \001(\014\022\014\n\004prev\0302 \001(\014"
-    "\022\014\n\004next\030< \001(\014\022\016\n\006season\030F \001(\005\"\207\001\n\014TeamP"
-    "rojMeta\022\016\n\006gameid\030\024 \001(\t\022\014\n\004team\030\036 \001(\t\022\023\n"
-    "\013kickofftime\030( \001(\r\022\014\n\004week\0302 \001(\r\022\036\n\026game"
-    "playerprojmetaroot\030< \001(\014\022\026\n\016gamedatameta"
-    "id\030F \001(\014\"\211\001\n\016TeamResultMeta\022\016\n\006gameid\030\024 "
-    "\001(\t\022\014\n\004team\030\036 \001(\t\022\023\n\013kickofftime\030( \001(\r\022\014"
-    "\n\004week\0302 \001(\r\022\034\n\024playerresultmetaroot\030< \001"
-    "(\014\022\030\n\020resultdatametaid\030F \001(\014\"\217\001\n\022GamePla"
-    "yerProjMeta\022\020\n\010playerid\030\024 \001(\t\022\030\n\020gamesta"
-    "tusmetaid\030\036 \001(\014\022\032\n\022projmetaplayerroot\030< "
-    "\001(\014\022\031\n\021posmetaplayerroot\030F \001(\014\022\026\n\016gameda"
-    "tametaid\030P \001(\014\"X\n\010ProjMeta\022\014\n\004name\030\n \001(\t"
-    "\022\014\n\004proj\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\022\020\n\010txme"
-    "taid\030( \001(\014\022\014\n\004prev\0302 \001(\014\"e\n\007PosMeta\022\014\n\004n"
-    "ame\030\n \001(\t\022\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\022\020\n"
-    "\010playerid\030( \001(\t\022\020\n\010txmetaid\0302 \001(\014\022\014\n\004pre"
-    "v\030< \001(\014\"\231\001\n\020PlayerResultMeta\022\031\n\021playerga"
-    "mestatsid\030\n \001(\014\022\030\n\020gamestatusmetaid\030\036 \001("
-    "\014\022\033\n\023awardmetaplayerroot\030< \001(\014\022\031\n\021pnlmet"
-    "aplayerroot\030F \001(\014\022\030\n\020resultdatametaid\030P "
-    "\001(\014\"e\n\017PlayerGameStats\022\020\n\010playerid\030\024 \001(\t"
-    "\022\016\n\006result\030( \001(\002\022 \n\005stats\0302 \001(\0132\021.fantas"
-    "ybit.Stats\022\016\n\006gameid\030< \001(\t\"e\n\tAwardMeta\022"
-    "\014\n\004name\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\r\n\005award\030\036 \001"
-    "(\004\022\022\n\nprojmetaid\030( \001(\014\022\031\n\021playergamestat"
-    "sid\0302 \001(\014\"n\n\007PnlMeta\022\014\n\004name\030\n \001(\t\022\013\n\003qt"
-    "y\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\022\013\n\003pnl\030( \001(\003\022\021\n\tp"
-    "osmetaid\0302 \001(\014\022\031\n\021playergamestatsid\030< \001("
-    "\014\"\203\001\n\021PlayerMarketState\022\027\n\017limitbookmeta"
-    "id\030\n \001(\014\022\020\n\010playerid\030\024 \001(\t\022\027\n\017marketticm"
-    "etaid\030\036 \001(\014\022\016\n\006locked\030\037 \001(\010\022\014\n\004prev\030( \001("
-    "\014\022\014\n\004next\0302 \001(\014\"\177\n\rLimitBookMeta\022\013\n\003bid\030"
-    "\n \001(\005\022\017\n\007bidsize\030\024 \001(\005\022\017\n\007asksize\030\036 \001(\005\022"
-    "\013\n\003ask\030( \001(\005\022\030\n\020bidordermetaroot\0302 \001(\014\022\030"
-    "\n\020askordermetaroot\030< \001(\014\"Q\n\rMarketTicMet"
-    "a\022\r\n\005price\030\024 \001(\005\022\014\n\004size\030\036 \001(\005\022\025\n\rorderf"
-    "illhead\030( \001(\014\022\014\n\004prev\0302 \001(\014\"\266\001\n\tOrderMet"
-    "a\022\016\n\006refnum\030\001 \001(\005\022\r\n\005fname\030\n \001(\t\022\020\n\010play"
-    "erid\030\024 \001(\t\022\017\n\007buyside\030\036 \001(\010\022\014\n\004size\030( \001("
-    "\005\022\r\n\005price\0302 \001(\005\022\020\n\010txmetaid\030< \001(\014\022\027\n\017or"
-    "derfillmetaid\030F \001(\014\022\021\n\ttimestamp\030K \001(\005\022\014"
-    "\n\004prev\030P \001(\014\"\251\001\n\rOrderFillMeta\022\016\n\006refnum"
-    "\030\001 \001(\005\022\r\n\005fname\030\n \001(\t\022\020\n\010playerid\030\017 \001(\t\022"
-    "\021\n\tfillprice\030\024 \001(\005\022\020\n\010fillsize\030\036 \001(\005\022\017\n\007"
-    "buyside\030# \001(\010\022\021\n\ttimestamp\030( \001(\004\022\020\n\010txme"
-    "taid\030< \001(\014\022\014\n\004prev\030F \001(\014\"m\n\017GlobalStateM"
-    "eta\022,\n\013globalstate\030\n \001(\0132\027.fantasybit.Gl"
-    "obalState\022\020\n\010trmetaid\030\024 \001(\014\022\014\n\004prev\030\036 \001("
-    "\014\022\014\n\004next\030( \001(\014\"\236\001\n\nPlayerMeta\022\020\n\010player"
-    "id\030\n \001(\t\022+\n\013player_base\030\024 \001(\0132\026.fantasyb"
-    "it.PlayerBase\022/\n\rplayer_status\030\036 \001(\0132\030.f"
-    "antasybit.PlayerStatus\022\022\n\ndatametaid\030( \001"
-    "(\014\022\014\n\004prev\0302 \001(\014\"B\n\010TeamMeta\022\016\n\006teamid\030\n"
-    " \001(\t\022\030\n\020playermetaidroot\030\024 \001(\014\022\014\n\004prev\030\036"
-    " \001(\014\"\335\001\n\007pbstate\022\027\n\017schedulestateid\030\n \001("
-    "\014\022\032\n\022leaderboardstateid\030\024 \001(\014\022\023\n\013projsta"
-    "teid\030\036 \001(\014\022\022\n\nposstateid\030# \001(\014\022\024\n\014orders"
-    "tateid\030( \001(\014\022\025\n\rmarketstateid\0302 \001(\014\022\025\n\rg"
-    "lobalstateid\030< \001(\014\022\024\n\014teamstatemid\030F \001(\014"
-    "\022\032\n\022fantasynamestateid\030P \001(\014\"*\n\nMerkleTr"
-    "ee\022\014\n\004root\030\n \001(\014\022\016\n\006leaves\030\024 \003(\014\"9\n\016NewP"
-    "layerModel\022\'\n\007players\030\n \003(\0132\026.fantasybit"
-    ".PlayerMeta\"D\n\005WsReq\022\017\n\007version\030\001 \001(\005\022 \n"
-    "\005ctype\030\002 \001(\0162\021.fantasybit.CType*\010\010d\020\200\200\200\200"
-    "\002\"t\n\007WSReply\022\017\n\007version\030\001 \001(\005\022 \n\005ctype\030\002"
-    " \001(\0162\021.fantasybit.CType\022\036\n\003req\030\024 \001(\0132\021.f"
-    "antasybit.WsReq\022\014\n\004data\030\036 \001(\t*\010\010d\020\200\200\200\200\002\""
-    "\203\001\n\021GetGlobalStateRep\022,\n\013globalstate\030\n \001"
-    "(\0132\027.fantasybit.GlobalState2@\n\003rep\022\023.fan"
-    "tasybit.WSReply\030\204\007 \001(\0132\035.fantasybit.GetG"
-    "lobalStateRep\"\177\n\016GetScheduleRep\022.\n\014sched"
-    "uledata\030\n \001(\0132\030.fantasybit.ScheduleData2"
-    "=\n\003rep\022\023.fantasybit.WSReply\030\216\007 \001(\0132\032.fan"
-    "tasybit.GetScheduleRep\"_\n\014CheckNameReq\022\024"
-    "\n\014fantasy_name\030\n \001(\t29\n\003req\022\021.fantasybit"
-    ".WsReq\030\310\001 \001(\0132\030.fantasybit.CheckNameReq\""
-    "\203\001\n\014CheckNameRep\022\017\n\007isavail\030\n \001(\t\022%\n\003req"
-    "\030\024 \001(\0132\030.fantasybit.CheckNameReq2;\n\003rep\022"
-    "\023.fantasybit.WSReply\030\310\001 \001(\0132\030.fantasybit"
-    ".CheckNameRep\"S\n\013Pk2FnameReq\022\n\n\002pk\030\n \001(\t"
-    "28\n\003req\022\021.fantasybit.WsReq\030\254\002 \001(\0132\027.fant"
-    "asybit.Pk2FnameReq\"\247\001\n\013Pk2FnameRep\022\r\n\005fn"
-    "ame\030\n \001(\t\022$\n\003req\030\024 \001(\0132\027.fantasybit.Pk2F"
-    "nameReq\022\'\n\003fnb\030\036 \001(\0132\032.fantasybit.Fantas"
-    "yNameBal2:\n\003rep\022\023.fantasybit.WSReply\030\254\002 "
-    "\001(\0132\027.fantasybit.Pk2FnameRep\"g\n\014Subscrib"
-    "eReq\022\014\n\004name\030\n \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003re"
-    "q\022\021.fantasybit.WsReq\030\336\002 \001(\0132\030.fantasybit"
-    ".SubscribeReq\"e\n\rNameStatusReq\022\014\n\004name\030\n"
-    " \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fantasybit.WsR"
-    "eq\030\220\003 \001(\0132\031.fantasybit.NameStatusReq\"\237\001\n"
-    "\rNameStatusRep\022(\n\006status\030\n \001(\0162\030.fantasy"
-    "bit.MyNameStatus\022&\n\003req\030\024 \001(\0132\031.fantasyb"
-    "it.NameStatusReq2<\n\003rep\022\023.fantasybit.WSR"
-    "eply\030\220\003 \001(\0132\031.fantasybit.NameStatusRep\"\207"
-    "\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003(\t\022\'\n\003fnb\030"
-    "\024 \003(\0132\032.fantasybit.FantasyNameBal2=\n\003rep"
-    "\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032.fantasybi"
-    "t.GetAllNamesRep\"E\n\nTeamRoster\022\016\n\006teamid"
-    "\030\n \001(\t\022\'\n\007players\030\024 \003(\0132\026.fantasybit.Pla"
-    "yerData\"\221\001\n\016GameDataRoster\022\'\n\tgame_data\030"
-    "\n \001(\0132\024.fantasybit.GameData\022*\n\nhomeroste"
-    "r\030\024 \001(\0132\026.fantasybit.TeamRoster\022*\n\nawayr"
-    "oster\030\036 \001(\0132\026.fantasybit.TeamRoster\"\224\001\n\021"
-    "GetCurrRostersRep\022\014\n\004week\030\n \001(\005\022/\n\013gamer"
-    "osters\030\024 \003(\0132\032.fantasybit.GameDataRoster"
-    "2@\n\003rep\022\023.fantasybit.WSReply\030\230\007 \001(\0132\035.fa"
-    "ntasybit.GetCurrRostersRep\"\224\001\n\tROWMarket"
-    "\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030\036 \001(\0132\027.fantasybi"
-    "t.MarketQuote\022*\n\nplayerdata\030( \001(\0132\026.fant"
-    "asybit.PlayerData\022&\n\004ohlc\0302 \001(\0132\030.fantas"
-    "ybit.ContractOHLC\"{\n\017GetROWMarketRep\022(\n\t"
-    "rowmarket\030\n \003(\0132\025.fantasybit.ROWMarket2>"
-    "\n\003rep\022\023.fantasybit.WSReply\030\330\004 \001(\0132\033.fant"
-    "asybit.GetROWMarketRep\"T\n\013GetDepthReq\022\013\n"
-    "\003pid\030\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\274\005 "
-    "\001(\0132\027.fantasybit.GetDepthReq\"\253\001\n\013GetDept"
-    "hRep\022\013\n\003pid\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025."
-    "fantasybit.DepthItem\022(\n\trowmarket\030\036 \001(\0132"
-    "\025.fantasybit.ROWMarket2:\n\003rep\022\023.fantasyb"
-    "it.WSReply\030\274\005 \001(\0132\027.fantasybit.GetDepthR"
-    "ep\"\177\n\016AllOdersSymbol\022\016\n\006symbol\030\n \001(\t\022\016\n\006"
-    "netqty\030\036 \001(\005\022\020\n\010netprice\030( \001(\005\022\013\n\003avg\0302 "
-    "\001(\001\022\013\n\003pnl\030< \001(\001\022!\n\006orders\030\024 \003(\0132\021.fanta"
-    "sybit.Order\"M\n\rAllOdersFname\022\r\n\005fname\030\n "
-    "\001(\t\022-\n\tpidorders\030\024 \003(\0132\032.fantasybit.AllO"
-    "dersSymbol\"\236\001\n\014GetOrdersRep\022%\n\003req\030\n \001(\013"
-    "2\030.fantasybit.GetOrdersReq\022*\n\007oorders\030\024 "
-    "\001(\0132\031.fantasybit.AllOdersFname2;\n\003rep\022\023."
-    "fantasybit.WSReply\030\240\006 \001(\0132\030.fantasybit.G"
-    "etOrdersRep\"x\n\014GetOrdersReq\022\016\n\006symbol\030\n "
-    "\001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003re"
-    "q\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030.fantasybit"
-    ".GetOrdersReq\"p\n\020GetProjectionReq\022\r\n\005fna"
-    "me\030\024 \001(\t\022\016\n\006getavg\030\036 \001(\0102=\n\003req\022\021.fantas"
-    "ybit.WsReq\030\204\007 \001(\0132\034.fantasybit.GetProjec"
-    "tionReq\",\n\nPlayerProj\022\020\n\010playerid\030\n \001(\t\022"
-    "\014\n\004proj\030\024 \001(\005\"d\n\nProjByName\022\014\n\004name\030\n \001("
-    "\t\022*\n\nplayerproj\030\024 \003(\0132\026.fantasybit.Playe"
-    "rProj\022\r\n\005count\030( \001(\005\022\r\n\005block\0302 \001(\005\"\237\001\n\020"
-    "GetProjectionRep\022%\n\005projs\030\024 \001(\0132\026.fantas"
-    "ybit.ProjByName\022#\n\003avg\030\036 \001(\0132\026.fantasybi"
-    "t.ProjByName2\?\n\003rep\022\023.fantasybit.WSReply"
-    "\030\254\007 \001(\0132\034.fantasybit.GetProjectionRep\"&\n"
-    "\010KeyValue\022\013\n\003key\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\312\001"
-    "\n\tBootstrap\022\013\n\003key\030\001 \001(\t\022\020\n\010blocknum\030\002 \001"
-    "(\005\022\014\n\004week\030\003 \001(\005\022\016\n\006season\030\004 \001(\005\022\024\n\014game"
-    "metaroot\030\n \001(\014\022\026\n\016playermetaroot\030\024 \001(\014\022\025"
-    "\n\rfnamemetaroot\030\036 \001(\014\022\016\n\006previd\030( \001(\014\022\026\n"
-    "\016gameresultroot\0302 \001(\014\022\023\n\013posmetaroot\030< \001"
-    "(\014*\214\002\n\005CType\022\010\n\004NONE\020\000\022\r\n\tCHECKNAME\020\001\022\t\n"
-    "\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020\004\022\017\n"
-    "\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010GETD"
-    "EPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIONS\020\t\022"
-    "\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOBALSTATE\020\013\022"
-    "\017\n\013GETSCHEDULE\020\014\022\021\n\rGETGAMEROSTER\020\r\022\022\n\016G"
-    "ETPROJECTIONS\020\017\022\020\n\014GETGAMESTART\020\020", 7993);
+    "\030\036 \001(\t\022\014\n\004bits\030# \001(\004\022\r\n\005stake\030( \001(\003\022\r\n\005b"
+    "lock\030) \001(\005\022\r\n\005count\030* \001(\005\022\r\n\005nonce\030- \001(\004"
+    "\022\025\n\rawardmetaroot\0302 \001(\014\022\023\n\013pnlmetaroot\030<"
+    " \001(\014\022\014\n\004prev\030F \001(\014\022\014\n\004next\030P \001(\014\"\257\001\n\020Fan"
+    "tasyNameState\022\014\n\004name\030\001 \001(\t\022\034\n\024fantasyna"
+    "mebalmetaid\030\n \001(\014\022\023\n\013posmetaroot\030\024 \001(\014\022\026"
+    "\n\016ordersmetaroot\030\036 \001(\014\022\024\n\014projmetaroot\030("
+    " \001(\014\022\014\n\004prev\030F \001(\014\022\014\n\004next\030P \001(\014\022\020\n\010txme"
+    "taid\0302 \001(\014\"\222\001\n\022WeekGameStatusMeta\022\014\n\004wee"
+    "k\030\n \001(\r\022\032\n\022gameresultmetaroot\030\024 \001(\014\022\032\n\022i"
+    "ngameprojmetaroot\030\036 \001(\014\022\032\n\022opengamestatu"
+    "sroot\030( \001(\014\022\014\n\004prev\0302 \001(\014\022\014\n\004next\030< \001(\014\""
+    "~\n\016InGameProjMeta\022\016\n\006gameid\030\024 \001(\t\022\030\n\020gam"
+    "estatusmetaid\030( \001(\014\022\024\n\014homeprojmeta\030< \001("
+    "\014\022\024\n\014awayprojmeta\030F \001(\014\022\026\n\016gamedatametai"
+    "d\0302 \001(\014\"\205\001\n\017GameResultsMeta\022\016\n\006gameid\030\024 "
+    "\001(\t\022\030\n\020gamestatusmetaid\030( \001(\014\022\026\n\016homeres"
+    "ultmeta\030< \001(\014\022\026\n\016awayresultmeta\030F \001(\014\022\030\n"
+    "\020resultdatametaid\0302 \001(\014\"\321\001\n\016GameStatusMe"
+    "ta\022\n\n\002id\030\001 \001(\t\022\014\n\004week\030\002 \001(\005\022&\n\010gameinfo"
+    "\030\n \001(\0132\024.fantasybit.GameInfo\022)\n\tgamesatu"
+    "s\030\024 \001(\0132\026.fantasybit.GameStatus\022\022\n\ngamem"
+    "etaid\030\036 \001(\014\022\022\n\ndatametaid\030( \001(\014\022\014\n\004prev\030"
+    "2 \001(\014\022\014\n\004next\030< \001(\014\022\016\n\006season\030F \001(\005\"\207\001\n\014"
+    "TeamProjMeta\022\016\n\006gameid\030\024 \001(\t\022\014\n\004team\030\036 \001"
+    "(\t\022\023\n\013kickofftime\030( \001(\r\022\014\n\004week\0302 \001(\r\022\036\n"
+    "\026gameplayerprojmetaroot\030< \001(\014\022\026\n\016gamedat"
+    "ametaid\030F \001(\014\"\211\001\n\016TeamResultMeta\022\016\n\006game"
+    "id\030\024 \001(\t\022\014\n\004team\030\036 \001(\t\022\023\n\013kickofftime\030( "
+    "\001(\r\022\014\n\004week\0302 \001(\r\022\034\n\024playerresultmetaroo"
+    "t\030< \001(\014\022\030\n\020resultdatametaid\030F \001(\014\"\217\001\n\022Ga"
+    "mePlayerProjMeta\022\020\n\010playerid\030\024 \001(\t\022\030\n\020ga"
+    "mestatusmetaid\030\036 \001(\014\022\032\n\022projmetaplayerro"
+    "ot\030< \001(\014\022\031\n\021posmetaplayerroot\030F \001(\014\022\026\n\016g"
+    "amedatametaid\030P \001(\014\"X\n\010ProjMeta\022\014\n\004name\030"
+    "\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\022\020\n"
+    "\010txmetaid\030( \001(\014\022\014\n\004prev\0302 \001(\014\"e\n\007PosMeta"
+    "\022\014\n\004name\030\n \001(\t\022\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\036 \001"
+    "(\005\022\020\n\010playerid\030( \001(\t\022\020\n\010txmetaid\0302 \001(\014\022\014"
+    "\n\004prev\030< \001(\014\"\231\001\n\020PlayerResultMeta\022\031\n\021pla"
+    "yergamestatsid\030\n \001(\014\022\030\n\020gamestatusmetaid"
+    "\030\036 \001(\014\022\033\n\023awardmetaplayerroot\030< \001(\014\022\031\n\021p"
+    "nlmetaplayerroot\030F \001(\014\022\030\n\020resultdatameta"
+    "id\030P \001(\014\"e\n\017PlayerGameStats\022\020\n\010playerid\030"
+    "\024 \001(\t\022\016\n\006result\030( \001(\002\022 \n\005stats\0302 \001(\0132\021.f"
+    "antasybit.Stats\022\016\n\006gameid\030< \001(\t\"e\n\tAward"
+    "Meta\022\014\n\004name\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\r\n\005awar"
+    "d\030\036 \001(\004\022\022\n\nprojmetaid\030( \001(\014\022\031\n\021playergam"
+    "estatsid\0302 \001(\014\"n\n\007PnlMeta\022\014\n\004name\030\n \001(\t\022"
+    "\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\022\013\n\003pnl\030( \001(\003"
+    "\022\021\n\tposmetaid\0302 \001(\014\022\031\n\021playergamestatsid"
+    "\030< \001(\014\"\203\001\n\021PlayerMarketState\022\027\n\017limitboo"
+    "kmetaid\030\n \001(\014\022\020\n\010playerid\030\024 \001(\t\022\027\n\017marke"
+    "tticmetaid\030\036 \001(\014\022\016\n\006locked\030\037 \001(\010\022\014\n\004prev"
+    "\030( \001(\014\022\014\n\004next\0302 \001(\014\"\177\n\rLimitBookMeta\022\013\n"
+    "\003bid\030\n \001(\005\022\017\n\007bidsize\030\024 \001(\005\022\017\n\007asksize\030\036"
+    " \001(\005\022\013\n\003ask\030( \001(\005\022\030\n\020bidordermetaroot\0302 "
+    "\001(\014\022\030\n\020askordermetaroot\030< \001(\014\"Q\n\rMarketT"
+    "icMeta\022\r\n\005price\030\024 \001(\005\022\014\n\004size\030\036 \001(\005\022\025\n\ro"
+    "rderfillhead\030( \001(\014\022\014\n\004prev\0302 \001(\014\"\266\001\n\tOrd"
+    "erMeta\022\016\n\006refnum\030\001 \001(\005\022\r\n\005fname\030\n \001(\t\022\020\n"
+    "\010playerid\030\024 \001(\t\022\017\n\007buyside\030\036 \001(\010\022\014\n\004size"
+    "\030( \001(\005\022\r\n\005price\0302 \001(\005\022\020\n\010txmetaid\030< \001(\014\022"
+    "\027\n\017orderfillmetaid\030F \001(\014\022\021\n\ttimestamp\030K "
+    "\001(\005\022\014\n\004prev\030P \001(\014\"\251\001\n\rOrderFillMeta\022\016\n\006r"
+    "efnum\030\001 \001(\005\022\r\n\005fname\030\n \001(\t\022\020\n\010playerid\030\017"
+    " \001(\t\022\021\n\tfillprice\030\024 \001(\005\022\020\n\010fillsize\030\036 \001("
+    "\005\022\017\n\007buyside\030# \001(\010\022\021\n\ttimestamp\030( \001(\004\022\020\n"
+    "\010txmetaid\030< \001(\014\022\014\n\004prev\030F \001(\014\"m\n\017GlobalS"
+    "tateMeta\022,\n\013globalstate\030\n \001(\0132\027.fantasyb"
+    "it.GlobalState\022\020\n\010trmetaid\030\024 \001(\014\022\014\n\004prev"
+    "\030\036 \001(\014\022\014\n\004next\030( \001(\014\"\236\001\n\nPlayerMeta\022\020\n\010p"
+    "layerid\030\n \001(\t\022+\n\013player_base\030\024 \001(\0132\026.fan"
+    "tasybit.PlayerBase\022/\n\rplayer_status\030\036 \001("
+    "\0132\030.fantasybit.PlayerStatus\022\022\n\ndatametai"
+    "d\030( \001(\014\022\014\n\004prev\0302 \001(\014\"B\n\010TeamMeta\022\016\n\006tea"
+    "mid\030\n \001(\t\022\030\n\020playermetaidroot\030\024 \001(\014\022\014\n\004p"
+    "rev\030\036 \001(\014\"\335\001\n\007pbstate\022\027\n\017schedulestateid"
+    "\030\n \001(\014\022\032\n\022leaderboardstateid\030\024 \001(\014\022\023\n\013pr"
+    "ojstateid\030\036 \001(\014\022\022\n\nposstateid\030# \001(\014\022\024\n\014o"
+    "rderstateid\030( \001(\014\022\025\n\rmarketstateid\0302 \001(\014"
+    "\022\025\n\rglobalstateid\030< \001(\014\022\024\n\014teamstatemid\030"
+    "F \001(\014\022\032\n\022fantasynamestateid\030P \001(\014\"*\n\nMer"
+    "kleTree\022\014\n\004root\030\n \001(\014\022\016\n\006leaves\030\024 \003(\014\"9\n"
+    "\016NewPlayerModel\022\'\n\007players\030\n \003(\0132\026.fanta"
+    "sybit.PlayerMeta\"D\n\005WsReq\022\017\n\007version\030\001 \001"
+    "(\005\022 \n\005ctype\030\002 \001(\0162\021.fantasybit.CType*\010\010d"
+    "\020\200\200\200\200\002\"t\n\007WSReply\022\017\n\007version\030\001 \001(\005\022 \n\005ct"
+    "ype\030\002 \001(\0162\021.fantasybit.CType\022\036\n\003req\030\024 \001("
+    "\0132\021.fantasybit.WsReq\022\014\n\004data\030\036 \001(\t*\010\010d\020\200"
+    "\200\200\200\002\"\203\001\n\021GetGlobalStateRep\022,\n\013globalstat"
+    "e\030\n \001(\0132\027.fantasybit.GlobalState2@\n\003rep\022"
+    "\023.fantasybit.WSReply\030\204\007 \001(\0132\035.fantasybit"
+    ".GetGlobalStateRep\"\177\n\016GetScheduleRep\022.\n\014"
+    "scheduledata\030\n \001(\0132\030.fantasybit.Schedule"
+    "Data2=\n\003rep\022\023.fantasybit.WSReply\030\216\007 \001(\0132"
+    "\032.fantasybit.GetScheduleRep\"_\n\014CheckName"
+    "Req\022\024\n\014fantasy_name\030\n \001(\t29\n\003req\022\021.fanta"
+    "sybit.WsReq\030\310\001 \001(\0132\030.fantasybit.CheckNam"
+    "eReq\"\203\001\n\014CheckNameRep\022\017\n\007isavail\030\n \001(\t\022%"
+    "\n\003req\030\024 \001(\0132\030.fantasybit.CheckNameReq2;\n"
+    "\003rep\022\023.fantasybit.WSReply\030\310\001 \001(\0132\030.fanta"
+    "sybit.CheckNameRep\"S\n\013Pk2FnameReq\022\n\n\002pk\030"
+    "\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\254\002 \001(\0132\027"
+    ".fantasybit.Pk2FnameReq\"\247\001\n\013Pk2FnameRep\022"
+    "\r\n\005fname\030\n \001(\t\022$\n\003req\030\024 \001(\0132\027.fantasybit"
+    ".Pk2FnameReq\022\'\n\003fnb\030\036 \001(\0132\032.fantasybit.F"
+    "antasyNameBal2:\n\003rep\022\023.fantasybit.WSRepl"
+    "y\030\254\002 \001(\0132\027.fantasybit.Pk2FnameRep\"g\n\014Sub"
+    "scribeReq\022\014\n\004name\030\n \001(\t\022\016\n\006fchash\030\036 \001(\0042"
+    "9\n\003req\022\021.fantasybit.WsReq\030\336\002 \001(\0132\030.fanta"
+    "sybit.SubscribeReq\"e\n\rNameStatusReq\022\014\n\004n"
+    "ame\030\n \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fantasybi"
+    "t.WsReq\030\220\003 \001(\0132\031.fantasybit.NameStatusRe"
+    "q\"\237\001\n\rNameStatusRep\022(\n\006status\030\n \001(\0162\030.fa"
+    "ntasybit.MyNameStatus\022&\n\003req\030\024 \001(\0132\031.fan"
+    "tasybit.NameStatusReq2<\n\003rep\022\023.fantasybi"
+    "t.WSReply\030\220\003 \001(\0132\031.fantasybit.NameStatus"
+    "Rep\"\207\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003(\t\022\'\n"
+    "\003fnb\030\024 \003(\0132\032.fantasybit.FantasyNameBal2="
+    "\n\003rep\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032.fant"
+    "asybit.GetAllNamesRep\"E\n\nTeamRoster\022\016\n\006t"
+    "eamid\030\n \001(\t\022\'\n\007players\030\024 \003(\0132\026.fantasybi"
+    "t.PlayerData\"\221\001\n\016GameDataRoster\022\'\n\tgame_"
+    "data\030\n \001(\0132\024.fantasybit.GameData\022*\n\nhome"
+    "roster\030\024 \001(\0132\026.fantasybit.TeamRoster\022*\n\n"
+    "awayroster\030\036 \001(\0132\026.fantasybit.TeamRoster"
+    "\"\224\001\n\021GetCurrRostersRep\022\014\n\004week\030\n \001(\005\022/\n\013"
+    "gamerosters\030\024 \003(\0132\032.fantasybit.GameDataR"
+    "oster2@\n\003rep\022\023.fantasybit.WSReply\030\230\007 \001(\013"
+    "2\035.fantasybit.GetCurrRostersRep\"\224\001\n\tROWM"
+    "arket\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030\036 \001(\0132\027.fant"
+    "asybit.MarketQuote\022*\n\nplayerdata\030( \001(\0132\026"
+    ".fantasybit.PlayerData\022&\n\004ohlc\0302 \001(\0132\030.f"
+    "antasybit.ContractOHLC\"{\n\017GetROWMarketRe"
+    "p\022(\n\trowmarket\030\n \003(\0132\025.fantasybit.ROWMar"
+    "ket2>\n\003rep\022\023.fantasybit.WSReply\030\330\004 \001(\0132\033"
+    ".fantasybit.GetROWMarketRep\"T\n\013GetDepthR"
+    "eq\022\013\n\003pid\030\n \001(\t28\n\003req\022\021.fantasybit.WsRe"
+    "q\030\274\005 \001(\0132\027.fantasybit.GetDepthReq\"\253\001\n\013Ge"
+    "tDepthRep\022\013\n\003pid\030\n \001(\t\022)\n\ndepthitems\030\024 \003"
+    "(\0132\025.fantasybit.DepthItem\022(\n\trowmarket\030\036"
+    " \001(\0132\025.fantasybit.ROWMarket2:\n\003rep\022\023.fan"
+    "tasybit.WSReply\030\274\005 \001(\0132\027.fantasybit.GetD"
+    "epthRep\"\177\n\016AllOdersSymbol\022\016\n\006symbol\030\n \001("
+    "\t\022\016\n\006netqty\030\036 \001(\005\022\020\n\010netprice\030( \001(\005\022\013\n\003a"
+    "vg\0302 \001(\001\022\013\n\003pnl\030< \001(\001\022!\n\006orders\030\024 \003(\0132\021."
+    "fantasybit.Order\"M\n\rAllOdersFname\022\r\n\005fna"
+    "me\030\n \001(\t\022-\n\tpidorders\030\024 \003(\0132\032.fantasybit"
+    ".AllOdersSymbol\"\236\001\n\014GetOrdersRep\022%\n\003req\030"
+    "\n \001(\0132\030.fantasybit.GetOrdersReq\022*\n\007oorde"
+    "rs\030\024 \001(\0132\031.fantasybit.AllOdersFname2;\n\003r"
+    "ep\022\023.fantasybit.WSReply\030\240\006 \001(\0132\030.fantasy"
+    "bit.GetOrdersRep\"x\n\014GetOrdersReq\022\016\n\006symb"
+    "ol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006fchash\030\036 \001(\0042"
+    "9\n\003req\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030.fanta"
+    "sybit.GetOrdersReq\"p\n\020GetProjectionReq\022\r"
+    "\n\005fname\030\024 \001(\t\022\016\n\006getavg\030\036 \001(\0102=\n\003req\022\021.f"
+    "antasybit.WsReq\030\204\007 \001(\0132\034.fantasybit.GetP"
+    "rojectionReq\",\n\nPlayerProj\022\020\n\010playerid\030\n"
+    " \001(\t\022\014\n\004proj\030\024 \001(\005\"d\n\nProjByName\022\014\n\004name"
+    "\030\n \001(\t\022*\n\nplayerproj\030\024 \003(\0132\026.fantasybit."
+    "PlayerProj\022\r\n\005count\030( \001(\005\022\r\n\005block\0302 \001(\005"
+    "\"\237\001\n\020GetProjectionRep\022%\n\005projs\030\024 \001(\0132\026.f"
+    "antasybit.ProjByName\022#\n\003avg\030\036 \001(\0132\026.fant"
+    "asybit.ProjByName2\?\n\003rep\022\023.fantasybit.WS"
+    "Reply\030\254\007 \001(\0132\034.fantasybit.GetProjectionR"
+    "ep\"&\n\010KeyValue\022\013\n\003key\030\n \001(\014\022\r\n\005value\030\024 \001"
+    "(\014\"\312\001\n\tBootstrap\022\013\n\003key\030\001 \001(\t\022\020\n\010blocknu"
+    "m\030\002 \001(\005\022\014\n\004week\030\003 \001(\005\022\016\n\006season\030\004 \001(\005\022\024\n"
+    "\014gamemetaroot\030\n \001(\014\022\026\n\016playermetaroot\030\024 "
+    "\001(\014\022\025\n\rfnamemetaroot\030\036 \001(\014\022\016\n\006previd\030( \001"
+    "(\014\022\026\n\016gameresultroot\0302 \001(\014\022\023\n\013posmetaroo"
+    "t\030< \001(\014*\214\002\n\005CType\022\010\n\004NONE\020\000\022\r\n\tCHECKNAME"
+    "\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS"
+    "\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n"
+    "\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIO"
+    "NS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOBALSTA"
+    "TE\020\013\022\017\n\013GETSCHEDULE\020\014\022\021\n\rGETGAMEROSTER\020\r"
+    "\022\022\n\016GETPROJECTIONS\020\017\022\020\n\014GETGAMESTART\020\020", 8038);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -4288,6 +4292,9 @@ const int FantasyNameBalMeta::kNameFieldNumber;
 const int FantasyNameBalMeta::kPublicKeyFieldNumber;
 const int FantasyNameBalMeta::kBitsFieldNumber;
 const int FantasyNameBalMeta::kStakeFieldNumber;
+const int FantasyNameBalMeta::kBlockFieldNumber;
+const int FantasyNameBalMeta::kCountFieldNumber;
+const int FantasyNameBalMeta::kNonceFieldNumber;
 const int FantasyNameBalMeta::kAwardmetarootFieldNumber;
 const int FantasyNameBalMeta::kPnlmetarootFieldNumber;
 const int FantasyNameBalMeta::kPrevFieldNumber;
@@ -4316,6 +4323,9 @@ void FantasyNameBalMeta::SharedCtor() {
   public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   bits_ = GOOGLE_ULONGLONG(0);
   stake_ = GOOGLE_LONGLONG(0);
+  block_ = 0;
+  count_ = 0;
+  nonce_ = GOOGLE_ULONGLONG(0);
   awardmetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   pnlmetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   prev_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
@@ -4401,6 +4411,11 @@ void FantasyNameBalMeta::Clear() {
     }
     bits_ = GOOGLE_ULONGLONG(0);
     stake_ = GOOGLE_LONGLONG(0);
+    block_ = 0;
+    count_ = 0;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    nonce_ = GOOGLE_ULONGLONG(0);
     if (has_awardmetaroot()) {
       if (awardmetaroot_ != &::google::protobuf::internal::kEmptyString) {
         awardmetaroot_->clear();
@@ -4411,8 +4426,6 @@ void FantasyNameBalMeta::Clear() {
         pnlmetaroot_->clear();
       }
     }
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_prev()) {
       if (prev_ != &::google::protobuf::internal::kEmptyString) {
         prev_->clear();
@@ -4520,6 +4533,54 @@ bool FantasyNameBalMeta::MergePartialFromCodedStream(
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &stake_)));
           set_has_stake();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(328)) goto parse_block;
+        break;
+      }
+
+      // optional int32 block = 41;
+      case 41: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_block:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &block_)));
+          set_has_block();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(336)) goto parse_count;
+        break;
+      }
+
+      // optional int32 count = 42;
+      case 42: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_count:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &count_)));
+          set_has_count();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(360)) goto parse_nonce;
+        break;
+      }
+
+      // optional uint64 nonce = 45;
+      case 45: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_nonce:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &nonce_)));
+          set_has_nonce();
         } else {
           goto handle_uninterpreted;
         }
@@ -4641,6 +4702,21 @@ void FantasyNameBalMeta::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(40, this->stake(), output);
   }
 
+  // optional int32 block = 41;
+  if (has_block()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(41, this->block(), output);
+  }
+
+  // optional int32 count = 42;
+  if (has_count()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(42, this->count(), output);
+  }
+
+  // optional uint64 nonce = 45;
+  if (has_nonce()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(45, this->nonce(), output);
+  }
+
   // optional bytes awardmetaroot = 50;
   if (has_awardmetaroot()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
@@ -4715,6 +4791,21 @@ void FantasyNameBalMeta::SerializeWithCachedSizes(
   // optional int64 stake = 40;
   if (has_stake()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(40, this->stake(), target);
+  }
+
+  // optional int32 block = 41;
+  if (has_block()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(41, this->block(), target);
+  }
+
+  // optional int32 count = 42;
+  if (has_count()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(42, this->count(), target);
+  }
+
+  // optional uint64 nonce = 45;
+  if (has_nonce()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(45, this->nonce(), target);
   }
 
   // optional bytes awardmetaroot = 50;
@@ -4798,6 +4889,29 @@ int FantasyNameBalMeta::ByteSize() const {
           this->stake());
     }
 
+    // optional int32 block = 41;
+    if (has_block()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->block());
+    }
+
+    // optional int32 count = 42;
+    if (has_count()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->count());
+    }
+
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional uint64 nonce = 45;
+    if (has_nonce()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->nonce());
+    }
+
     // optional bytes awardmetaroot = 50;
     if (has_awardmetaroot()) {
       total_size += 2 +
@@ -4812,8 +4926,6 @@ int FantasyNameBalMeta::ByteSize() const {
           this->pnlmetaroot());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional bytes prev = 70;
     if (has_prev()) {
       total_size += 2 +
@@ -4873,14 +4985,23 @@ void FantasyNameBalMeta::MergeFrom(const FantasyNameBalMeta& from) {
     if (from.has_stake()) {
       set_stake(from.stake());
     }
+    if (from.has_block()) {
+      set_block(from.block());
+    }
+    if (from.has_count()) {
+      set_count(from.count());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_nonce()) {
+      set_nonce(from.nonce());
+    }
     if (from.has_awardmetaroot()) {
       set_awardmetaroot(from.awardmetaroot());
     }
     if (from.has_pnlmetaroot()) {
       set_pnlmetaroot(from.pnlmetaroot());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_prev()) {
       set_prev(from.prev());
     }
@@ -4916,6 +5037,9 @@ void FantasyNameBalMeta::Swap(FantasyNameBalMeta* other) {
     std::swap(public_key_, other->public_key_);
     std::swap(bits_, other->bits_);
     std::swap(stake_, other->stake_);
+    std::swap(block_, other->block_);
+    std::swap(count_, other->count_);
+    std::swap(nonce_, other->nonce_);
     std::swap(awardmetaroot_, other->awardmetaroot_);
     std::swap(pnlmetaroot_, other->pnlmetaroot_);
     std::swap(prev_, other->prev_);

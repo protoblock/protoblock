@@ -55,7 +55,7 @@ protobuf_impl.input = PROTOS
 protobuf_impl.output = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.cc
 protobuf_impl.depends = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.h
 protobuf_impl.commands = $$escape_expand(\n)
-#protobuf_impl.variable_out = SOURCES
+protobuf_impl.variable_out = SOURCES
 QMAKE_EXTRA_COMPILERS += protobuf_impl
 }
 

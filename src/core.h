@@ -74,7 +74,7 @@ public:
 public slots:
     void guiIsAwake();
 private:
-
+    int mCount = 0;
     QMap<QString,IResolvable *> myNamedResolvableInstance;
     QWaitCondition myWaitForGUI;
     QMutex myMutex;

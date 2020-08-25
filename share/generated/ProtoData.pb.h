@@ -75,6 +75,14 @@ class OrderUnique;
 class OrderDeets;
 class InsideUnique;
 class TimeTransition;
+class Bitcoin_UTXO;
+class Bitcoin_UTXOS;
+class SwapAsk;
+class SwapBid;
+class SwapFill;
+class SwapSent;
+class ProofOfDoubleSpend;
+class SwapSentAck;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -314,11 +322,17 @@ enum TransType {
   STAMPED = 7,
   EXCHANGE = 8,
   EXCHANGE_BLOCK = 9,
-  TRANSFER = 10
+  TRANSFER = 10,
+  SWAPASK = 11,
+  SWAPBID = 12,
+  SWAPFIL = 13,
+  SWAPSENT = 14,
+  PODP = 15,
+  SWAPSENTACK = 16
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
-const TransType TransType_MAX = TRANSFER;
+const TransType TransType_MAX = SWAPSENTACK;
 const int TransType_ARRAYSIZE = TransType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TransType_descriptor();
@@ -5057,6 +5071,973 @@ class TimeTransition : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static TimeTransition* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Bitcoin_UTXO : public ::google::protobuf::Message {
+ public:
+  Bitcoin_UTXO();
+  virtual ~Bitcoin_UTXO();
+
+  Bitcoin_UTXO(const Bitcoin_UTXO& from);
+
+  inline Bitcoin_UTXO& operator=(const Bitcoin_UTXO& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Bitcoin_UTXO& default_instance();
+
+  void Swap(Bitcoin_UTXO* other);
+
+  // implements Message ----------------------------------------------
+
+  Bitcoin_UTXO* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Bitcoin_UTXO& from);
+  void MergeFrom(const Bitcoin_UTXO& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes txid = 10;
+  inline bool has_txid() const;
+  inline void clear_txid();
+  static const int kTxidFieldNumber = 10;
+  inline const ::std::string& txid() const;
+  inline void set_txid(const ::std::string& value);
+  inline void set_txid(const char* value);
+  inline void set_txid(const void* value, size_t size);
+  inline ::std::string* mutable_txid();
+  inline ::std::string* release_txid();
+  inline void set_allocated_txid(::std::string* txid);
+
+  // optional uint32 tx_output_n = 20;
+  inline bool has_tx_output_n() const;
+  inline void clear_tx_output_n();
+  static const int kTxOutputNFieldNumber = 20;
+  inline ::google::protobuf::uint32 tx_output_n() const;
+  inline void set_tx_output_n(::google::protobuf::uint32 value);
+
+  // optional uint64 in_value = 30;
+  inline bool has_in_value() const;
+  inline void clear_in_value();
+  static const int kInValueFieldNumber = 30;
+  inline ::google::protobuf::uint64 in_value() const;
+  inline void set_in_value(::google::protobuf::uint64 value);
+
+  // optional bytes locking_script = 40;
+  inline bool has_locking_script() const;
+  inline void clear_locking_script();
+  static const int kLockingScriptFieldNumber = 40;
+  inline const ::std::string& locking_script() const;
+  inline void set_locking_script(const ::std::string& value);
+  inline void set_locking_script(const char* value);
+  inline void set_locking_script(const void* value, size_t size);
+  inline ::std::string* mutable_locking_script();
+  inline ::std::string* release_locking_script();
+  inline void set_allocated_locking_script(::std::string* locking_script);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Bitcoin_UTXO)
+ private:
+  inline void set_has_txid();
+  inline void clear_has_txid();
+  inline void set_has_tx_output_n();
+  inline void clear_has_tx_output_n();
+  inline void set_has_in_value();
+  inline void clear_has_in_value();
+  inline void set_has_locking_script();
+  inline void clear_has_locking_script();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* txid_;
+  ::google::protobuf::uint64 in_value_;
+  ::std::string* locking_script_;
+  ::google::protobuf::uint32 tx_output_n_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Bitcoin_UTXO* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Bitcoin_UTXOS : public ::google::protobuf::Message {
+ public:
+  Bitcoin_UTXOS();
+  virtual ~Bitcoin_UTXOS();
+
+  Bitcoin_UTXOS(const Bitcoin_UTXOS& from);
+
+  inline Bitcoin_UTXOS& operator=(const Bitcoin_UTXOS& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Bitcoin_UTXOS& default_instance();
+
+  void Swap(Bitcoin_UTXOS* other);
+
+  // implements Message ----------------------------------------------
+
+  Bitcoin_UTXOS* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Bitcoin_UTXOS& from);
+  void MergeFrom(const Bitcoin_UTXOS& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 total_value = 10;
+  inline bool has_total_value() const;
+  inline void clear_total_value();
+  static const int kTotalValueFieldNumber = 10;
+  inline ::google::protobuf::uint64 total_value() const;
+  inline void set_total_value(::google::protobuf::uint64 value);
+
+  // repeated .fantasybit.Bitcoin_UTXO utxo = 20;
+  inline int utxo_size() const;
+  inline void clear_utxo();
+  static const int kUtxoFieldNumber = 20;
+  inline const ::fantasybit::Bitcoin_UTXO& utxo(int index) const;
+  inline ::fantasybit::Bitcoin_UTXO* mutable_utxo(int index);
+  inline ::fantasybit::Bitcoin_UTXO* add_utxo();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >&
+      utxo() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >*
+      mutable_utxo();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Bitcoin_UTXOS)
+ private:
+  inline void set_has_total_value();
+  inline void clear_has_total_value();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 total_value_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO > utxo_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Bitcoin_UTXOS* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapAsk : public ::google::protobuf::Message {
+ public:
+  SwapAsk();
+  virtual ~SwapAsk();
+
+  SwapAsk(const SwapAsk& from);
+
+  inline SwapAsk& operator=(const SwapAsk& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapAsk& default_instance();
+
+  void Swap(SwapAsk* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapAsk* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapAsk& from);
+  void MergeFrom(const SwapAsk& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 satoshi_min = 10;
+  inline bool has_satoshi_min() const;
+  inline void clear_satoshi_min();
+  static const int kSatoshiMinFieldNumber = 10;
+  inline ::google::protobuf::uint64 satoshi_min() const;
+  inline void set_satoshi_min(::google::protobuf::uint64 value);
+
+  // optional uint64 satoshi_max = 11;
+  inline bool has_satoshi_max() const;
+  inline void clear_satoshi_max();
+  static const int kSatoshiMaxFieldNumber = 11;
+  inline ::google::protobuf::uint64 satoshi_max() const;
+  inline void set_satoshi_max(::google::protobuf::uint64 value);
+
+  // optional uint64 rate = 20;
+  inline bool has_rate() const;
+  inline void clear_rate();
+  static const int kRateFieldNumber = 20;
+  inline ::google::protobuf::uint64 rate() const;
+  inline void set_rate(::google::protobuf::uint64 value);
+
+  // optional uint64 fb_qty = 30;
+  inline bool has_fb_qty() const;
+  inline void clear_fb_qty();
+  static const int kFbQtyFieldNumber = 30;
+  inline ::google::protobuf::uint64 fb_qty() const;
+  inline void set_fb_qty(::google::protobuf::uint64 value);
+
+  static const int kSwapaskTranFieldNumber = 450;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapAsk >, 11, false >
+    swapask_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapAsk)
+ private:
+  inline void set_has_satoshi_min();
+  inline void clear_has_satoshi_min();
+  inline void set_has_satoshi_max();
+  inline void clear_has_satoshi_max();
+  inline void set_has_rate();
+  inline void clear_has_rate();
+  inline void set_has_fb_qty();
+  inline void clear_has_fb_qty();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 satoshi_min_;
+  ::google::protobuf::uint64 satoshi_max_;
+  ::google::protobuf::uint64 rate_;
+  ::google::protobuf::uint64 fb_qty_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapAsk* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapBid : public ::google::protobuf::Message {
+ public:
+  SwapBid();
+  virtual ~SwapBid();
+
+  SwapBid(const SwapBid& from);
+
+  inline SwapBid& operator=(const SwapBid& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapBid& default_instance();
+
+  void Swap(SwapBid* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapBid* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapBid& from);
+  void MergeFrom(const SwapBid& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 satoshi_min = 10;
+  inline bool has_satoshi_min() const;
+  inline void clear_satoshi_min();
+  static const int kSatoshiMinFieldNumber = 10;
+  inline ::google::protobuf::uint64 satoshi_min() const;
+  inline void set_satoshi_min(::google::protobuf::uint64 value);
+
+  // optional uint64 satoshi_max = 11;
+  inline bool has_satoshi_max() const;
+  inline void clear_satoshi_max();
+  static const int kSatoshiMaxFieldNumber = 11;
+  inline ::google::protobuf::uint64 satoshi_max() const;
+  inline void set_satoshi_max(::google::protobuf::uint64 value);
+
+  // optional uint64 rate = 20;
+  inline bool has_rate() const;
+  inline void clear_rate();
+  static const int kRateFieldNumber = 20;
+  inline ::google::protobuf::uint64 rate() const;
+  inline void set_rate(::google::protobuf::uint64 value);
+
+  // optional .fantasybit.Bitcoin_UTXOS utxos = 30;
+  inline bool has_utxos() const;
+  inline void clear_utxos();
+  static const int kUtxosFieldNumber = 30;
+  inline const ::fantasybit::Bitcoin_UTXOS& utxos() const;
+  inline ::fantasybit::Bitcoin_UTXOS* mutable_utxos();
+  inline ::fantasybit::Bitcoin_UTXOS* release_utxos();
+  inline void set_allocated_utxos(::fantasybit::Bitcoin_UTXOS* utxos);
+
+  // optional bytes change_addr = 40;
+  inline bool has_change_addr() const;
+  inline void clear_change_addr();
+  static const int kChangeAddrFieldNumber = 40;
+  inline const ::std::string& change_addr() const;
+  inline void set_change_addr(const ::std::string& value);
+  inline void set_change_addr(const char* value);
+  inline void set_change_addr(const void* value, size_t size);
+  inline ::std::string* mutable_change_addr();
+  inline ::std::string* release_change_addr();
+  inline void set_allocated_change_addr(::std::string* change_addr);
+
+  // optional .fantasybit.SwapAsk this_offer = 50;
+  inline bool has_this_offer() const;
+  inline void clear_this_offer();
+  static const int kThisOfferFieldNumber = 50;
+  inline const ::fantasybit::SwapAsk& this_offer() const;
+  inline ::fantasybit::SwapAsk* mutable_this_offer();
+  inline ::fantasybit::SwapAsk* release_this_offer();
+  inline void set_allocated_this_offer(::fantasybit::SwapAsk* this_offer);
+
+  // optional string counteroffer = 60;
+  inline bool has_counteroffer() const;
+  inline void clear_counteroffer();
+  static const int kCounterofferFieldNumber = 60;
+  inline const ::std::string& counteroffer() const;
+  inline void set_counteroffer(const ::std::string& value);
+  inline void set_counteroffer(const char* value);
+  inline void set_counteroffer(const char* value, size_t size);
+  inline ::std::string* mutable_counteroffer();
+  inline ::std::string* release_counteroffer();
+  inline void set_allocated_counteroffer(::std::string* counteroffer);
+
+  static const int kSwapbidTranFieldNumber = 500;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapBid >, 11, false >
+    swapbid_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapBid)
+ private:
+  inline void set_has_satoshi_min();
+  inline void clear_has_satoshi_min();
+  inline void set_has_satoshi_max();
+  inline void clear_has_satoshi_max();
+  inline void set_has_rate();
+  inline void clear_has_rate();
+  inline void set_has_utxos();
+  inline void clear_has_utxos();
+  inline void set_has_change_addr();
+  inline void clear_has_change_addr();
+  inline void set_has_this_offer();
+  inline void clear_has_this_offer();
+  inline void set_has_counteroffer();
+  inline void clear_has_counteroffer();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 satoshi_min_;
+  ::google::protobuf::uint64 satoshi_max_;
+  ::google::protobuf::uint64 rate_;
+  ::fantasybit::Bitcoin_UTXOS* utxos_;
+  ::std::string* change_addr_;
+  ::fantasybit::SwapAsk* this_offer_;
+  ::std::string* counteroffer_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapBid* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapFill : public ::google::protobuf::Message {
+ public:
+  SwapFill();
+  virtual ~SwapFill();
+
+  SwapFill(const SwapFill& from);
+
+  inline SwapFill& operator=(const SwapFill& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapFill& default_instance();
+
+  void Swap(SwapFill* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapFill* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapFill& from);
+  void MergeFrom(const SwapFill& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.SwapBid swapbid = 10;
+  inline bool has_swapbid() const;
+  inline void clear_swapbid();
+  static const int kSwapbidFieldNumber = 10;
+  inline const ::fantasybit::SwapBid& swapbid() const;
+  inline ::fantasybit::SwapBid* mutable_swapbid();
+  inline ::fantasybit::SwapBid* release_swapbid();
+  inline void set_allocated_swapbid(::fantasybit::SwapBid* swapbid);
+
+  // optional bytes hash_to_sign = 20;
+  inline bool has_hash_to_sign() const;
+  inline void clear_hash_to_sign();
+  static const int kHashToSignFieldNumber = 20;
+  inline const ::std::string& hash_to_sign() const;
+  inline void set_hash_to_sign(const ::std::string& value);
+  inline void set_hash_to_sign(const char* value);
+  inline void set_hash_to_sign(const void* value, size_t size);
+  inline ::std::string* mutable_hash_to_sign();
+  inline ::std::string* release_hash_to_sign();
+  inline void set_allocated_hash_to_sign(::std::string* hash_to_sign);
+
+  // optional uint64 satoshi_fee = 30;
+  inline bool has_satoshi_fee() const;
+  inline void clear_satoshi_fee();
+  static const int kSatoshiFeeFieldNumber = 30;
+  inline ::google::protobuf::uint64 satoshi_fee() const;
+  inline void set_satoshi_fee(::google::protobuf::uint64 value);
+
+  // optional uint64 fb_qty = 40;
+  inline bool has_fb_qty() const;
+  inline void clear_fb_qty();
+  static const int kFbQtyFieldNumber = 40;
+  inline ::google::protobuf::uint64 fb_qty() const;
+  inline void set_fb_qty(::google::protobuf::uint64 value);
+
+  // optional string counterparty = 50;
+  inline bool has_counterparty() const;
+  inline void clear_counterparty();
+  static const int kCounterpartyFieldNumber = 50;
+  inline const ::std::string& counterparty() const;
+  inline void set_counterparty(const ::std::string& value);
+  inline void set_counterparty(const char* value);
+  inline void set_counterparty(const char* value, size_t size);
+  inline ::std::string* mutable_counterparty();
+  inline ::std::string* release_counterparty();
+  inline void set_allocated_counterparty(::std::string* counterparty);
+
+  static const int kSwapfilTranFieldNumber = 600;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapFill >, 11, false >
+    swapfil_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapFill)
+ private:
+  inline void set_has_swapbid();
+  inline void clear_has_swapbid();
+  inline void set_has_hash_to_sign();
+  inline void clear_has_hash_to_sign();
+  inline void set_has_satoshi_fee();
+  inline void clear_has_satoshi_fee();
+  inline void set_has_fb_qty();
+  inline void clear_has_fb_qty();
+  inline void set_has_counterparty();
+  inline void clear_has_counterparty();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::SwapBid* swapbid_;
+  ::std::string* hash_to_sign_;
+  ::google::protobuf::uint64 satoshi_fee_;
+  ::google::protobuf::uint64 fb_qty_;
+  ::std::string* counterparty_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapFill* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapSent : public ::google::protobuf::Message {
+ public:
+  SwapSent();
+  virtual ~SwapSent();
+
+  SwapSent(const SwapSent& from);
+
+  inline SwapSent& operator=(const SwapSent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapSent& default_instance();
+
+  void Swap(SwapSent* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapSent* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapSent& from);
+  void MergeFrom(const SwapSent& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.SwapFill swapfill = 10;
+  inline bool has_swapfill() const;
+  inline void clear_swapfill();
+  static const int kSwapfillFieldNumber = 10;
+  inline const ::fantasybit::SwapFill& swapfill() const;
+  inline ::fantasybit::SwapFill* mutable_swapfill();
+  inline ::fantasybit::SwapFill* release_swapfill();
+  inline void set_allocated_swapfill(::fantasybit::SwapFill* swapfill);
+
+  // optional bytes sig = 20;
+  inline bool has_sig() const;
+  inline void clear_sig();
+  static const int kSigFieldNumber = 20;
+  inline const ::std::string& sig() const;
+  inline void set_sig(const ::std::string& value);
+  inline void set_sig(const char* value);
+  inline void set_sig(const void* value, size_t size);
+  inline ::std::string* mutable_sig();
+  inline ::std::string* release_sig();
+  inline void set_allocated_sig(::std::string* sig);
+
+  static const int kSwapsentTranFieldNumber = 700;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapSent >, 11, false >
+    swapsent_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapSent)
+ private:
+  inline void set_has_swapfill();
+  inline void clear_has_swapfill();
+  inline void set_has_sig();
+  inline void clear_has_sig();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::SwapFill* swapfill_;
+  ::std::string* sig_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapSent* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProofOfDoubleSpend : public ::google::protobuf::Message {
+ public:
+  ProofOfDoubleSpend();
+  virtual ~ProofOfDoubleSpend();
+
+  ProofOfDoubleSpend(const ProofOfDoubleSpend& from);
+
+  inline ProofOfDoubleSpend& operator=(const ProofOfDoubleSpend& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProofOfDoubleSpend& default_instance();
+
+  void Swap(ProofOfDoubleSpend* other);
+
+  // implements Message ----------------------------------------------
+
+  ProofOfDoubleSpend* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProofOfDoubleSpend& from);
+  void MergeFrom(const ProofOfDoubleSpend& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.SwapSent swapsent = 10;
+  inline bool has_swapsent() const;
+  inline void clear_swapsent();
+  static const int kSwapsentFieldNumber = 10;
+  inline const ::fantasybit::SwapSent& swapsent() const;
+  inline ::fantasybit::SwapSent* mutable_swapsent();
+  inline ::fantasybit::SwapSent* release_swapsent();
+  inline void set_allocated_swapsent(::fantasybit::SwapSent* swapsent);
+
+  // optional .fantasybit.Bitcoin_UTXO utxo = 20;
+  inline bool has_utxo() const;
+  inline void clear_utxo();
+  static const int kUtxoFieldNumber = 20;
+  inline const ::fantasybit::Bitcoin_UTXO& utxo() const;
+  inline ::fantasybit::Bitcoin_UTXO* mutable_utxo();
+  inline ::fantasybit::Bitcoin_UTXO* release_utxo();
+  inline void set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo);
+
+  // optional bytes pre = 30;
+  inline bool has_pre() const;
+  inline void clear_pre();
+  static const int kPreFieldNumber = 30;
+  inline const ::std::string& pre() const;
+  inline void set_pre(const ::std::string& value);
+  inline void set_pre(const char* value);
+  inline void set_pre(const void* value, size_t size);
+  inline ::std::string* mutable_pre();
+  inline ::std::string* release_pre();
+  inline void set_allocated_pre(::std::string* pre);
+
+  // optional bytes post = 40;
+  inline bool has_post() const;
+  inline void clear_post();
+  static const int kPostFieldNumber = 40;
+  inline const ::std::string& post() const;
+  inline void set_post(const ::std::string& value);
+  inline void set_post(const char* value);
+  inline void set_post(const void* value, size_t size);
+  inline ::std::string* mutable_post();
+  inline ::std::string* release_post();
+  inline void set_allocated_post(::std::string* post);
+
+  // optional bytes sig = 50;
+  inline bool has_sig() const;
+  inline void clear_sig();
+  static const int kSigFieldNumber = 50;
+  inline const ::std::string& sig() const;
+  inline void set_sig(const ::std::string& value);
+  inline void set_sig(const char* value);
+  inline void set_sig(const void* value, size_t size);
+  inline ::std::string* mutable_sig();
+  inline ::std::string* release_sig();
+  inline void set_allocated_sig(::std::string* sig);
+
+  static const int kPodpTranFieldNumber = 800;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ProofOfDoubleSpend >, 11, false >
+    podp_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.ProofOfDoubleSpend)
+ private:
+  inline void set_has_swapsent();
+  inline void clear_has_swapsent();
+  inline void set_has_utxo();
+  inline void clear_has_utxo();
+  inline void set_has_pre();
+  inline void clear_has_pre();
+  inline void set_has_post();
+  inline void clear_has_post();
+  inline void set_has_sig();
+  inline void clear_has_sig();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::SwapSent* swapsent_;
+  ::fantasybit::Bitcoin_UTXO* utxo_;
+  ::std::string* pre_;
+  ::std::string* post_;
+  ::std::string* sig_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProofOfDoubleSpend* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapSentAck : public ::google::protobuf::Message {
+ public:
+  SwapSentAck();
+  virtual ~SwapSentAck();
+
+  SwapSentAck(const SwapSentAck& from);
+
+  inline SwapSentAck& operator=(const SwapSentAck& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapSentAck& default_instance();
+
+  void Swap(SwapSentAck* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapSentAck* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapSentAck& from);
+  void MergeFrom(const SwapSentAck& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.SwapSent swapsent = 10;
+  inline bool has_swapsent() const;
+  inline void clear_swapsent();
+  static const int kSwapsentFieldNumber = 10;
+  inline const ::fantasybit::SwapSent& swapsent() const;
+  inline ::fantasybit::SwapSent* mutable_swapsent();
+  inline ::fantasybit::SwapSent* release_swapsent();
+  inline void set_allocated_swapsent(::fantasybit::SwapSent* swapsent);
+
+  static const int kSwapsentackTranFieldNumber = 810;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapSentAck >, 11, false >
+    swapsentack_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapSentAck)
+ private:
+  inline void set_has_swapsent();
+  inline void clear_has_swapsent();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::SwapSent* swapsent_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapSentAck* default_instance_;
 };
 // ===================================================================
 
@@ -10677,6 +11658,1293 @@ inline ::google::protobuf::uint32 TimeTransition::week() const {
 inline void TimeTransition::set_week(::google::protobuf::uint32 value) {
   set_has_week();
   week_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Bitcoin_UTXO
+
+// optional bytes txid = 10;
+inline bool Bitcoin_UTXO::has_txid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_txid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Bitcoin_UTXO::clear_has_txid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Bitcoin_UTXO::clear_txid() {
+  if (txid_ != &::google::protobuf::internal::kEmptyString) {
+    txid_->clear();
+  }
+  clear_has_txid();
+}
+inline const ::std::string& Bitcoin_UTXO::txid() const {
+  return *txid_;
+}
+inline void Bitcoin_UTXO::set_txid(const ::std::string& value) {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  txid_->assign(value);
+}
+inline void Bitcoin_UTXO::set_txid(const char* value) {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  txid_->assign(value);
+}
+inline void Bitcoin_UTXO::set_txid(const void* value, size_t size) {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  txid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bitcoin_UTXO::mutable_txid() {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  return txid_;
+}
+inline ::std::string* Bitcoin_UTXO::release_txid() {
+  clear_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = txid_;
+    txid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bitcoin_UTXO::set_allocated_txid(::std::string* txid) {
+  if (txid_ != &::google::protobuf::internal::kEmptyString) {
+    delete txid_;
+  }
+  if (txid) {
+    set_has_txid();
+    txid_ = txid;
+  } else {
+    clear_has_txid();
+    txid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint32 tx_output_n = 20;
+inline bool Bitcoin_UTXO::has_tx_output_n() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_tx_output_n() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Bitcoin_UTXO::clear_has_tx_output_n() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Bitcoin_UTXO::clear_tx_output_n() {
+  tx_output_n_ = 0u;
+  clear_has_tx_output_n();
+}
+inline ::google::protobuf::uint32 Bitcoin_UTXO::tx_output_n() const {
+  return tx_output_n_;
+}
+inline void Bitcoin_UTXO::set_tx_output_n(::google::protobuf::uint32 value) {
+  set_has_tx_output_n();
+  tx_output_n_ = value;
+}
+
+// optional uint64 in_value = 30;
+inline bool Bitcoin_UTXO::has_in_value() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_in_value() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Bitcoin_UTXO::clear_has_in_value() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Bitcoin_UTXO::clear_in_value() {
+  in_value_ = GOOGLE_ULONGLONG(0);
+  clear_has_in_value();
+}
+inline ::google::protobuf::uint64 Bitcoin_UTXO::in_value() const {
+  return in_value_;
+}
+inline void Bitcoin_UTXO::set_in_value(::google::protobuf::uint64 value) {
+  set_has_in_value();
+  in_value_ = value;
+}
+
+// optional bytes locking_script = 40;
+inline bool Bitcoin_UTXO::has_locking_script() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_locking_script() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Bitcoin_UTXO::clear_has_locking_script() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Bitcoin_UTXO::clear_locking_script() {
+  if (locking_script_ != &::google::protobuf::internal::kEmptyString) {
+    locking_script_->clear();
+  }
+  clear_has_locking_script();
+}
+inline const ::std::string& Bitcoin_UTXO::locking_script() const {
+  return *locking_script_;
+}
+inline void Bitcoin_UTXO::set_locking_script(const ::std::string& value) {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  locking_script_->assign(value);
+}
+inline void Bitcoin_UTXO::set_locking_script(const char* value) {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  locking_script_->assign(value);
+}
+inline void Bitcoin_UTXO::set_locking_script(const void* value, size_t size) {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  locking_script_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bitcoin_UTXO::mutable_locking_script() {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  return locking_script_;
+}
+inline ::std::string* Bitcoin_UTXO::release_locking_script() {
+  clear_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = locking_script_;
+    locking_script_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bitcoin_UTXO::set_allocated_locking_script(::std::string* locking_script) {
+  if (locking_script_ != &::google::protobuf::internal::kEmptyString) {
+    delete locking_script_;
+  }
+  if (locking_script) {
+    set_has_locking_script();
+    locking_script_ = locking_script;
+  } else {
+    clear_has_locking_script();
+    locking_script_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Bitcoin_UTXOS
+
+// optional uint64 total_value = 10;
+inline bool Bitcoin_UTXOS::has_total_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Bitcoin_UTXOS::set_has_total_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Bitcoin_UTXOS::clear_has_total_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Bitcoin_UTXOS::clear_total_value() {
+  total_value_ = GOOGLE_ULONGLONG(0);
+  clear_has_total_value();
+}
+inline ::google::protobuf::uint64 Bitcoin_UTXOS::total_value() const {
+  return total_value_;
+}
+inline void Bitcoin_UTXOS::set_total_value(::google::protobuf::uint64 value) {
+  set_has_total_value();
+  total_value_ = value;
+}
+
+// repeated .fantasybit.Bitcoin_UTXO utxo = 20;
+inline int Bitcoin_UTXOS::utxo_size() const {
+  return utxo_.size();
+}
+inline void Bitcoin_UTXOS::clear_utxo() {
+  utxo_.Clear();
+}
+inline const ::fantasybit::Bitcoin_UTXO& Bitcoin_UTXOS::utxo(int index) const {
+  return utxo_.Get(index);
+}
+inline ::fantasybit::Bitcoin_UTXO* Bitcoin_UTXOS::mutable_utxo(int index) {
+  return utxo_.Mutable(index);
+}
+inline ::fantasybit::Bitcoin_UTXO* Bitcoin_UTXOS::add_utxo() {
+  return utxo_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >&
+Bitcoin_UTXOS::utxo() const {
+  return utxo_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >*
+Bitcoin_UTXOS::mutable_utxo() {
+  return &utxo_;
+}
+
+// -------------------------------------------------------------------
+
+// SwapAsk
+
+// optional uint64 satoshi_min = 10;
+inline bool SwapAsk::has_satoshi_min() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapAsk::set_has_satoshi_min() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapAsk::clear_has_satoshi_min() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapAsk::clear_satoshi_min() {
+  satoshi_min_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_min();
+}
+inline ::google::protobuf::uint64 SwapAsk::satoshi_min() const {
+  return satoshi_min_;
+}
+inline void SwapAsk::set_satoshi_min(::google::protobuf::uint64 value) {
+  set_has_satoshi_min();
+  satoshi_min_ = value;
+}
+
+// optional uint64 satoshi_max = 11;
+inline bool SwapAsk::has_satoshi_max() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapAsk::set_has_satoshi_max() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapAsk::clear_has_satoshi_max() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapAsk::clear_satoshi_max() {
+  satoshi_max_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_max();
+}
+inline ::google::protobuf::uint64 SwapAsk::satoshi_max() const {
+  return satoshi_max_;
+}
+inline void SwapAsk::set_satoshi_max(::google::protobuf::uint64 value) {
+  set_has_satoshi_max();
+  satoshi_max_ = value;
+}
+
+// optional uint64 rate = 20;
+inline bool SwapAsk::has_rate() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapAsk::set_has_rate() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapAsk::clear_has_rate() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapAsk::clear_rate() {
+  rate_ = GOOGLE_ULONGLONG(0);
+  clear_has_rate();
+}
+inline ::google::protobuf::uint64 SwapAsk::rate() const {
+  return rate_;
+}
+inline void SwapAsk::set_rate(::google::protobuf::uint64 value) {
+  set_has_rate();
+  rate_ = value;
+}
+
+// optional uint64 fb_qty = 30;
+inline bool SwapAsk::has_fb_qty() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SwapAsk::set_has_fb_qty() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SwapAsk::clear_has_fb_qty() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SwapAsk::clear_fb_qty() {
+  fb_qty_ = GOOGLE_ULONGLONG(0);
+  clear_has_fb_qty();
+}
+inline ::google::protobuf::uint64 SwapAsk::fb_qty() const {
+  return fb_qty_;
+}
+inline void SwapAsk::set_fb_qty(::google::protobuf::uint64 value) {
+  set_has_fb_qty();
+  fb_qty_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SwapBid
+
+// optional uint64 satoshi_min = 10;
+inline bool SwapBid::has_satoshi_min() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapBid::set_has_satoshi_min() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapBid::clear_has_satoshi_min() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapBid::clear_satoshi_min() {
+  satoshi_min_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_min();
+}
+inline ::google::protobuf::uint64 SwapBid::satoshi_min() const {
+  return satoshi_min_;
+}
+inline void SwapBid::set_satoshi_min(::google::protobuf::uint64 value) {
+  set_has_satoshi_min();
+  satoshi_min_ = value;
+}
+
+// optional uint64 satoshi_max = 11;
+inline bool SwapBid::has_satoshi_max() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapBid::set_has_satoshi_max() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapBid::clear_has_satoshi_max() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapBid::clear_satoshi_max() {
+  satoshi_max_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_max();
+}
+inline ::google::protobuf::uint64 SwapBid::satoshi_max() const {
+  return satoshi_max_;
+}
+inline void SwapBid::set_satoshi_max(::google::protobuf::uint64 value) {
+  set_has_satoshi_max();
+  satoshi_max_ = value;
+}
+
+// optional uint64 rate = 20;
+inline bool SwapBid::has_rate() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapBid::set_has_rate() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapBid::clear_has_rate() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapBid::clear_rate() {
+  rate_ = GOOGLE_ULONGLONG(0);
+  clear_has_rate();
+}
+inline ::google::protobuf::uint64 SwapBid::rate() const {
+  return rate_;
+}
+inline void SwapBid::set_rate(::google::protobuf::uint64 value) {
+  set_has_rate();
+  rate_ = value;
+}
+
+// optional .fantasybit.Bitcoin_UTXOS utxos = 30;
+inline bool SwapBid::has_utxos() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SwapBid::set_has_utxos() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SwapBid::clear_has_utxos() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SwapBid::clear_utxos() {
+  if (utxos_ != NULL) utxos_->::fantasybit::Bitcoin_UTXOS::Clear();
+  clear_has_utxos();
+}
+inline const ::fantasybit::Bitcoin_UTXOS& SwapBid::utxos() const {
+  return utxos_ != NULL ? *utxos_ : *default_instance_->utxos_;
+}
+inline ::fantasybit::Bitcoin_UTXOS* SwapBid::mutable_utxos() {
+  set_has_utxos();
+  if (utxos_ == NULL) utxos_ = new ::fantasybit::Bitcoin_UTXOS;
+  return utxos_;
+}
+inline ::fantasybit::Bitcoin_UTXOS* SwapBid::release_utxos() {
+  clear_has_utxos();
+  ::fantasybit::Bitcoin_UTXOS* temp = utxos_;
+  utxos_ = NULL;
+  return temp;
+}
+inline void SwapBid::set_allocated_utxos(::fantasybit::Bitcoin_UTXOS* utxos) {
+  delete utxos_;
+  utxos_ = utxos;
+  if (utxos) {
+    set_has_utxos();
+  } else {
+    clear_has_utxos();
+  }
+}
+
+// optional bytes change_addr = 40;
+inline bool SwapBid::has_change_addr() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SwapBid::set_has_change_addr() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SwapBid::clear_has_change_addr() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SwapBid::clear_change_addr() {
+  if (change_addr_ != &::google::protobuf::internal::kEmptyString) {
+    change_addr_->clear();
+  }
+  clear_has_change_addr();
+}
+inline const ::std::string& SwapBid::change_addr() const {
+  return *change_addr_;
+}
+inline void SwapBid::set_change_addr(const ::std::string& value) {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  change_addr_->assign(value);
+}
+inline void SwapBid::set_change_addr(const char* value) {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  change_addr_->assign(value);
+}
+inline void SwapBid::set_change_addr(const void* value, size_t size) {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  change_addr_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapBid::mutable_change_addr() {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  return change_addr_;
+}
+inline ::std::string* SwapBid::release_change_addr() {
+  clear_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = change_addr_;
+    change_addr_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapBid::set_allocated_change_addr(::std::string* change_addr) {
+  if (change_addr_ != &::google::protobuf::internal::kEmptyString) {
+    delete change_addr_;
+  }
+  if (change_addr) {
+    set_has_change_addr();
+    change_addr_ = change_addr;
+  } else {
+    clear_has_change_addr();
+    change_addr_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.SwapAsk this_offer = 50;
+inline bool SwapBid::has_this_offer() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SwapBid::set_has_this_offer() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SwapBid::clear_has_this_offer() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void SwapBid::clear_this_offer() {
+  if (this_offer_ != NULL) this_offer_->::fantasybit::SwapAsk::Clear();
+  clear_has_this_offer();
+}
+inline const ::fantasybit::SwapAsk& SwapBid::this_offer() const {
+  return this_offer_ != NULL ? *this_offer_ : *default_instance_->this_offer_;
+}
+inline ::fantasybit::SwapAsk* SwapBid::mutable_this_offer() {
+  set_has_this_offer();
+  if (this_offer_ == NULL) this_offer_ = new ::fantasybit::SwapAsk;
+  return this_offer_;
+}
+inline ::fantasybit::SwapAsk* SwapBid::release_this_offer() {
+  clear_has_this_offer();
+  ::fantasybit::SwapAsk* temp = this_offer_;
+  this_offer_ = NULL;
+  return temp;
+}
+inline void SwapBid::set_allocated_this_offer(::fantasybit::SwapAsk* this_offer) {
+  delete this_offer_;
+  this_offer_ = this_offer;
+  if (this_offer) {
+    set_has_this_offer();
+  } else {
+    clear_has_this_offer();
+  }
+}
+
+// optional string counteroffer = 60;
+inline bool SwapBid::has_counteroffer() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void SwapBid::set_has_counteroffer() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void SwapBid::clear_has_counteroffer() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void SwapBid::clear_counteroffer() {
+  if (counteroffer_ != &::google::protobuf::internal::kEmptyString) {
+    counteroffer_->clear();
+  }
+  clear_has_counteroffer();
+}
+inline const ::std::string& SwapBid::counteroffer() const {
+  return *counteroffer_;
+}
+inline void SwapBid::set_counteroffer(const ::std::string& value) {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  counteroffer_->assign(value);
+}
+inline void SwapBid::set_counteroffer(const char* value) {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  counteroffer_->assign(value);
+}
+inline void SwapBid::set_counteroffer(const char* value, size_t size) {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  counteroffer_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapBid::mutable_counteroffer() {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  return counteroffer_;
+}
+inline ::std::string* SwapBid::release_counteroffer() {
+  clear_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = counteroffer_;
+    counteroffer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapBid::set_allocated_counteroffer(::std::string* counteroffer) {
+  if (counteroffer_ != &::google::protobuf::internal::kEmptyString) {
+    delete counteroffer_;
+  }
+  if (counteroffer) {
+    set_has_counteroffer();
+    counteroffer_ = counteroffer;
+  } else {
+    clear_has_counteroffer();
+    counteroffer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SwapFill
+
+// optional .fantasybit.SwapBid swapbid = 10;
+inline bool SwapFill::has_swapbid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapFill::set_has_swapbid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapFill::clear_has_swapbid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapFill::clear_swapbid() {
+  if (swapbid_ != NULL) swapbid_->::fantasybit::SwapBid::Clear();
+  clear_has_swapbid();
+}
+inline const ::fantasybit::SwapBid& SwapFill::swapbid() const {
+  return swapbid_ != NULL ? *swapbid_ : *default_instance_->swapbid_;
+}
+inline ::fantasybit::SwapBid* SwapFill::mutable_swapbid() {
+  set_has_swapbid();
+  if (swapbid_ == NULL) swapbid_ = new ::fantasybit::SwapBid;
+  return swapbid_;
+}
+inline ::fantasybit::SwapBid* SwapFill::release_swapbid() {
+  clear_has_swapbid();
+  ::fantasybit::SwapBid* temp = swapbid_;
+  swapbid_ = NULL;
+  return temp;
+}
+inline void SwapFill::set_allocated_swapbid(::fantasybit::SwapBid* swapbid) {
+  delete swapbid_;
+  swapbid_ = swapbid;
+  if (swapbid) {
+    set_has_swapbid();
+  } else {
+    clear_has_swapbid();
+  }
+}
+
+// optional bytes hash_to_sign = 20;
+inline bool SwapFill::has_hash_to_sign() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapFill::set_has_hash_to_sign() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapFill::clear_has_hash_to_sign() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapFill::clear_hash_to_sign() {
+  if (hash_to_sign_ != &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_->clear();
+  }
+  clear_has_hash_to_sign();
+}
+inline const ::std::string& SwapFill::hash_to_sign() const {
+  return *hash_to_sign_;
+}
+inline void SwapFill::set_hash_to_sign(const ::std::string& value) {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  hash_to_sign_->assign(value);
+}
+inline void SwapFill::set_hash_to_sign(const char* value) {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  hash_to_sign_->assign(value);
+}
+inline void SwapFill::set_hash_to_sign(const void* value, size_t size) {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  hash_to_sign_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapFill::mutable_hash_to_sign() {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  return hash_to_sign_;
+}
+inline ::std::string* SwapFill::release_hash_to_sign() {
+  clear_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = hash_to_sign_;
+    hash_to_sign_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapFill::set_allocated_hash_to_sign(::std::string* hash_to_sign) {
+  if (hash_to_sign_ != &::google::protobuf::internal::kEmptyString) {
+    delete hash_to_sign_;
+  }
+  if (hash_to_sign) {
+    set_has_hash_to_sign();
+    hash_to_sign_ = hash_to_sign;
+  } else {
+    clear_has_hash_to_sign();
+    hash_to_sign_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint64 satoshi_fee = 30;
+inline bool SwapFill::has_satoshi_fee() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapFill::set_has_satoshi_fee() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapFill::clear_has_satoshi_fee() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapFill::clear_satoshi_fee() {
+  satoshi_fee_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_fee();
+}
+inline ::google::protobuf::uint64 SwapFill::satoshi_fee() const {
+  return satoshi_fee_;
+}
+inline void SwapFill::set_satoshi_fee(::google::protobuf::uint64 value) {
+  set_has_satoshi_fee();
+  satoshi_fee_ = value;
+}
+
+// optional uint64 fb_qty = 40;
+inline bool SwapFill::has_fb_qty() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SwapFill::set_has_fb_qty() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SwapFill::clear_has_fb_qty() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SwapFill::clear_fb_qty() {
+  fb_qty_ = GOOGLE_ULONGLONG(0);
+  clear_has_fb_qty();
+}
+inline ::google::protobuf::uint64 SwapFill::fb_qty() const {
+  return fb_qty_;
+}
+inline void SwapFill::set_fb_qty(::google::protobuf::uint64 value) {
+  set_has_fb_qty();
+  fb_qty_ = value;
+}
+
+// optional string counterparty = 50;
+inline bool SwapFill::has_counterparty() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SwapFill::set_has_counterparty() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SwapFill::clear_has_counterparty() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SwapFill::clear_counterparty() {
+  if (counterparty_ != &::google::protobuf::internal::kEmptyString) {
+    counterparty_->clear();
+  }
+  clear_has_counterparty();
+}
+inline const ::std::string& SwapFill::counterparty() const {
+  return *counterparty_;
+}
+inline void SwapFill::set_counterparty(const ::std::string& value) {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  counterparty_->assign(value);
+}
+inline void SwapFill::set_counterparty(const char* value) {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  counterparty_->assign(value);
+}
+inline void SwapFill::set_counterparty(const char* value, size_t size) {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  counterparty_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapFill::mutable_counterparty() {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  return counterparty_;
+}
+inline ::std::string* SwapFill::release_counterparty() {
+  clear_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = counterparty_;
+    counterparty_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapFill::set_allocated_counterparty(::std::string* counterparty) {
+  if (counterparty_ != &::google::protobuf::internal::kEmptyString) {
+    delete counterparty_;
+  }
+  if (counterparty) {
+    set_has_counterparty();
+    counterparty_ = counterparty;
+  } else {
+    clear_has_counterparty();
+    counterparty_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SwapSent
+
+// optional .fantasybit.SwapFill swapfill = 10;
+inline bool SwapSent::has_swapfill() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapSent::set_has_swapfill() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapSent::clear_has_swapfill() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapSent::clear_swapfill() {
+  if (swapfill_ != NULL) swapfill_->::fantasybit::SwapFill::Clear();
+  clear_has_swapfill();
+}
+inline const ::fantasybit::SwapFill& SwapSent::swapfill() const {
+  return swapfill_ != NULL ? *swapfill_ : *default_instance_->swapfill_;
+}
+inline ::fantasybit::SwapFill* SwapSent::mutable_swapfill() {
+  set_has_swapfill();
+  if (swapfill_ == NULL) swapfill_ = new ::fantasybit::SwapFill;
+  return swapfill_;
+}
+inline ::fantasybit::SwapFill* SwapSent::release_swapfill() {
+  clear_has_swapfill();
+  ::fantasybit::SwapFill* temp = swapfill_;
+  swapfill_ = NULL;
+  return temp;
+}
+inline void SwapSent::set_allocated_swapfill(::fantasybit::SwapFill* swapfill) {
+  delete swapfill_;
+  swapfill_ = swapfill;
+  if (swapfill) {
+    set_has_swapfill();
+  } else {
+    clear_has_swapfill();
+  }
+}
+
+// optional bytes sig = 20;
+inline bool SwapSent::has_sig() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapSent::set_has_sig() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapSent::clear_has_sig() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapSent::clear_sig() {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    sig_->clear();
+  }
+  clear_has_sig();
+}
+inline const ::std::string& SwapSent::sig() const {
+  return *sig_;
+}
+inline void SwapSent::set_sig(const ::std::string& value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void SwapSent::set_sig(const char* value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void SwapSent::set_sig(const void* value, size_t size) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapSent::mutable_sig() {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  return sig_;
+}
+inline ::std::string* SwapSent::release_sig() {
+  clear_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sig_;
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapSent::set_allocated_sig(::std::string* sig) {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    delete sig_;
+  }
+  if (sig) {
+    set_has_sig();
+    sig_ = sig;
+  } else {
+    clear_has_sig();
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// ProofOfDoubleSpend
+
+// optional .fantasybit.SwapSent swapsent = 10;
+inline bool ProofOfDoubleSpend::has_swapsent() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_swapsent() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProofOfDoubleSpend::clear_has_swapsent() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProofOfDoubleSpend::clear_swapsent() {
+  if (swapsent_ != NULL) swapsent_->::fantasybit::SwapSent::Clear();
+  clear_has_swapsent();
+}
+inline const ::fantasybit::SwapSent& ProofOfDoubleSpend::swapsent() const {
+  return swapsent_ != NULL ? *swapsent_ : *default_instance_->swapsent_;
+}
+inline ::fantasybit::SwapSent* ProofOfDoubleSpend::mutable_swapsent() {
+  set_has_swapsent();
+  if (swapsent_ == NULL) swapsent_ = new ::fantasybit::SwapSent;
+  return swapsent_;
+}
+inline ::fantasybit::SwapSent* ProofOfDoubleSpend::release_swapsent() {
+  clear_has_swapsent();
+  ::fantasybit::SwapSent* temp = swapsent_;
+  swapsent_ = NULL;
+  return temp;
+}
+inline void ProofOfDoubleSpend::set_allocated_swapsent(::fantasybit::SwapSent* swapsent) {
+  delete swapsent_;
+  swapsent_ = swapsent;
+  if (swapsent) {
+    set_has_swapsent();
+  } else {
+    clear_has_swapsent();
+  }
+}
+
+// optional .fantasybit.Bitcoin_UTXO utxo = 20;
+inline bool ProofOfDoubleSpend::has_utxo() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_utxo() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProofOfDoubleSpend::clear_has_utxo() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProofOfDoubleSpend::clear_utxo() {
+  if (utxo_ != NULL) utxo_->::fantasybit::Bitcoin_UTXO::Clear();
+  clear_has_utxo();
+}
+inline const ::fantasybit::Bitcoin_UTXO& ProofOfDoubleSpend::utxo() const {
+  return utxo_ != NULL ? *utxo_ : *default_instance_->utxo_;
+}
+inline ::fantasybit::Bitcoin_UTXO* ProofOfDoubleSpend::mutable_utxo() {
+  set_has_utxo();
+  if (utxo_ == NULL) utxo_ = new ::fantasybit::Bitcoin_UTXO;
+  return utxo_;
+}
+inline ::fantasybit::Bitcoin_UTXO* ProofOfDoubleSpend::release_utxo() {
+  clear_has_utxo();
+  ::fantasybit::Bitcoin_UTXO* temp = utxo_;
+  utxo_ = NULL;
+  return temp;
+}
+inline void ProofOfDoubleSpend::set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo) {
+  delete utxo_;
+  utxo_ = utxo;
+  if (utxo) {
+    set_has_utxo();
+  } else {
+    clear_has_utxo();
+  }
+}
+
+// optional bytes pre = 30;
+inline bool ProofOfDoubleSpend::has_pre() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_pre() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProofOfDoubleSpend::clear_has_pre() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProofOfDoubleSpend::clear_pre() {
+  if (pre_ != &::google::protobuf::internal::kEmptyString) {
+    pre_->clear();
+  }
+  clear_has_pre();
+}
+inline const ::std::string& ProofOfDoubleSpend::pre() const {
+  return *pre_;
+}
+inline void ProofOfDoubleSpend::set_pre(const ::std::string& value) {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  pre_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_pre(const char* value) {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  pre_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_pre(const void* value, size_t size) {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  pre_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_pre() {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  return pre_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_pre() {
+  clear_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = pre_;
+    pre_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_pre(::std::string* pre) {
+  if (pre_ != &::google::protobuf::internal::kEmptyString) {
+    delete pre_;
+  }
+  if (pre) {
+    set_has_pre();
+    pre_ = pre;
+  } else {
+    clear_has_pre();
+    pre_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes post = 40;
+inline bool ProofOfDoubleSpend::has_post() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_post() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ProofOfDoubleSpend::clear_has_post() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ProofOfDoubleSpend::clear_post() {
+  if (post_ != &::google::protobuf::internal::kEmptyString) {
+    post_->clear();
+  }
+  clear_has_post();
+}
+inline const ::std::string& ProofOfDoubleSpend::post() const {
+  return *post_;
+}
+inline void ProofOfDoubleSpend::set_post(const ::std::string& value) {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  post_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_post(const char* value) {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  post_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_post(const void* value, size_t size) {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  post_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_post() {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  return post_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_post() {
+  clear_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = post_;
+    post_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_post(::std::string* post) {
+  if (post_ != &::google::protobuf::internal::kEmptyString) {
+    delete post_;
+  }
+  if (post) {
+    set_has_post();
+    post_ = post;
+  } else {
+    clear_has_post();
+    post_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes sig = 50;
+inline bool ProofOfDoubleSpend::has_sig() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_sig() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ProofOfDoubleSpend::clear_has_sig() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ProofOfDoubleSpend::clear_sig() {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    sig_->clear();
+  }
+  clear_has_sig();
+}
+inline const ::std::string& ProofOfDoubleSpend::sig() const {
+  return *sig_;
+}
+inline void ProofOfDoubleSpend::set_sig(const ::std::string& value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_sig(const char* value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_sig(const void* value, size_t size) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_sig() {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  return sig_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_sig() {
+  clear_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sig_;
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_sig(::std::string* sig) {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    delete sig_;
+  }
+  if (sig) {
+    set_has_sig();
+    sig_ = sig;
+  } else {
+    clear_has_sig();
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SwapSentAck
+
+// optional .fantasybit.SwapSent swapsent = 10;
+inline bool SwapSentAck::has_swapsent() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapSentAck::set_has_swapsent() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapSentAck::clear_has_swapsent() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapSentAck::clear_swapsent() {
+  if (swapsent_ != NULL) swapsent_->::fantasybit::SwapSent::Clear();
+  clear_has_swapsent();
+}
+inline const ::fantasybit::SwapSent& SwapSentAck::swapsent() const {
+  return swapsent_ != NULL ? *swapsent_ : *default_instance_->swapsent_;
+}
+inline ::fantasybit::SwapSent* SwapSentAck::mutable_swapsent() {
+  set_has_swapsent();
+  if (swapsent_ == NULL) swapsent_ = new ::fantasybit::SwapSent;
+  return swapsent_;
+}
+inline ::fantasybit::SwapSent* SwapSentAck::release_swapsent() {
+  clear_has_swapsent();
+  ::fantasybit::SwapSent* temp = swapsent_;
+  swapsent_ = NULL;
+  return temp;
+}
+inline void SwapSentAck::set_allocated_swapsent(::fantasybit::SwapSent* swapsent) {
+  delete swapsent_;
+  swapsent_ = swapsent;
+  if (swapsent) {
+    set_has_swapsent();
+  } else {
+    clear_has_swapsent();
+  }
 }
 
 

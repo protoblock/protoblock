@@ -6,7 +6,7 @@ win32 { DEFINES += INTEL_KLUDGE }
 
 TARGET = protoblock-qt
 TEMPLATE = app
-QT += qml quick core websockets network xmlpatterns qml-private quick-private quickcontrols2
+QT += qml quick core websockets network qml-private quick-private quickcontrols2
 CONFIG += c++11
 
 contains(DEFINES, SQLSTUFF){

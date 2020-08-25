@@ -207,7 +207,7 @@ bool Commissioner::BootStrapFileExists(string genesiskey) {
 }
 
 Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
-    Bootstrap head;
+    Bootstrap head{};
     string headhash;
 
     string prefix = "boot4strap";
@@ -254,7 +254,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     qDebug() << "makeGenesisBoot good?" << reader.good() ;
     if ( !reader.good() )
         return head;
-    KeyValue kv;
+    KeyValue kv{};
     while ( reader.ReadNext(kv)) {
         if ( kv.key() == genesiskey ) {
             headhash = kv.value();
