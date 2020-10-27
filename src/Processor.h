@@ -101,6 +101,7 @@ public:
     void hardReset();
     void ProcessInsideStamped(const SignedTransaction &inst, int32_t, int32_t);
 
+    void doStartGame(const std::string &gameid, const GameStatus &gs);
 #ifdef BLOCK_EXPLORER
     fantasybit_bx::BlockExplorer bx;
 #endif

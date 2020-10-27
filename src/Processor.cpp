@@ -443,7 +443,15 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     qWarning() << rd.game_result().gameid().data() << " game already closed - ignorning result ";
                     break;
                 }
-
+#ifndef NO_FIX1_2020
+                else if ( st.status() != GameStatus_Status_INGAME ) {
+                    //GameStatus_Status_SCHEDULED // expected
+                    //GameStatus_Status_PREGAME // not_used
+                    //GameStatus_Status_POSTGAME // not_used
+                    qWarning() << rd.game_result().gameid().data() << " game not ingame, on result - forced gamestart ";
+                    doStartGame(rd.game_result().gameid(),st);
+                }
+#endif
                 auto allprojs = mNameData.GetGameProj(rd.game_result().gameid());
                 bool nopnl = false;
 #ifdef TRADE_FEATURE
@@ -453,7 +461,6 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #else
                 nopnl = true;
 #endif
-//                qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
                 unordered_map<string,std::pair<BookPos *,BookPos *>> posmap;
@@ -842,29 +849,11 @@ void BlockProcessor::process(const DataTransition &indt) {
             else {
                 qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
             }
-            //mGlobalState.set_week(indt.week());
         }
 
         for (auto t : indt.gamedata()) {
-            mData.OnGameStart(t.gameid(),t.status());
             qInfo() <<  "Kickoff for game " << t.DebugString().data();
-            auto gi =  mData.GetGameInfo(t.gameid());
-            auto homeroster = mData.GetTeamRoster(gi.home());
-            auto awayroster = mData.GetTeamRoster(gi.away());
-//            if ( gi.away() == "CLE" )
-//                qDebug() << "" ;
-            vector<string> homep, awayp;
-            for ( auto hr : homeroster) {
-                homep.push_back(hr.first);
-            }
-            for ( auto hr : awayroster)
-                awayp.push_back(hr.first);
-
-            mNameData.OnGameStart(t.gameid(),homep,awayp);
-#ifdef TRADE_FEATURE
-            mExchangeData.OnGameStart(t.gameid(),homeroster,awayroster);
-#endif
-
+            doStartGame(t.gameid(),t.status());
         }
         break;
     case TrType::WEEKOVER:
@@ -948,6 +937,24 @@ void BlockProcessor::process(const DataTransition &indt) {
     default:
         break;
     }
+}
+
+void BlockProcessor::doStartGame(const std::string &gameid, const GameStatus &status) {
+    mData.OnGameStart(gameid,status);
+    auto gi =  mData.GetGameInfo(gameid);
+    auto homeroster = mData.GetTeamRoster(gi.home());
+    auto awayroster = mData.GetTeamRoster(gi.away());
+    vector<string> homep, awayp;
+    for ( auto hr : homeroster) {
+        homep.push_back(hr.first);
+    }
+    for ( auto hr : awayroster)
+        awayp.push_back(hr.first);
+
+    mNameData.OnGameStart(gameid,homep,awayp);
+#ifdef TRADE_FEATURE
+    mExchangeData.OnGameStart(gameid,homeroster,awayroster);
+#endif
 }
 
 bool BlockProcessor::isValidTx(const SignedTransaction &st) {
