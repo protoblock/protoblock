@@ -33,6 +33,7 @@ void TeamColors::setPrimaryMap()
     map.insert("NYG" , "#0B2265");
     map.insert("NYJ" , "#2C5E4F");
     map.insert("OAK" , "#85888B");
+    map.insert("LV" , "#85888B");
     map.insert("PHI" , "#004953");
     map.insert("PIT" , "#111C24");
     map.insert("SD" , "#002244");
@@ -73,6 +74,7 @@ void TeamColors::setPrimaryMap()
     map2.insert("NYG" , "#A71930");
     map2.insert("NYJ" , "#FFFFFF");
     map2.insert("OAK" , "#111C24");
+    map2.insert("LV" , "#111C24");
     map2.insert("PHI" , "#111C24");
     map2.insert("PIT" , "#FFB612");
     map2.insert("SD" , "#FFB612");

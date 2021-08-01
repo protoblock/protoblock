@@ -201,6 +201,21 @@ int32_t BlockProcessor::process(Block &sblock) {
         boot.set_previd(sblock.signedhead().head().prev_id());
         mExchangeData.addBootStrap(&boot);
         mNameData.addBootStrap(&boot,true);
+
+        {
+
+
+            Writer<KeyValue> writer{string("boot5strap") + boot.key() + ".out",ios::app};
+            auto *it = Node::bootstrap->NewIterator(leveldb::ReadOptions());
+            KeyValue kv;
+            for (it->SeekToFirst(); it->Valid(); it->Next()) {
+                kv.set_key(it->key().ToString());
+                kv.set_value(it->value().ToString());
+                writer(kv);
+                qDebug() << kv.DebugString().data();
+            }
+        }
+
     }
 #endif
 

@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 #endif
 
-    RunGuard guard( "protoblockqtprodapp" );
+    RunGuard guard( "protoblock-open1" );
         if ( !guard.tryToRun() )
             return 0;
 

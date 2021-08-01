@@ -49,7 +49,7 @@ Item {
                 SpinBox {
                     focus: true
                     id: blocknum
-                    enabled: MiddleMan.liveSync === "Live"
+                    enabled: true//MiddleMan.liveSync === "Live"
                     decimals: 0
                     stepSize: 1.0
                     maximumValue: MiddleMan.height

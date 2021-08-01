@@ -47,7 +47,7 @@ Item {
                 }
 
                 Material.Label {
-                    text: model.symbol
+                    text: model.playerid
                     Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
                     Layout.fillWidth: false
@@ -65,6 +65,17 @@ Item {
         //                                Layout.preferredWidth: (parent.width / 4) - 2
                     horizontalAlignment: Text.AlignLeft
                     Layout.preferredWidth: parent.width * .75
+                    font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
+
+                }
+
+                Material.Label {
+                    text: model.playerid
+                    Layout.fillHeight: true
+                    verticalAlignment: Text.AlignVCenter
+                    Layout.fillWidth: false
+                    horizontalAlignment: Text.AlignLeft
+                    Layout.preferredWidth: parent.width / 4.0
                     font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
 
                 }

@@ -2,7 +2,7 @@
 ## Globals
 ##############
 
-DIRPREFIX = $$PWD/../libs-newpb/
+DIRPREFIX = $$PWD/../libs/
 ##############
 ##  WINDOWS
 ##############
@@ -21,10 +21,12 @@ win32 {
         LIBS += -lleveldb
     }
     #openssl
-    #openssl
-    INCLUDEPATH += $$OPENSSL_PREFIX/include
-    LIBS += -L$$OPENSSL_PREFIX/lib
-    LIBS += -llibssl -llibcrypto
+    LIBS += -llibeay32 \
+            -lssleay32
+
+#    INCLUDEPATH += $$OPENSSL_PREFIX/include
+#    LIBS += -L$$OPENSSL_PREFIX/lib
+#    LIBS += -llibssl -llibcrypto
 }
 macx {
     message(macx Build)
