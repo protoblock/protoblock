@@ -27,12 +27,14 @@ using namespace std;
 using namespace fantasybit;
 
 void FantasyNameData::init() {
-    write_sync.sync = true;
-    leveldb::Options options;
-    options.create_if_missing = true;
-    leveldb::Status status;
+    pb::make_all(filedir(""));
 
-    leveldb::DB *db1;
+//    write_sync.sync = true;
+    leveldb::Options options{};
+    options.create_if_missing = true;
+    leveldb::Status status{};
+
+    leveldb::DB *db1{};
     status = leveldb::DB::Open(options, filedir("namestore"), &db1);
     namestore.reset(db1);
     if ( !status.ok() ) {

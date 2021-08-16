@@ -52,17 +52,18 @@ void Node::init() {
     }
 #endif
 
-    write_sync.sync = true;
+    pb::make_all(GET_ROOT_DIR() + "block/");
+//    write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
-    leveldb::Options optionsInt;
+    leveldb::Options optionsInt{};
     optionsInt.create_if_missing = true;
     optionsInt.comparator = cmp;
 
     qDebug() << "init node";
-    leveldb::Options options;
+    leveldb::Options options{};
     options.create_if_missing = true;
-    leveldb::Status status;
+    leveldb::Status status{};
 
 
     leveldb::DB *db2;
@@ -73,9 +74,9 @@ void Node::init() {
     }
     Node::blockchain.reset(db2);
 
-    leveldb::Options options2;
+    leveldb::Options options2{};
     options2.create_if_missing = true;
-    leveldb::DB *db3;
+    leveldb::DB *db3{};
     status = leveldb::DB::Open(options2, filedir("block/bootstrap"), &db3);
     if ( !status.ok()) {
         qCritical() << " error opening block/bootstrap";
@@ -92,8 +93,8 @@ void Node::init() {
     qDebug() <<  "PeerNode current_hight" << current_hight;
 
 #ifdef BLK18
-    if ( current_hight == 0) {
-            Block bl;
+    if ( current_hight == -1) {
+        Block bl{};
             Reader<Block> reader{ GET_ROOT_DIR(true) + "blk18.out"};
             //"D:\\work\\build-ProRoto2016-Desktop_Qt_5_10_1_MSVC2013_64bit-Debug\\Applications\\ProtoBlock2016\\debug\\storage\\newblocks.out"};
             if ( !reader.good() )
@@ -148,7 +149,7 @@ void Node::init() {
 
 
 #ifndef NOUSE_GENESIS_BOOT
-    if ( current_hight == 0 ) {
+    if ( current_hight == -1 ) {
         LdbWriter ldb;
         ldb.init(Node::bootstrap.get());
         current_boot = Commissioner::makeGenesisBoot(ldb);
@@ -181,12 +182,12 @@ void Node::init() {
 #endif
 
 #ifndef USE_LOCAL_GENESIS
-    if (current_hight == 0)
+    if (current_hight == -1)
         qDebug() << " ERROR? - NO Boot - No Local Genesis!";
     else
         qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
 #else
-    if (current_hight == 0) {
+    if (current_hight == -1) {
         auto  sb = Commissioner::makeGenesisBlock();
 
 #ifdef TRACEDEBUG
@@ -420,7 +421,7 @@ int32_t Node::getLastLocalBlockNum() {
 
     if (!it->Valid()) {
         delete it;
-        return 0;
+        return -1;
     }
     auto slice = it->key();
 

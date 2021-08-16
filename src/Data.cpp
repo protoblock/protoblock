@@ -26,8 +26,8 @@ using namespace fantasybit;
 void NFLStateData::InitCheckpoint() {
 
     leveldb::WriteOptions write_sync;
-    write_sync.sync = true;
-    leveldb::Options options;
+//    write_sync.sync = true;
+    leveldb::Options options{};
     options.create_if_missing = true;
     leveldb::Status status;
 
@@ -110,28 +110,30 @@ void NFLStateData::InitCheckpoint() {
 #include "PeerNode.h"
 void NFLStateData::InitCheckpoint(bool onlyresult) {
 
-    leveldb::WriteOptions write_sync;
-    write_sync.sync = true;
-    leveldb::Options options;
-    options.create_if_missing = true;
-    leveldb::Status status;
+    pb::make_all(filedir(""));
 
-    leveldb::DB *db2;
+    leveldb::WriteOptions write_sync{};
+//    write_sync.sync = true;
+    leveldb::Options options{};
+    options.create_if_missing = true;
+    leveldb::Status status{};
+
+    leveldb::DB *db2{};
     leveldb::DB::Open(options, filedir("statusstore"), &db2);
-    leveldb::DB *db4;
+    leveldb::DB *db4{};
     leveldb::DB::Open(options, filedir("staticstore"), &db4);
-    leveldb::DB *db3;
+    leveldb::DB *db3{};
     leveldb::DB::Open(options, filedir("playerstore"), &db3);
-    leveldb::DB *db5;
+    leveldb::DB *db5{};
     leveldb::DB::Open(options, filedir("namestore"), &db5);
-    leveldb::DB *db6;
+    leveldb::DB *db6{};
     string file = GET_ROOT_DIR();
     file += "trade/posstore";
     leveldb::DB::Open(options, file, &db6);
 
 
-    Bootstrap head;
-    LdbWriter ldb;
+    Bootstrap head{};
+    LdbWriter ldb{};
     ldb.init(Node::bootstrap.get());
     ldb.read(ldb.read(ldb.read("head")),head);
 
@@ -272,8 +274,10 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
 #endif
 
 void NFLStateData::init() {
-    write_sync.sync = true;
-    leveldb::Options options;
+    pb::make_all(filedir(""));
+
+//    write_sync.sync = true;
+    leveldb::Options options{};
     options.create_if_missing = true;
     leveldb::Status status;
 

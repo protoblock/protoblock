@@ -14,7 +14,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 
 
-import Communi 3.0
+//import Communi 3.0
 
 Material.ApplicationWindow{
     title: "Protoblock"
@@ -792,38 +792,38 @@ Material.ApplicationWindow{
     }
 
 
-    IrcConnection {
-        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
-        property string tempName1: ""
-        id: ircConnectionPoint
-        host: "162.254.24.67"
-        port: 6667
-        secure: false
-        saslMechanism: ""
-        nickName: tempName
-        realName:tempName
-        userName:tempName
-        password:""
-    }
+//    IrcConnection {
+//        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
+//        property string tempName1: ""
+//        id: ircConnectionPoint
+//        host: "162.254.24.67"
+//        port: 6667
+//        secure: false
+//        saslMechanism: ""
+//        nickName: tempName
+//        realName:tempName
+//        userName:tempName
+//        password:""
+//    }
 
-    IrcBufferModel {
-        id: ircBufferModel
-        sortMethod: Irc.SortByTitle
-        connection:ircConnectionPoint
-        onMessageIgnored: ircServerBuffer.receiveMessage(message)
-        function quit() {
-            bufferModel.clear()
-            ircConnectionPoint.quit("The Origional Football Blockchain")
-            ircConnectionPoint.close()
-        }
-    }
-    IrcBuffer {
-        id: ircServerBuffer
-        sticky: true
-        persistent: true
-        name: ircConnectionPoint.displayName
-        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
-    }
+//    IrcBufferModel {
+//        id: ircBufferModel
+//        sortMethod: Irc.SortByTitle
+//        connection:ircConnectionPoint
+//        onMessageIgnored: ircServerBuffer.receiveMessage(message)
+//        function quit() {
+//            bufferModel.clear()
+//            ircConnectionPoint.quit("The Origional Football Blockchain")
+//            ircConnectionPoint.close()
+//        }
+//    }
+//    IrcBuffer {
+//        id: ircServerBuffer
+//        sticky: true
+//        persistent: true
+//        name: ircConnectionPoint.displayName
+//        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
+//    }
 
     /*!
       * This is the left gesture bar that is used only for

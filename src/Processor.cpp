@@ -25,6 +25,9 @@
 #include "pbutils.h"
 #include "ldbwriter.h"
 
+#ifdef DEBUG_TIMINGS
+#include <QElapsedTimer>
+#endif
 
 
 #ifdef BLOCK_EXPLORER
@@ -123,6 +126,11 @@ int32_t BlockProcessor::process(Block &sblock) {
     }
 #endif
 
+#ifdef DEBUG_TIMINGS
+    QElapsedTimer timer;
+    timer.start();
+#endif
+
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
@@ -131,6 +139,11 @@ int32_t BlockProcessor::process(Block &sblock) {
     else {
         //qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
     }
+
+#ifdef DEBUG_TIMINGS
+    qDebug() << "Process verifySignedBlock took" << timer.elapsed() << " milliseconds";
+    timer.restart();
+#endif
 
 //    if ( sblock.signedhead().head().num() == 139 ) {
 //        auto bs = sblock.DebugString();
@@ -1036,6 +1049,11 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
 
 void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
+#ifdef DEBUG_TIMINGS
+    QElapsed timer;
+    timer.start();
+#endif
+
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
 
@@ -1062,6 +1080,10 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         mNameData.AddNewName(nt.fantasy_name(), nt.public_key(), b.signedhead().head().num() );
         qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
 
+#ifdef DEBUG_TIMINGS
+        qDebug() << "processTxfrom name" << timer.elapsed() << " milliseconds";
+        timer.restart();
+#endif
     }
 
     if ( nameonly ) return;
@@ -1102,10 +1124,18 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         case TransType::PROJECTION_BLOCK: {
             const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
             //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
+#ifdef DEBUG_TIMINGS
+            QElapsedTimer timer2;
+            timer2.start();
+#endif
             for (const PlayerPoints & pt : ptb.player_points() ) {
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
 //                if ( st.fantasy_name() == "@SpreadSheetFF" && pt.playerid() == "1179")
 //                    qDebug() << pt.DebugString().data();
+#ifdef DEBUG_TIMINGS
+                qDebug() << "AddProjection took " << timer2.elapsed() << " milliseconds";
+                timer2.restart();
+#endif
             }
 
             break;
@@ -1135,6 +1165,10 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         default:
             break;
         }
+#ifdef DEBUG_TIMINGS
+        qDebug() << "processTxfrom " << t.type() << " " << timer.elapsed() << " milliseconds";
+        timer.restart();
+#endif
     }
 
     for ( auto & nextstamped : doStamped) {

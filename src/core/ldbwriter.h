@@ -74,7 +74,7 @@ public:
     void LdbWriter::init() {
 
         //for(auto fd : BlockMeta::descriptor()->DebugString().data())
-        write_sync.sync = true;
+//        write_sync.sync = true;
 
         leveldb::Options opt;
         opt.create_if_missing = true;

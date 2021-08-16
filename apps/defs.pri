@@ -3,6 +3,11 @@
 ##############
 
 DIRPREFIX = $$PWD/../libs/
+LDBDIRPREFIX = $$PWD/../libldb/
+OPENSSL_PREFIX=C:\Qt\Tools\OpenSSL\Win_x64
+#OPENSSL_PREFIX = $$PWD/../libssl/
+
+#Note for QT 5.12.4 and on - there must be both a link to openssl lib and the shared DLLs in the executable path.
 ##############
 ##  WINDOWS
 ##############
@@ -11,18 +16,25 @@ win32 {
     INCLUDEPATH += $$DIRPREFIX/include
     LIBS+= -L$$DIRPREFIX
 
+    INCLUDEPATH += $$LDBDIRPREFIX/include
+    LIBS+= -L$$LDBDIRPREFIX
+
     #protobuf
     CONFIG(debug, debug|release) {
         LIBS += -llibprotobufd
-        LIBS += -lleveldbd
+        LIBS += -llibleveldbd
     }
     else {
         LIBS += -llibprotobuf
-        LIBS += -lleveldb
+        LIBS += -llibleveldb
     }
     #openssl
-    LIBS += -llibeay32 \
-            -lssleay32
+    INCLUDEPATH += $$OPENSSL_PREFIX/include
+#    LIBS += -L$$OPENSSL_PREFIX
+#    LIBS += -llibeay32 -lssleay32
+
+    LIBS += -L$$OPENSSL_PREFIX/lib
+    LIBS += -llibssl -llibcrypto
 }
 macx {
     message(macx Build)

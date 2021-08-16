@@ -18,6 +18,12 @@ static void remove_all(const std::string &indir) {
     dir.removeRecursively();
 }
 
+static void make_all(const std::string &indir) {
+    QDir dir(indir.data());
+    if (!dir.exists())
+        dir.mkpath(".");
+}
+
 static std::string makeMerkleRoot(decltype(fantasybit::MerkleTree::default_instance().leaves()) &in) {
     std::queue<pb::sha256> merkle;
 

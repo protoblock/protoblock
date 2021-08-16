@@ -10,6 +10,9 @@
 #include <vector>
 #include "Commissioner.h"
 
+#ifdef DEBUG_TIMINGS
+#include <QElapsedTimer>
+#endif
 
 using namespace std;
 using namespace fantasybit;
@@ -210,10 +213,19 @@ bool MainLAPIWorker::doProcessBlock() {
         qWarning() << " !b" << next;
         return false;
     }
+#ifdef DEBUG_TIMINGS
+    QElapsedTimer timer;
+    timer.start();
+#endif
+
     if ( !Process(*b) ) {
         qWarning() << "MainLAPIWorker::doProcessBlock nope !Process";
         return false;
     }
+
+#ifdef DEBUG_TIMINGS
+    qDebug() << "Process operation took" << timer.elapsed() << " milliseconds";
+#endif
 
     return true;
 }

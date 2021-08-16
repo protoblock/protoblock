@@ -20,6 +20,7 @@
 #include "weeklyschedulemodel.h"
 #include <QItemSelectionModel>
 #include "fantasynamemodel.h"
+#include "math.h"
 
 namespace pb {
 using namespace fantasybit;

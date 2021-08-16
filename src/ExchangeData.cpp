@@ -27,6 +27,7 @@ Q_GLOBAL_STATIC(ExchangeDataHolder, pExchangeData)
 
 
 void ExchangeData::init(const fantasybit::GlobalState &st) {
+    pb::make_all(filedir(""));
     mWeek = st.week();
     mSeason = st.season();
     if ( mWeek > 16)
@@ -39,11 +40,8 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
 
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     pExchangeData->set(this);
-    mBookDelta->write_sync.sync = true;
-
 
     qDebug() << "level2 ExchangeData init";
-    write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
     leveldb::Status status;
@@ -89,48 +87,6 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
         delete it;
     }
 
-/*
-    leveldb::DB *db3;
-    status = leveldb::DB::Open(options, filedir("orderseqstore"), &db3);
-    orderseqstore.reset(db3);
-    if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("orderseqstore");
-        //todo emit fatal
-        return;
-    }
-    else {
-        auto *it = snapstore->NewIterator(leveldb::ReadOptions());
-        for (it->SeekToFirst(); it->Valid(); it->Next()) {
-            ContractOHLC ohlc;
-            if ( !ohlc.ParseFromString(it->value().ToString()) )
-                continue;
-
-#ifdef TRACE
-            qDebug() << "level2 ExchangeData init ContractOHLC " <<  ohlc.symbol();
-#endif
-
-            auto it3 = mLimitBooks.find(ohlc.symbol());
-            if ( it3 == end(mLimitBooks)) {
-                auto it2 = mLimitBooks.insert(make_pair(ohlc.symbol(),
-                               unique_ptr<MatchingEngine>(new MatchingEngine(ohlc.symbol(),false))));
-
-                if ( !it2.second ) {
-                    qWarning() << "unable to insert for" << ohlc.symbol();
-                    continue;
-                }
-
-#ifdef TRACE
-            qDebug() << "level2 ExchangeData new init ContractOHLC for" << ohlc.symbol();
-#endif
-                it2.first->second->ResetLimitBook();
-            }
-
-            mContractOHLC[ohlc.symbol()] = ohlc;
-        }
-        delete it;
-    }
-*/
-
     Int32Comparator *cmp = new Int32Comparator();
     leveldb::Options optionsInt;
     optionsInt.create_if_missing = true;
@@ -144,17 +100,8 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
         return;
     }
 
-    bookdeltastore.reset(db2);
 
-    /*
-    auto it = bookdeltastore->NewIterator(leveldb::ReadOptions());
-    it->SeekToFirst();
-    string out;
-    bookdeltastore->GetProperty("leveldb.stats",&out);
-#ifdef TRACE
-            qDebug() << "level2 ExchangeData init bookdeltastore " << out <<  it->Valid() << " is valid?";
-#endif
-    */
+    bookdeltastore.reset(db2);
     {
         MAXSEQ = 0;
         auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
@@ -170,19 +117,10 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
 #ifdef TRACE
             qDebug() << "level2 ExchangeData init BookDelta " << bd.symbol().data() << bd.seqnum();
 #endif
-/*
-            auto &myset = mNameSeqMap[bd.fantasy_name()];
-            myset.insert(bd.seqnum());
-            mSeqNameMap[bd.seqnum()] = bd.fantasy_name();
-*/
-            if ( bd.symbol () == "@@RB17s") {
-                qDebug() << "@@RB";
-             }
             auto it3 = mLimitBooks.find(bd.symbol());
             if ( it3 == end(mLimitBooks)) {
                 auto it2 = mLimitBooks.insert(make_pair(bd.symbol(),
                                unique_ptr<MatchingEngine>(new MatchingEngine(bd.symbol(),false))));
-                //it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
 
                 if ( !it2.second ) {
                     qWarning() << "level2 unable to insert for" << bd.symbol();
@@ -194,7 +132,6 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
 #endif
 
                 it2.first->second->ResetLimitBook(fantasybit::isWeekly(bd.symbol())  ? 40 : 400);//mLimitBook.reset(new LimitBook());
-
                 it3 = it2.first;
             }
             if ( it3->second->islocked ) continue;
@@ -262,12 +199,6 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
         }
         if ( it != NULL ) delete it;
     }
-
-
-    //MarketTicker *mm = l1.New();
-    //mm->CopyFrom(l1);
-    //emit NewMarketTicker(mm);
-
 
     leveldb::DB *db4;
     status = leveldb::DB::Open(options, filedir("posstore"), &db4);
