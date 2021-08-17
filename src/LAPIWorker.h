@@ -64,7 +64,7 @@ public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
 #ifndef NOSYNC
-    ThreadedQObject<NodeWorker> node;
+    ThreadedQObject<NodeWorker> nodeworker_thread;
 #endif
 
     fantasybit::NFLStateData &NFLState() { return data; }

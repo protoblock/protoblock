@@ -22,11 +22,11 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 {
     timer = new QTimer(this);
 #ifndef NOSYNC
-    node.thread()->connect(node.thread(),
+    nodeworker_thread.thread()->connect(nodeworker_thread.thread(),
                            SIGNAL(started()),
-                           node.object(),
+                           nodeworker_thread.object(),
                            SLOT(init()));
-    myNodeWorker = node.object();
+    myNodeWorker = nodeworker_thread.object();
 
 
     //QObject::connect(this,SIGNAL(Timer()),myNodeWorker,SLOT(TryNext()));
@@ -133,14 +133,11 @@ void MainLAPIWorker::startPoint(){
 #ifndef NOSYNC
     auto h = myNodeWorker->preinit();
     emit Height(h);
-    node.thread()->start();
-
-
-
+    nodeworker_thread.thread()->start();
 #endif
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        last_block = processor.init();
+        last_block = processor.init(h);
         qDebug() << " startPoint last_block " << last_block;
 #ifdef NOSYNC
         Node node;
@@ -170,7 +167,7 @@ void MainLAPIWorker::startPoint(){
 void MainLAPIWorker::ResetIndex() {
     std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
     processor.hardReset();
-    last_block = processor.init();
+    last_block = processor.init(0);
     if ( last_block < 0 ) {
         last_block = BlockRecorder::zeroblock;
     }

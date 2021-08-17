@@ -73,7 +73,7 @@ public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
                    ExchangeData &ed);
 
-    int32_t init();
+    int32_t init(int32_t height);
 
     int32_t process(Block &sblock);
     bool processDataBlock(const Block &sblock);

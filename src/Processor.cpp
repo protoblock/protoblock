@@ -59,10 +59,10 @@ void BlockProcessor::hardReset() {
 
 }
 
-int32_t BlockProcessor::init() {
+int32_t BlockProcessor::init(int32_t height) {
 
     mRecorder.init();
-    if (!mRecorder.isValid() ) {
+    if (!mRecorder.isValid(height) ) {
         emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
@@ -76,7 +76,7 @@ int32_t BlockProcessor::init() {
         qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
 
         mRecorder.init();
-        if (!mRecorder.isValid() ) {
+        if (!mRecorder.isValid(height) ) {
             qInfo() <<  "mRecorder not valid! ";
             InvalidState(mRecorder.getLastBlockId());
             return -1;

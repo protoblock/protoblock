@@ -90,13 +90,13 @@ int32_t BlockRecorder::endBlock(int32_t num) {
 }
 
 
-bool BlockRecorder::isValid() {
+bool BlockRecorder::isValid(int32_t height) {
     std::string value;
     if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
         return true;
 
     int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
-    return num < 0 && lastBlock > BlockRecorder::zeroblock;
+    return num < 0 && lastBlock > BlockRecorder::zeroblock && lastBlock <= height;
 }
 
 
