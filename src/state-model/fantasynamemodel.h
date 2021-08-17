@@ -62,7 +62,8 @@ public:
         m_thisweek = 0;
         m_lastweek = 0;
         m_leaders20XX = 0;
-        m_numberproj = m_lastupdate = 0;
+        m_numberproj = in.count();
+        m_lastupdate = in.block();
 //        m_chash = in.chash();
     }
 
