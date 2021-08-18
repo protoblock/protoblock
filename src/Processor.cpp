@@ -1089,6 +1089,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
     if ( nameonly ) return;
 
     map<int,SignedTransaction> doStamped;
+    unordered_set<string> madeProjection{};
    // for (const SignedTransaction &st : b.signed_transactions()) //
     for (int j = start; j < b.signed_transactions_size(); j++)
     {
@@ -1138,6 +1139,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 #endif
             }
 
+            madeProjection.insert(st.fantasy_name());
             break;
 
         }
@@ -1147,6 +1149,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
 //            qDebug() << st.fantasy_name() << "new projection " << pt.DebugString().data();
             mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
+            madeProjection.insert(st.fantasy_name());
             break;
         }
 
@@ -1174,6 +1177,9 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
     for ( auto & nextstamped : doStamped) {
         ProcessInsideStamped(nextstamped.second,nextstamped.first,b.signedhead().head().num());
     }
+
+    for ( const auto & fname : madeProjection )
+        mNameData.UpdateProjBlockNum(fname, b.signedhead().head().num());
 }
 
 void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum,int32_t blocknum) {
