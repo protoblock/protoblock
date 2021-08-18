@@ -841,6 +841,12 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         if (mGlobalState.week() != indt.week()) {
             if ( mGlobalState.week() == 0 && indt.week() == 1) {
+                if ( mGlobalState.state() != GlobalState_State_INSEASON ) {
+                    mGlobalState.set_state(GlobalState_State_INSEASON);
+                    mData.OnGlobalState(mGlobalState);
+                    OnSeasonStart(indt.season());
+                }
+
                 mGlobalState.set_week(1);
                 mData.OnGlobalState(mGlobalState);
                 OnWeekStart(1);
