@@ -308,7 +308,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -326,7 +326,7 @@ Item {
                 title: "Skill"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
 
 
                 delegate: Material.Label {
@@ -346,7 +346,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -365,7 +365,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -384,7 +384,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -421,7 +421,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek >= 1 && myTheWeek < 17
+                visible: myTheWeek >= 1 && myTheWeek < MiddleMan.lastWeekForTheSeason
 
 
                 delegate: Material.Label {
@@ -441,7 +441,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek > 1 && myTheWeek <= 17
+                visible: myTheWeek > 1 && myTheWeek <= MiddleMan.lastWeekForTheSeason
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -459,7 +459,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: myTheWeek >= 1 || myTheWeek <= MiddleMan.lastWeekForTheSeason
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -477,7 +477,7 @@ Item {
                 title: "Overall"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: myTheWeek >= 1 || myTheWeek <= MiddleMan.lastWeekForTheSeason
 
 
                 delegate: Material.Label {
@@ -497,7 +497,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: myTheWeek >= 1 || myTheWeek <= MiddleMan.lastWeekForTheSeason
 
                 delegate: Material.Label {
                     anchors.centerIn: parent

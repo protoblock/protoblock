@@ -30,7 +30,7 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
     pb::make_all(filedir(""));
     mWeek = st.week();
     mSeason = st.season();
-    if ( mWeek > 16)
+    if ( mWeek > WK.FFC)
         mMinSeason = mSeason+1;
     else
         mMinSeason = mSeason;
@@ -720,6 +720,7 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
 void ExchangeData::UpdateOpenPnl(MatchingEngine &ma) {
     const MarketQuote &mq = mMarketQuote[ma.mSymbol];
 
+    int maxask = WK.FFC * 40;
     if ( ma.islocked ) return;
 
     if ( ma.mPkPos.size() == 0)
@@ -731,8 +732,8 @@ void ExchangeData::UpdateOpenPnl(MatchingEngine &ma) {
         if ( fantasybit::isWeekly(ma.mSymbol) )
             ask = 41;
         else {
-            ask = (16 - mWeek) * 40;
-            if ( ask > 401) ask = 401;
+            ask = (WK.FFC - mWeek) * 40;
+            if ( ask > maxask + 1) ask = maxask + 1;
         }
     }
     int multiplier = ma.mLimitBook->BOOK_SIZE == 40 ? 100 : 1;
@@ -923,7 +924,7 @@ void ExchangeData::OnWeekOver(int week) {
         ProcessResultOver(it.first,0);
     }
     */
-    clearNewWeek(week < 16);
+    clearNewWeek(week < WK.FFC);
     mWeek = 0;
 }
 

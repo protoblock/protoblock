@@ -24,6 +24,7 @@
 #include "ldbwriter.h"
 #include "PeerNode.h"
 #include "pbutils.h"
+#include <Commissioner.h>
 
 using namespace std;
 
@@ -87,7 +88,7 @@ public:
     static void InitCheckpoint();
 #endif
 
-#ifndef NOUSE_GENESIS_BOOT
+#if !defined(NOUSE_GENESIS_BOOT) || !defined(NOCHECK_LOCAL_BOOTSTRAP)
     static void InitCheckpoint(bool = false);
 #endif
 
@@ -330,38 +331,40 @@ public:
         WeeklySchedule ws;
         MerkleTree tree;
         string temp;
-        for ( int s = 2014; s<=theSeason();s++)
-        for (int i=1; i<=17;i++) {
-            string key = to_string(s) + "scheduleweek:" + to_string(i);
+        for ( int s = 2014; s<=theSeason();s++) {
+            auto weeks = WeekForSeason(s);
+            for (int i=1; i<=weeks.NFL;i++) {
+                string key = to_string(s) + "scheduleweek:" + to_string(i);
 
-            if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "BootStrapSchedule cant find schedule " << key.data();
-                break;
-            }
-
-            if ( !ws.ParseFromString(temp) ) {
-                qCritical() << "bad read WeeklySchedule ";
-                continue;
-            }
-
-            for ( auto game : *ws.mutable_games()) {
-//                GameInfo &game = *gm;
-                gsm.set_allocated_gameinfo(&game);
-                gsm.set_week(i);
-                gsm.set_id(game.id());
-                gsm.set_season(s);
-
-                string key = "gamestatus:" + game.id();
-                if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                    gsm.mutable_gamesatus()->ParseFromString(temp);
-                }
-                else {
-                    qDebug() << " no game status " << key.data() << gsm.has_gamesatus();
+                if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                    qWarning() << "BootStrapSchedule cant find schedule " << key.data();
+                    break;
                 }
 
-                tree.add_leaves(ldb.write(gsm));
-                gsm.release_gameinfo();
-                gsm.Clear();
+                if ( !ws.ParseFromString(temp) ) {
+                    qCritical() << "bad read WeeklySchedule ";
+                    continue;
+                }
+
+                for ( auto game : *ws.mutable_games()) {
+    //                GameInfo &game = *gm;
+                    gsm.set_allocated_gameinfo(&game);
+                    gsm.set_week(i);
+                    gsm.set_id(game.id());
+                    gsm.set_season(s);
+
+                    string key = "gamestatus:" + game.id();
+                    if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                        gsm.mutable_gamesatus()->ParseFromString(temp);
+                    }
+                    else {
+                        qDebug() << " no game status " << key.data() << gsm.has_gamesatus();
+                    }
+
+                    tree.add_leaves(ldb.write(gsm));
+                    gsm.release_gameinfo();
+                    gsm.Clear();
+                }
             }
         }
         tree.set_root(pb::makeMerkleRoot(tree.leaves()));
@@ -372,25 +375,27 @@ public:
         WeeklySchedule ws;
         MerkleTree tree;
         string temp;
-        for ( int s = 2014; s<=theSeason();s++)
 
-        for (int i=1; i<=16;i++) {
-            string key = to_string(s) + "scheduleweek:" + to_string(i);
+        for ( int s = 2014; s<=theSeason();s++) {
+            auto weeks = WeekForSeason(s);
+            for (int i=1; i<=weeks.FFC;i++) {
+                string key = to_string(s) + "scheduleweek:" + to_string(i);
 
-            if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "BootStrapResult cant find schedule " << key.data();
-                break;
-            }
+                if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                    qWarning() << "BootStrapResult cant find schedule " << key.data();
+                    break;
+                }
 
-            if ( !ws.ParseFromString(temp) ) {
-                qCritical() << "bad read WeeklySchedule ";
-                continue;
-            }
+                if ( !ws.ParseFromString(temp) ) {
+                    qCritical() << "bad read WeeklySchedule ";
+                    continue;
+                }
 
-            for ( auto game : ws.games()) {
-                GameResult gr;
-                if ( GetGameResult(game.id(),gr) ) {
-                   tree.add_leaves(ldb.write(gr));
+                for ( auto game : ws.games()) {
+                    GameResult gr;
+                    if ( GetGameResult(game.id(),gr) ) {
+                       tree.add_leaves(ldb.write(gr));
+                    }
                 }
             }
         }

@@ -188,6 +188,7 @@ void Node::init() {
         qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
 #else
     if (current_hight == -1) {
+        WK.SetSeason(2014);
         auto  sb = Commissioner::makeGenesisBlock();
 
 #ifdef TRACEDEBUG
@@ -520,6 +521,7 @@ Bootstrap Node::getLastLocalBoot() {
     //todo: season
     int sseason = getBootSeason();
 
+    WK.SetSeason(sseason);
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif
@@ -536,18 +538,17 @@ Bootstrap Node::getLastLocalBoot() {
     ldb.init(Node::bootstrap.get());
     string localhead = ldb.read("head");
 
+    bool dateyear = QDate::currentDate().year();
     bool done = false;
     while ( !done ) {
         if ( week < 0 ) {
             sseason--;
-            if ( sseason < 2017 ) {
+            if ( sseason < (dateyear - 3) ) {
                 done = true;
                 break;
-
             }
-            else {
-                week = 16;
-            }
+            WK.SetSeason(sseason);
+            week = WK.FFC;
         }
 
         string globalhead = to_string(sseason) + (week < 10 ?  + "0" : "") + to_string(week);

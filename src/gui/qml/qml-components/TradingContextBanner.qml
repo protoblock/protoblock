@@ -49,10 +49,10 @@ Material.Card {
                   "If you can predict weekly busts, then you can now monetize your skills, in this first ever blockchain based, fantasy football forwards exchange!\n\n"
                   +"A good way to start, is, to place a Sell order (ask) at each players ceiling, and at the same time place a Buy order at each players floor. This is called \"passive market making\", where you are, quite literally,  getting paid for your Fantasy Football Skills!"
 
-    property string helperTxtseason: "16 games in 16 weeks (16x16).\n\n"
+    property string helperTxtseason: "17 games in 17 weeks (17x17).\n\n"
                 +"Season long contracts are Rest-of-Way contracts, and settle at the total PPR fantasy points " +
-                " from a 16 game season. " +
-                "The season runs from Week1-Week16. (Week16 is counted twice instead of using Week17).\n\n" +
+                " from a 17 game season. " +
+                "The season runs from Week1-Week17. (Week17 is counted twice instead of using Week18).\n\n" +
                 "These contract expire at the end of the season, and settle at the total PPR fantasy points scored by " + inplay.firstname + " " + inplay.lastname +
                 ", for the \"Rest-of-the-Way\" this season.\n\n"
                 +"The \"Writer\" (seller) must give the \"Holder\" (buyer), Fantasybits equal to the amount of PPR fantasy points scored. " +

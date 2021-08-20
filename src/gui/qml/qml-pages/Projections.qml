@@ -140,10 +140,15 @@ Item {
     //                    hoverAnimation: true
                     tooltip: "Next Week"
                 }
-                enabled: MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && (
+                enabled: MiddleMan.liveSync !== "Sync" && stack && stack.currentItem &&
+                         (
                              (stack.currentItem.objectName === "prevWeekS") ||
-                             (stack.currentItem.objectName === "pptS" && MiddleMan.theWeek < 16) ||
-                             (stack.currentItem.objectName === "nextWeekS" && (MiddleMan.theNextWeek < 16 || MiddleMan.theSeason > MiddleMan.theNextSeason)))
+                             (stack.currentItem.objectName === "pptS" &&
+                              MiddleMan.theWeek < MiddleMan.lastWeekForSeason(MiddleMan.theSeason)) ||
+                             (stack.currentItem.objectName === "nextWeekS" &&
+                              (MiddleMan.theNextWeek < MiddleMan.lastWeekForSeason(MiddleMan.theNextSeason) ||
+                               MiddleMan.theSeason > MiddleMan.theNextSeason))
+                         )
 
 //                enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && MiddleMan.thePrevWeek > 1
                 onClicked : {
@@ -153,11 +158,16 @@ Item {
                                 ||
                              (MiddleMan.thisWeekPrev && MiddleMan.thePrevWeek === MiddleMan.theWeek)
                                 ||
-                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason-1 &&
-                                (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev )))
+                             (  MiddleMan.thePrevWeek === MiddleMan.lastWeekForSeason(MiddleMan.thePrevSeason) &&
+                                MiddleMan.thePrevSeason === MiddleMan.theSeason-1 &&
+                                (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev ))
+                             )
                                 ||
-                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason && MiddleMan.theWeek > 16)
-                                )
+                             (  MiddleMan.thePrevWeek === MiddleMan.lastWeekForSeason(MiddleMan.thePrevSeason) &&
+                                MiddleMan.thePrevSeason === MiddleMan.theSeason &&
+                                MiddleMan.theWeek > MiddleMan.lastWeekForSeason(MiddleMan.theSeason)
+                             )
+                            )
                             stack.push({item: pptS, properties:{objectName:"pptS"}});
                         else {
                             MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek+1,MiddleMan.thePrevSeason)

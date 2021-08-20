@@ -506,7 +506,6 @@ public:
     Q_INVOKABLE void setNextWeekData(int week) {
         if ( !amLive ) return;
 
-
         int season = m_theNextSeason;
 
         if ( week <= 0 ) {
@@ -515,9 +514,9 @@ public:
             if ( season < m_theSeason )
                 return;
 
-            week = 16;
+            week = lastWeekForSeason(season);
         }
-        else if (week >= 17) {
+        else if (week > lastWeekForSeason(season)) {
             season = m_theNextSeason + 1;
 
             if ( season > m_theSeason )
@@ -542,15 +541,14 @@ public:
                                   mGateway->dataService->GetWeeklySchedule(season,week));
     }
 
+    //
+    // PrevWeekSeason is the past data currently being viewed in the model
+    // Projections.qml
+    //
     Q_INVOKABLE void setPrevWeekData(int week, int season) {
         qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
-
-//        int season = m_thePrevSeason;
-//        if ( season != m_thePrevSeason )
-//            setthePrevSeason(season);
-//        m_thePrevSeason = season;
 
         if ( week <= 0 ) {
             season = m_thePrevSeason-1;
@@ -558,11 +556,11 @@ public:
             if ( season < 2014 )
                 return;
 
-            week = 16;
+            week = lastWeekForSeason(season);
         }
-        else if (week >= 17 ) {
+        else if (week > lastWeekForSeason(season) ) {
             if ( week < m_theWeek && season == m_theSeason) {
-                week = 16;
+                week = lastWeekForSeason(season);
             }
             else {
                 season = m_thePrevSeason + 1;
@@ -593,7 +591,6 @@ public:
 
         if ( week == m_theWeek && season == m_theSeason) {
            m_pPreviousWeekScheduleModel->clear();
-//           for ( auto *it : m_pWeekClosedScheduleModel->)
            m_pPreviousWeekScheduleModel->append(m_pWeekClosedScheduleModel->toList());
         }
         else
@@ -615,13 +612,7 @@ public:
 
         auto it = mPlayerResultModel.getByUid(in);
         if ( it ) {
-            //update_pResultSelectedModel(it->get_awardsModel());
-
             m_pResultSelectedModel->setSourceModel(it->get_awardsModel());
-//            m_pResultSelectedModel->setSortRole("award");//mPlayerProjModel.roleForName("pos"));
-//            m_pResultSelectedModel->setDynamicSortFilter(true);
-//            m_pResultSelectedModel->setSource();
-
             QString fordisply("%1 (%2) %3 - %4 ƑɃ");
             QString fd2 = fordisply.arg(it->get_fullname()).arg(it->get_pos()).arg(it->get_teamid())
                     .arg(it->get_fb());
@@ -629,6 +620,13 @@ public:
         }
     }
 
+    Q_INVOKABLE int lastWeekForSeason(int season) {
+        return WeekForSeason(season).FFC;
+    }
+
+    Q_INVOKABLE int lastWeekForTheSeason() {
+        return WK.NFL;
+    }
 
 //    bool usingRandomNames = false;
 
@@ -894,7 +892,6 @@ private:
         mWeeklySuffix += "w";
         mWeeklySuffix += (week <= 9) ? "0" : "";
         mWeeklySuffix += to_string(week);
-
     }
 
 public slots:

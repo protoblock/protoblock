@@ -59,7 +59,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_height(0),
                     m_blocknum(0) ,
                     myFantasyName("") ,
-                    m_theSeason(2018),
+                    m_theSeason(2014),
                     m_pAccountsModel(new SortFilterProxyModel)  {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
@@ -362,7 +362,6 @@ void Mediator::LiveGui(GlobalState gs) {
         setliveSync("Live");
         if ( gs.state() == GlobalState_State_OFFSEASON ) {
             setseasonString("Off Season");
-//            setthePrevWeek(16);
             setthePrevSeason(m_theSeason);
             setthePrevWeek(gs.week());
             settheNextSeason(m_theSeason);
@@ -409,7 +408,7 @@ void Mediator::updateWeek() {
             }
         }
 
-        if ( m_theWeek > 0  && m_theWeek < 17) {
+        if ( m_theWeek > 0  && m_theWeek < WK.NFL) {
             m_pWeeklyScheduleModel->clear ();
             m_pWeekClosedScheduleModel->clear ();
 

@@ -106,7 +106,7 @@ void NFLStateData::InitCheckpoint() {
 }
 #endif
 
-#ifndef NOUSE_GENESIS_BOOT
+#if !defined(NOUSE_GENESIS_BOOT) || !defined(NOCHECK_LOCAL_BOOTSTRAP)
 #include "PeerNode.h"
 void NFLStateData::InitCheckpoint(bool onlyresult) {
 
@@ -138,10 +138,11 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     ldb.read(ldb.read(ldb.read("head")),head);
 
     if ( !onlyresult ) {
+        WK.SetSeason(head.season());
         GlobalState gs;
         gs.set_season(head.season());
         gs.set_week(head.week());
-        if ( gs.week() >= 1 && gs.week() <= 16)
+        if ( gs.week() >= 1 && gs.week() <= WK.FFC)
             gs.set_state(GlobalState_State_INSEASON);
         else
             gs.set_state(GlobalState_State_OFFSEASON);
@@ -332,6 +333,8 @@ void NFLStateData::init() {
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+
 #ifdef WRITESYMBOLS_FORCE_INITALL
         SqlStuff sql("tfprod","symbolstatausforce");
 #endif
@@ -402,7 +405,9 @@ void NFLStateData::init() {
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
         auto gs = GetGlobalState();
-        for (int i=1; i<=17;i++) {
+        WK.SetSeason(gs.season());
+
+        for (int i=1; i<=WK.NFL;i++) {
             string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
@@ -540,7 +545,7 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
 }
 
 void NFLStateData::OnSeasonEnd(int season) {
-    for ( int i=0;i<16;i++) {
+    for ( int i=0;i<WK.FFC;i++) {
         auto ws = GetWeeklySchedule(season,i+1);
 
         string key = to_string(season) + "scheduleweek:" + to_string(i+1);
@@ -627,7 +632,7 @@ void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs)
     if (!staticstore->Put(write_sync, key, gs.SerializeAsString()).ok()) {
         qWarning() << "cant add gameresult" << gameid;
     }
-    qDebug() << key.data ()<< gs.DebugString().data ();
+//    qDebug() << key.data ()<< gs.DebugString().data ();
     if ( amlive )
         emit NewGameResult(gameid);
 

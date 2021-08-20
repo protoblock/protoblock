@@ -760,7 +760,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     if ( pbpospair.second != nullptr) {
         playerresultP->set_symbol(pbpospair.second->playerid());
         SettleROWPositionsRawStake set(*(pbpospair.second));
-        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == 16);
+        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == WK.FFC);
         for (auto r : pnls ) {
             FantasyBitPnl &fba = *playerresult.mutable_rowposdividend()->Add();
             fba.mutable_spos()->CopyFrom(r.second.first);
@@ -802,7 +802,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     case TrType::SEASONEND:
         if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-            if ( mGlobalState.week() >= 17) {
+            if ( mGlobalState.week() > WK.FFC) {
                 OnSeasonEnd(mGlobalState.season());
                 mGlobalState.set_season(indt.season()+1);
                 mGlobalState.set_week(0);
@@ -889,7 +889,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
         for ( auto &sbp : pos ) {
-            if ( !isWeekly(sbp.first) && indt.week() < 16)
+            if ( !isWeekly(sbp.first) && indt.week() < WK.FFC)
                 continue;
 
             SettlePositionsRawStake set(sbp.second);
@@ -905,13 +905,13 @@ void BlockProcessor::process(const DataTransition &indt) {
 #endif
 
 #ifdef JAYHACK
-//        if (indt.week() == 16)
+//        if (indt.week() == WK.FFC)
 //            break;
 #endif
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
-        if (indt.week() >= 16) {
+        if (indt.week() >= WK.FFC) {
             qInfo() <<  "season " << indt.season() << " Over ";
             if ( mGlobalState.season() == 2017 && indt.season() == 2017 && indt.week() < 21) {
                 OnSeasonEnd(mGlobalState.season());
@@ -1344,6 +1344,7 @@ void BlockProcessor::OnWeekStart(int week) {
 }
 
 void BlockProcessor::OnSeasonStart(int season) {
+    WK.SetSeason(season);
     mNameData.OnSeasonStart(season);
     mData.OnSeasonStart(season);
     mExchangeData.OnSeasonStart(season);
@@ -1362,6 +1363,7 @@ void BlockProcessor::OnSeasonEnd(int oldseason) {
 #ifdef TRADE_FEATURE
     mFutContract.set_season(oldseason+1);
 #endif
+    WK.SetSeason(oldseason+1);
 }
 
 
