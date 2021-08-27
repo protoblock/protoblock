@@ -68,6 +68,7 @@ int32_t BlockProcessor::init(int32_t height) {
         mRecorder.closeAll();
         pb::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
+        mExchangeData.removeAll();
 
 #ifndef NOUSE_GENESIS_BOOT
         NFLStateData::InitCheckpoint();
