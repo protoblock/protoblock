@@ -40,6 +40,7 @@ class MainLAPIWorker : public QObject , public IResolvable
     int32_t numto = std::numeric_limits<int32_t>::max();
     bool amlive = false;
     bool quitting = false;
+    bool resetting = false;
     QTimer * timer;
     fantasybit::FantasyAgent agent{};
     fantasybit::NFLStateData data;

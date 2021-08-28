@@ -646,11 +646,11 @@ Block Node::getlastLocalBlock() {
 
 fc::optional<Block> Node::getLocalBlock(int32_t num, bool force) {
 
+    std::lock_guard<std::mutex> lockg{ blockchain_mutex };
+
     fc::optional<Block> block;
     if ( forking && !force )
         return block;
-
-    std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 
     if ( getLastLocalBlockNum() < num ) {
         qDebug() << "getLastLocalBlockNum() < num " << num;

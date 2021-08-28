@@ -165,20 +165,28 @@ void MainLAPIWorker::startPoint(){
 }
 
 void MainLAPIWorker::ResetIndex() {
-    std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-    processor.hardReset();
-    last_block = processor.init(0);
-    if ( last_block < 0 ) {
-        last_block = BlockRecorder::zeroblock;
+
+    qDebug() << "ml ResetIndex ";
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        intervalstart = 2000;
+        timer->stop();
+        resetting = true;
+        timer->start(intervalstart);
     }
 }
 
 //blockchain
 void MainLAPIWorker::OnInSync(int32_t num) {
-    qDebug() << "OnInSync" << num;
+    qDebug() << "OnInSync" << num << resetting;
     bool myamlive;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        if ( resetting ) {
+            numto = num;
+            return;
+        }
+
         myamlive = (!amlive && num == last_block);
         qDebug() << "myamlive" << myamlive << last_block;
     }
@@ -194,7 +202,7 @@ void MainLAPIWorker::OnInSync(int32_t num) {
 }
 
 bool MainLAPIWorker::doProcessBlock() {
-    qDebug() << " doprocess";
+    qDebug() << " doprocess" << resetting;
     int32_t next;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
@@ -204,6 +212,8 @@ bool MainLAPIWorker::doProcessBlock() {
             QCoreApplication::exit();
             return false;
         }
+        else if ( resetting )
+            return false;
     }
     auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
@@ -229,7 +239,7 @@ bool MainLAPIWorker::doProcessBlock() {
 
 #include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
-    qDebug() << " ProcessBlock";
+    qDebug() << "ProcessBlock" << resetting;
     int docount = 0;
     bool catchingup;
     do {
@@ -244,6 +254,8 @@ void MainLAPIWorker::ProcessBlock() {
                 QCoreApplication::exit();
                 return;
             }
+            else if ( resetting )
+                return;
         }
 
         if ( catchingup )
@@ -278,6 +290,8 @@ void MainLAPIWorker::ProcessBlock() {
 }
 
 void MainLAPIWorker::OnSeenBlock(int32_t num) {
+    qDebug() << "OnSeenBlock " << resetting;
+
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         if (amlive)
@@ -317,16 +331,25 @@ void MainLAPIWorker::Timer() {
         justwentlive = false;
     }
 #endif
-
     bool numtogtlast;
     {
-        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        numtogtlast = (numto > last_block);
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };        
         if ( quitting ) {
             qDebug() << " Timer quiting";
             QCoreApplication::exit();
             return;
         }
+        else if ( resetting ) {
+            processor.hardReset();
+            last_block = processor.init(0);
+            if ( last_block < 0 ) {
+                last_block = BlockRecorder::zeroblock;
+            }
+            bcount = pcount = 0;
+            resetting = false;
+        }
+
+        numtogtlast = (numto > last_block);
     }
     bcount++;
     pcount++;
@@ -369,31 +392,26 @@ void MainLAPIWorker::Timer() {
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
+    qDebug() << "Process " << resetting;
+
     int32_t last = processor.process(b);
-    if ( last == -1 ) {
-        //emit OnError();
-        timer->start(5000);
-        return false;
-    }
-
-    //if ( last != last_block+1) {
-        //emit OnError
-        //should never be here
-    //    return false;
-    //}
-
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        if ( last == last_block+1)
-            last_block = last;
-        else
-            qDebug() << " shoud bever be here! ? reorg? fork? ";
-
         if ( quitting ) {
             qDebug() << "Process quiting";
             QCoreApplication::exit();
             return false;
         }
+
+        if ( last == -1 ) {
+            if ( !resetting ) timer->start(5000);
+            return false;
+        }
+
+        if ( last == last_block+1)
+            last_block = last;
+        else
+            qDebug() << " shoud bever be here! ? reorg? fork? ";
     }
     return true;
 }
