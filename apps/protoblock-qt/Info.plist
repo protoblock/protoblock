@@ -34,5 +34,7 @@
     <string>public.app-category.sports-games</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
+    <key>NSRequiresAquaSystemAppearance</key>
+<string>true</string>
 </dict>
 </plist>
