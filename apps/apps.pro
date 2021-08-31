@@ -2,7 +2,11 @@ TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += \
     $$PWD/protoblockd \
-    $$PWD/protoblock-qt
+    $$PWD/fantasybit-server \
+    $$PWD/protoblock-qt \
+    $$PWD/dataagent-qt \
+    $$PWD/wsserver \
+    $$PWD/fantasybit-lite
 
 
 OTHER_FILES += \
