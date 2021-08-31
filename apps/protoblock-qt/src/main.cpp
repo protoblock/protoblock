@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
         if ( !guard.tryToRun() )
             return 0;
 
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
@@ -63,7 +65,6 @@ int main(int argc, char *argv[])
 
     QQuickStyle::setStyle("Material");
 
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
     Core::instance()->bootstrap();

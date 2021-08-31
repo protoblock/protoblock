@@ -43,6 +43,7 @@ namespace fantasybit
 
 
 void BlockProcessor::hardReset() {
+    qInfo() <<  "delete all leveldb, should have nothing";
     mRecorder.closeAll();
     mData.closeAll();
     mNameData.closeAll();
@@ -56,7 +57,7 @@ void BlockProcessor::hardReset() {
     NFLStateData::InitCheckpoint();
 #endif
     BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
-
+    qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
 }
 
 int32_t BlockProcessor::init(int32_t height) {
