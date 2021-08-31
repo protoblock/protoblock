@@ -44,7 +44,7 @@ public:
     PlayerDetail GetPlayerDetail(const std::string &symbol);
 
     fantasybit::MyFantasyName importMnemonic(const std::string &in);
-    std::string exportMnemonic(std::string &in);
+    std::string exportMnemonic(const std::string &in);
 
     ordsnap_t
         GetOrdersPositionsByName(const std::string &fname);

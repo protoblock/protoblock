@@ -181,9 +181,11 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t bl
     if ( fnp  != nullptr) {
         fnp->setBlockNump (blocknum,0);
 
-        OnFantasyName(fnp);
         if ( amlive ) {
             emit NewFantasyName(fn);
+
+        OnFantasyName(fnp);
+
 //            fantasybit::FantasyBitProj fpj{};
 //            fpj.set_name(name);
 //            fpj.set_playerid(0);
