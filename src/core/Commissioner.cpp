@@ -319,7 +319,7 @@ decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS {
     "NO" ,
     "NYG" ,
     "NYJ" ,
-    "OAK" ,
+    "LV" ,
     "PHI" ,
     "PIT" ,
     "LAC" ,
