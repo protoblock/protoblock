@@ -485,7 +485,7 @@ int Node::getBootSeason() {
     auto sseason = jo.value("season").toString().toStdString();
 
     if ( sseason == "" )
-        return 2018;
+        return 2021;
 
     return stoi(sseason);
 }

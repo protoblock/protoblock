@@ -69,9 +69,9 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "2018 Season Long Contracts "
+                        bannerText: "Season Long Contracts "
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Hedge dynasty risk, with  future season long 2018 contracts. Contact us for more info. contact@protoblock.com"
+                        text: "Hedge dynasty risk, with future season long contracts. Contact us for more info. contact@protoblock.com"
                     }
 
                 }

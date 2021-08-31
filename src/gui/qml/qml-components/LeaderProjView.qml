@@ -301,7 +301,7 @@ Item {
                 }
             }
 
-            //2018 Leaders - off season
+            //Leaders - off season
             TableViewColumn {
                 role: "leaders20XX"
                 title: myTheWeek === 0 ? MiddleMan.theSeason-1 : MiddleMan.theSeason
@@ -452,7 +452,7 @@ Item {
                 }
             }
 
-            //2018 Leaders - in season
+            //Leaders - in season
             TableViewColumn {
                 role: "leaders20XX"
                 title: MiddleMan.theSeason

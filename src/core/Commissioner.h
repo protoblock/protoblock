@@ -111,7 +111,7 @@ public:
     }
 
     static Block makeGenesisBlock();
-    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "201800");
+    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "202100");
     static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;
