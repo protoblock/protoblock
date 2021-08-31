@@ -234,10 +234,10 @@ Material.ApplicationWindow{
     property var sectionLeftEnable: [ true, false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
-        property bool expanded: false
+        property bool expanded: true
         id: pageHelper
         title: "Protoblock"
-        selectedTabIndex: 1
+        selectedTabIndex: 0
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
@@ -252,7 +252,7 @@ Material.ApplicationWindow{
         actionBar.customContent:    Material.Label {
             text: realRoot.uname + "   [" +
                   (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString()) + " ƑɃ]"
-            verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
+            verticalAlignment: Text.AlignTop//navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
                 family: fontfamFB
                 bold: true
@@ -265,15 +265,16 @@ Material.ApplicationWindow{
                 right: parent.left
                 rightMargin: ProtoScreen.guToPx(2)
                 top: parent.top
-                topMargin:{
-                    if (navDrawer.enabled === false ){
-                        ProtoScreen.guToPx(1)
-                    }
-                }
+                topMargin: ProtoScreen.guToPx(1)
+//                {
+//                    if (navDrawer.enabled === false ){
+//                        ProtoScreen.guToPx(1)
+//                    }
+//                }
                 bottom: parent.bottom
             }
         }
-        actionBar.maxActionCount: navDrawer.enabled ? 1:3
+        actionBar.maxActionCount: 3//navDrawer.enabled ? 1:3
         actions: [
             Material.Action {
                 iconName: "qrc:/icons/action_account_circle.png"
@@ -295,15 +296,18 @@ Material.ApplicationWindow{
 //                }
 //            }
         ]
+
+        /*
         backAction: navDrawer.action
         Material.NavigationDrawer {
             id: navDrawer
             enabled:{
                 if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ){
                     true
-                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
-                    true
                 }
+//                else if (pageHelper.width < ProtoScreen.guToPx(120)){
+//                    true
+//                }
                 else {
                     false
                 }
@@ -358,13 +362,13 @@ Material.ApplicationWindow{
                 }
             }
         }
-
+        */
         Loader {
             id: rootLoader
-            source: start
+            source: account
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: (navDrawer.enabled === true) ? themeroot.width  :
-                  pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
+//            width: (navDrawer.enabled === true) ? themeroot.width  :
+            width:  pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
             height: parent.height//navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
@@ -381,7 +385,7 @@ Material.ApplicationWindow{
         }
 
         Repeater {
-            model: !navDrawer.enabled  ? sections : 0
+            model: sections //!navDrawer.enabled  ? sections : 0
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
@@ -476,7 +480,7 @@ Material.ApplicationWindow{
                            "NO" ,
                            "NYG" ,
                            "NYJ" ,
-                           "OAK" ,
+                           "LV" ,
                            "PHI" ,
                            "PIT" ,
                            "LAC" ,
@@ -714,7 +718,7 @@ Material.ApplicationWindow{
             pageHelper.selectedTabIndex = startindex
             loginDialog.currentindex = loginDialog.start
             loginDialog.open();
-            firstname = true
+//            firstname = true
         }
 
         onUsingFantasyName: {
@@ -725,18 +729,22 @@ Material.ApplicationWindow{
             if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
+                console.log(msgString)
+                console.log(" dosecret " + dosecret)
+                console.log(" pageHelper.selectedTabIndex " + pageHelper.selectedTabIndex)
                 if( pageHelper.selectedTabIndex === accountIndex){
                     pageHelper.selectedTabIndex = startindex
 //                    rootLoader.source = start
                     if ( !dosecret )
                         usingNameDialog.open()
                 }
-                else if ( !firstname ) {
-                    pageHelper.selectedTabIndex = startindex
-                    firstname = true;
-                }
-                else
-                    console.log(" no popup")
+//                else if ( !firstname ) {
+//                    pageHelper.selectedTabIndex = startindex
+//                    firstname = true;
+//                    console.log("!firstname ")
+//                }
+//                else
+//                    console.log(" no popup")
 
                 if ( dosecret ) {
                     loginDialog.currentindex = loginDialog.secret
@@ -747,7 +755,7 @@ Material.ApplicationWindow{
         }
 
         onImportSuccess: {
-            console.log(passfail + "onImportSucess " + name )
+            console.log(passfail + " onImportSucess " + name )
             if ( passfail ) {
                 msgString = name + " - Imported!"
                 usingNameDialog.open()
@@ -830,6 +838,7 @@ Material.ApplicationWindow{
       * tablets and phones and phablets. It is a swipe gesture to
       * open up the navbar. Kinda buggy but better then nothing.
       */
+    /*
     Rectangle{
         id:leftGesture
         color: "transparent"
@@ -875,4 +884,5 @@ Material.ApplicationWindow{
             }
         }
     }
+    */
 }

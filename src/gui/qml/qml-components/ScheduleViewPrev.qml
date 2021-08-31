@@ -119,7 +119,7 @@ Material.Card {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    console.log( " header clicked");
+//                                    console.log( " header clicked");
                                     secsel = [["section"]]
                                     isl.clear()
                                     topc.changed()
@@ -165,7 +165,7 @@ Material.Card {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    console.log ( " sectionDelegate clicked " + section)
+//                    console.log ( " sectionDelegate clicked " + section)
                     if ( secsel[section] === "on")
                         secsel[section] = "off"
                     else secsel[section] = "on"
@@ -238,76 +238,77 @@ Material.Card {
             backgroundColor: (isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection)  ? (index % 2 == 0 ?"#f5f5f5":"white") : Qt.darker("white",1.20)
 
             RowLayout {
-            anchors.fill: parent
-            spacing: 0
-            id: rr
+                anchors.fill: parent
+                spacing: 0
+                id: rr
 
-            Material.Label {
-//                anchors.centerIn: parent
+                Material.Label {
+    //                anchors.centerIn: parent
 
-                text: time
-                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width * widths[0])
-//                width: (parent.width * widths[0])
+                    text: time
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    Layout.preferredWidth: (parent.width * widths[0])
+    //                width: (parent.width * widths[0])
+                }
+                Material.Label{
+    //                anchors.centerIn: parent
+                    text: away
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    Layout.preferredWidth: (parent.width * widths[1] * .90)
+    //                width: (parent.width * widths[1])
+                    ColorAnimation on color { to: TeamInfo.getPrimaryAt(away); duration: 10000 }
+                    font.bold: true
+                }
+                Material.Label{
+    //                anchors.centerIn: parent
+                    text: "@"
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    Layout.preferredWidth: (parent.width * widths[1] * .20)
+    //                width: (parent.width * widths[1])
+                }
+
+                Material.Label{
+    //                anchors.centerIn: parent
+                    text: home
+
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+    //                Layout.fillHeight: true
+    //                Layout.fillWidth: false
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    Layout.preferredWidth: (parent.width * widths[2] * .90)
+                    ColorAnimation on color { to: TeamInfo.getPrimaryAt(home); duration: 10000 }
+                    font.bold: true
+    //                width: (parent.width * widths[2])
+                }
+                Material.Label{
+    //                anchors.centerIn: parent
+                    text: "Closed"
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    Layout.preferredWidth: (parent.width * widths[3])
+    //                width: (parent.width * widths[3])
+                }
+
             }
-            Material.Label{
-//                anchors.centerIn: parent
-                text: away
-                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width * widths[1] * .90)
-//                width: (parent.width * widths[1])
-                ColorAnimation on color { to: TeamInfo.getPrimaryAt(away); duration: 10000 }
-                font.bold: true
-            }
-            Material.Label{
-//                anchors.centerIn: parent
-                text: "@"
-                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width * widths[1] * .20)
-//                width: (parent.width * widths[1])
-            }
-
-            Material.Label{
-//                anchors.centerIn: parent
-                text: home
-
-
-                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-//                Layout.fillHeight: true
-//                Layout.fillWidth: false
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width * widths[2] * .90)
-                ColorAnimation on color { to: TeamInfo.getPrimaryAt(home); duration: 10000 }
-                font.bold: true
-//                width: (parent.width * widths[2])
-            }
-            Material.Label{
-//                anchors.centerIn: parent
-                text: "Closed"
-                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width * widths[3])
-//                width: (parent.width * widths[3])
-            }
-
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
@@ -333,16 +334,15 @@ Material.Card {
                     topc.secsel[time] = ""//Qt.binding( function() { return "" } )
 
 
-                    console.log("click is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
-                    console.log("click is row is any" + isl.hasSelection)
-                    console.log("onClicked time " + time)
+//                    console.log("click is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
+//                    console.log("click is row is any" + isl.hasSelection)
+//                    console.log("onClicked time " + time)
 
 //                    update()
 //                    lv.currentIndex = index
                 }
 
             }
-        }
 
 
             function myMethod() {

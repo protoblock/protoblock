@@ -9,7 +9,7 @@ Item {
     Sidebar {
         id: sidebar
 //        width: ProtoScreen.guToPx(31.25)
-        expanded: !navDrawer.enabled && pageHelper.expanded
+        expanded: pageHelper.expanded//!navDrawer.enabled && pageHelper.expanded
         ColumnLayout {
             width: parent.width
             Repeater {

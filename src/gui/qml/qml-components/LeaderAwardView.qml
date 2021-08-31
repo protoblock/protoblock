@@ -179,7 +179,7 @@ Item {
         target: MiddleMan.pResultSelectedModel
 
         onSourceModelChanged: {
-            console.log(" finally model changd");
+//            console.log(" finally model changd");
             tvl.model = MiddleMan.pResultSelectedModel
         }
 

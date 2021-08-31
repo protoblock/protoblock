@@ -83,7 +83,7 @@ Material.Card {
 //                forceLayout()
 //            }
 
-            console.log(" lv ci " + currentIndex + " first" + first + " has " + isl.hasSelection)
+//            console.log(" lv ci " + currentIndex + " first" + first + " has " + isl.hasSelection)
 //            isl.select(currentIndex, ItemSelectionModel.ToggleCurrent)
 //            for ( var i in isl.selectedIndexes )
 //                console.log( " isl " + i.row())
@@ -225,14 +225,14 @@ Material.Card {
 
                 Component.onCompleted: {
                     secsel[section] = ""
-                    console.log (" section " + section)
+//                    console.log (" section " + section)
                 }
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    console.log ("togglr setting section " + section +  secsel[section])
+//                    console.log ("togglr setting section " + section +  secsel[section])
                     if ( secsel[section] === "on")
                     secsel[section] = "off"
                 else secsel[section] = "on"
@@ -257,7 +257,7 @@ Material.Card {
 //            property string timestatus: model.time
             id: dcard
             function myMethod() {
-                console.log("Button was clicked!" + secsel[time])
+//                console.log("Button was clicked!" + secsel[time])
                 if ( secsel[time] === "on" && !isl.isSelected(lv.model.index(index,0)))
                     MiddleMan.toggle(index,ItemSelectionModel.Toggle)
                 else if ( secsel[time] === "off" && isl.isSelected(lv.model.index(index,0)) )
@@ -401,39 +401,6 @@ Material.Card {
 //                width: (parent.width * widths[3])
             }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
-                    dcard.elevation = Qt.binding(
-                        function() {
-                            if ( isl.isSelected(lv.model.index(index,0)) )
-                                return 5;
-                            else
-                                return 0
-                        }
-                    )
-
-                    dcard.backgroundColor = Qt.binding(
-                        function() {
-                            if ( isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection )
-//                                return "white";
-                                return index % 2 == 0 ?"#f5f5f5":"white";
-                            else
-                                return Qt.darker("white",1.20)
-                        }
-                    )
-
-                    topc.secsel[time] = ""//Qt.binding( function() { return "" } )
-
-
-                    console.log("click is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
-                    console.log("click is row is any" + isl.hasSelection)
-//                    update()
-//                    lv.currentIndex = index
-                }
-
-            }
 
 
 //            Connections {
@@ -443,6 +410,39 @@ Material.Card {
 //                    backgroundColor: (isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection)  ? "white" : Qt.darker("white",1.20)
 //                }
 //            }
+
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                MiddleMan.toggle(index,ItemSelectionModel.Toggle)
+                dcard.elevation = Qt.binding(
+                    function() {
+                        if ( isl.isSelected(lv.model.index(index,0)) )
+                            return 5;
+                        else
+                            return 0
+                    }
+                )
+
+                dcard.backgroundColor = Qt.binding(
+                    function() {
+                        if ( isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection )
+//                                return "white";
+                            return index % 2 == 0 ?"#f5f5f5":"white";
+                        else
+                            return Qt.darker("white",1.20)
+                    }
+                )
+
+                topc.secsel[time] = ""//Qt.binding( function() { return "" } )
+
+
+//                console.log("click is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
+//                console.log("click is row is any" + isl.hasSelection)
+//                    update()
+//                    lv.currentIndex = index
+            }
 
         }
 
