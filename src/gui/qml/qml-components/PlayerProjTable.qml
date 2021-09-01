@@ -8,7 +8,10 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
-import QtQuick.Controls 2.1 as Mat2
+//import QtQuick.Controls 2.1 as Mat2
+//import QtQuick.Controls.Material 2.12
+//import QtQuick.Controls.Material 2.4
+
 
 Item {
     id: topw
@@ -155,14 +158,14 @@ Item {
             TableViewColumn {
                 id: tvm
                 role: "pos"
-                title: "Position"
+                title: "Pos"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
 
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
-                width: ProtoScreen.guToPx(8)
+                width: ProtoScreen.guToPx(7)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -394,8 +397,8 @@ Item {
 //                                    value, 0)
                     model.projection = value
 
-                    if ( model && (model.knownProjection !==  value) && (topw.focuscount != 1))
-                        topw.focuscount = 1
+                    if ( model && (model.knownProjection !==  value))
+                        topw.focuscount++;
 
                    lbl.text = Qt.binding(function(){
                        if ( !model ) return ""
@@ -432,16 +435,22 @@ Item {
                 width: parent.width
                 color: "transparent"
                 anchors.top: parent.top
-                Mat2.ComboBox {
+                ComboBox {
                     id: cbc
-                    model: ["All", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
+
+                    model: ["ALL", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
-                       MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
+                          MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
                     }
+
+//                    implicitIndicatorWidth: 4
                 }
 
                 Material.IconButton {
@@ -518,7 +527,7 @@ Item {
                         height: parent.height * .75
                         width: parent.width * .90
                         visible: styleData.column === pcol
-                        enabled: styleData.column === pcol && MiddleMan.allowAction
+                        enabled: styleData.column === pcol && MiddleMan.allowAction && focus
                         text: "Send"
 
                         onClicked : {
@@ -619,13 +628,16 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === pcol ? themeroot.theme.accentColor :
+                backgroundColor: styleData.column === pcol ?
+                                 (but.focus ? "gray" : themeroot.theme.accentColor) :
                                  styleData.column < 6 ? themeroot.theme.primaryColor : "#AFE1FF"
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? (styleData.column === pcol ? "black" : themeroot.theme.accentColor)
-                                                                 : "black"
+                    styleData.column  === tv.sortIndicatorColumn ?
+                       Qt.darker("white",1.5) : "black"
+//                        (styleData.column === pcol ? "black" :
+//                          themeroot.theme.accentColor  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
                     id: textItem2
@@ -636,7 +648,10 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === pcol ? Material.Theme.light.textColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+                    color: (styleData.column === pcol && !topw.focuscount > 0 ) ?
+                               themeroot.theme.primaryColor :
+                               styleData.column < 6 ? "white" :
+                               Material.Theme.light.textColor
 //                    font.bold: styleData.column === 4
                 }
             }

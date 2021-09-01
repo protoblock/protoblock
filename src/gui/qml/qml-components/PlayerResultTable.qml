@@ -163,10 +163,10 @@ Item {
             TableViewColumn {
                 id: tvm
                 role: "pos"
-                title: "Position"
+                title: "Pos"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(8)
+                width: ProtoScreen.guToPx(7)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -523,13 +523,17 @@ Item {
                 width: parent.width
                 color: "transparent"
                 anchors.top: parent.top
-                Mat2.ComboBox {
+                ComboBox {
                     id: cbc
-                    model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
+
+                    model: ["ALL","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
                         MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
                         if ( currentIndex === 0 )

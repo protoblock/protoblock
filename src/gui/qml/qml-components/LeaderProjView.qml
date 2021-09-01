@@ -133,7 +133,7 @@ Item {
                     anchors.bottom: parent.bottom
                     radius: 1
                     border.color:
-                        styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor : "black"
+                        styleData.column  === tv.sortIndicatorColumn ? "gray"  : "black"
 
                     Material.Label {
                         id: textItem2

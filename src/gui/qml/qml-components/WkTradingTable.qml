@@ -378,7 +378,7 @@ Item {
                 role: "teamid"
                 title: "Team"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(6)
+                width: ProtoScreen.guToPx(7)
 
                 delegate: Material.Label {
                     text: styleData.value
@@ -737,14 +737,18 @@ Item {
                 anchors.top: parent.top
                 ComboBox {
                     id: cbc
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
+
                     model: styleData.column === poscol ? postionModel :
-//                               ["All", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] :
+//                               ["ALL", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] :
                             styleData.column === teamcol ?
                                teamModel : [""]
                     enabled: styleData.column === poscol || styleData.column === teamcol
                     currentIndex: 0
                     visible: enabled
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
                         if ( styleData.column === poscol )
                             quotemodel.setPos(currentText)

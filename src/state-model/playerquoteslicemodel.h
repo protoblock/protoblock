@@ -544,8 +544,8 @@ class PlayerQuoteSliceViewFilterProxyModel : public SortFilterProxyModel {
 //    QItemSelectionModel * mySelectedGames;
 //    QStringListModel * myPositionCombobox;
     bool myIsEnabled = true;
-    QString myPos = "All";
-        QString myTeam = "All";
+    QString myPos = "ALL";
+        QString myTeam = "ALL";
 
 public:
     Q_PROPERTY(QStringList userRoleNames READ userRoleNames CONSTANT)

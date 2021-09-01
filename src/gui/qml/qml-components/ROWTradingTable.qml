@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
@@ -320,7 +321,7 @@ Item {
                 role: "teamid"
                 title: "Team"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(6)
+                width: ProtoScreen.guToPx(7)
 
                 delegate: Material.Label {
                     text: styleData.value
@@ -807,11 +808,15 @@ Item {
                 anchors.top: parent.top
                 ComboBox {
                     id: cbc
-                    model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
+
+                    model: ["ALL","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === poscol
                     currentIndex: 0
                     visible: styleData.column === poscol
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
                        MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
 //                        kicker = def = qb = (currentIndex === 0)
