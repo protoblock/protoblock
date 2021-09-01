@@ -10,6 +10,6 @@ OTHER_FILES += \
     $$PWD/defs.pri
 
 macx {
-    message (apps.pro 10.14)
-    QMAKE_MAC_SDK = macosx10.14
+#    message (apps.pro 10.14)
+#    QMAKE_MAC_SDK = macosx10.14
 }

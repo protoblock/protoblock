@@ -18,7 +18,7 @@ contains(DEFINES, DATAAGENTDEFS){
 
 osx{
     QMAKE_CXXFLAGS += -std=c++11
-    QMAKE_MAC_SDK = macosx10.14
+#    QMAKE_MAC_SDK = macosx10.14
     message( protoblockd.pro osx)
     CONFIG+=app_bundle
 }
