@@ -1,8 +1,8 @@
-import QtQuick 2.4
+import QtQml 2.2
+import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtQuick.XmlListModel 2.0
 
-//import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
@@ -12,9 +12,6 @@ import Material.Extras 1.0
 
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
-
-
-//import Communi 3.0
 
 Material.ApplicationWindow{
     title: "Protoblock"
@@ -242,7 +239,7 @@ Material.ApplicationWindow{
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
-            console.log(" onSelectedTabChanged " + selectedTabIndex)
+//            console.log(" onSelectedTabChanged " + selectedTabIndex)
 //            navDrawer.enabled = sectionTitles[selectedTabIndex] === "Projections"
             expanded = sectionLeftEnable[selectedTabIndex];
         }
@@ -632,10 +629,10 @@ Material.ApplicationWindow{
                 elevation: 0
                 onClicked: {
                     if ( ProtoScreen.os === "osx" ) {
-                        Qt.openUrlExternally("http://protoblock.com/Downloads/MacOS/64/protoblock.dmg")
+                        Qt.openUrlExternally("http://fantasybit.com/Downloads/MacOS/64/protoblock.dmg")
                     }
                     else if ( ProtoScreen.os === "windows" ) {
-                        Qt.openUrlExternally("http://protoblock.com/Downloads/Windows/64/protoblock.exe")
+                        Qt.openUrlExternally("http://fantasybit.com/Downloads/Windows/64/protoblock.exe")
                     }
                     else if ( ProtoScreen.os === "ios"  ) {
                         Qt.openUrlExternally("https://itunes.apple.com/us/app/protoblock-2016/id1133758199");
@@ -644,7 +641,7 @@ Material.ApplicationWindow{
                         Qt.openUrlExternally("https://play.google.com/store/apps/details?id=org.proto.protoblock")
                     }
                     else
-                        Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
+                        Qt.openUrlExternally("http://fantasybit.com/template/downloads.html")
 
                     updateDialog.close()
                     themeroot.close()
@@ -708,7 +705,7 @@ Material.ApplicationWindow{
             else {
                 errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "
                 errorString = errorString + " Please click Import below."
-                errorString = errorString + "\n\nFor more assistance please contact the protoblock at <contact@protoblock.com>"
+                errorString = errorString + "\n\nFor more assistance please contact the protoblock at <contact@fantasybit.com>"
                 accountErrorDialog.open()
             }
         }
@@ -730,8 +727,8 @@ Material.ApplicationWindow{
                 uname = name
                 msgString = "You are now playing as: " + name
                 console.log(msgString)
-                console.log(" dosecret " + dosecret)
-                console.log(" pageHelper.selectedTabIndex " + pageHelper.selectedTabIndex)
+//                console.log(" dosecret " + dosecret)
+//                console.log(" pageHelper.selectedTabIndex " + pageHelper.selectedTabIndex)
                 if( pageHelper.selectedTabIndex === accountIndex){
                     pageHelper.selectedTabIndex = startindex
 //                    rootLoader.source = start
@@ -781,7 +778,7 @@ Material.ApplicationWindow{
 //    // check for updates
     XmlListModel {
         id: updateMachine
-        source: "http://protoblock.com/version-" + ProtoScreen.os + ".xml"
+        source: "http://fantasybit.com/version-" + ProtoScreen.os + ".xml"
         query: "/updatemachine"
         XmlRole{name: "version";query: "version/string()"}
         XmlRole{name: "libs";query: "libs/string()"}

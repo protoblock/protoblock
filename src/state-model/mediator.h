@@ -117,6 +117,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
 
     QML_READONLY_CSTREF_PROPERTY (qint32, theWeek)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theLastWeek)
     QML_READONLY_CSTREF_PROPERTY (qint32, theSeason)
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
@@ -624,10 +625,6 @@ public:
         return WeekForSeason(season).FFC;
     }
 
-    Q_INVOKABLE int lastWeekForTheSeason() {
-        return WK.NFL;
-    }
-
 //    bool usingRandomNames = false;
 
     std::vector<std::string> fnames;
@@ -830,9 +827,9 @@ private:
 
     void getLeaders(int week,bool lastweek, bool all20XX = false) {
 #ifdef NO_SQL_LEADERS
-        return;
+//        return;
 #endif
-        QString links("https://app.trading.football:4545");
+        QString links(PAPIURL.data());
         QString route("fantasy/leaders");
         if ( !all20XX )
             route = route.append("?position=all%20positions&week=%1").arg(week);

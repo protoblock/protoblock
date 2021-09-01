@@ -907,7 +907,7 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
     strtweet += " trading at: " + price;
     strtweet += "\n«" + tt->symbol() + "» @protoblock";
-    strtweet += "\nhttp://protoblock.com/ticks.html?symbol=" + tt->symbol();
+    strtweet += "\nhttp://fantasybit.com/ticks.html?symbol=" + tt->symbol();
     strtweet += "\n#fantasyfootball #fantasybits $ƑɃ";
     qDebug() << " sending tweet " << strtweet.data();
     sock.send(strtweet.data(), strtweet.size(),0);
@@ -917,7 +917,7 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
     strtweet += ") trading at: " + price + " fantasy points for SuperBowl LII";
     strtweet += "\n«" + tt->symbol() + "» @protoblock";
-    strtweet += "\nhttp://protoblock.com/ticks.html?symbol=" + tt->symbol();
+    strtweet += "\nhttp://fantasybit.com/ticks.html?symbol=" + tt->symbol();
     strtweet += "\n#fantasyfootball #fantasybits $ƑɃ #sb52 #blockchain";
     qDebug() << " sending tweet " << strtweet.data();
     sock.send(strtweet.data(), strtweet.size(),0);
@@ -928,13 +928,13 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
      /*
     "name"
     " (WR TEN) - 2017 Totals - last trade @ 100 "
-    "http://protoblock.com/ticks.html?playerid=$RBRBa17s"
+    "http://fantasybit.com/ticks.html?playerid=$RBRBa17s"
     "$RBRBa17s "
     "@protoblock #fantasyfootball"
     "12/21/17 12:12:12.12"
 
     "01234567890123456789012345678901 (WR TEN) - 2017 Totals - trading at 100 @protoblock "
-    "http://protoblock.com/ticks.html?playerid=RBRBa17s"
+    "http://fantasybit.com/ticks.html?playerid=RBRBa17s"
     "$RBRBa17s  #fantasybits"
      */
 

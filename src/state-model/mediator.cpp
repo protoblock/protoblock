@@ -360,6 +360,7 @@ void Mediator::GlobalStateChange(GlobalState gs) {
 
         if ( amLive && gs.week() > m_theWeek) {
             settheWeek(gs.week());
+            settheLastWeek(WK.NFL);
             updateWeek();
         }
         else if ( !(gs.season() == 2014 && gs.week() <= 1) )
@@ -375,6 +376,7 @@ void Mediator::LiveGui(GlobalState gs) {
     if ( !amLive ) {
         amLive = true;
         settheWeek(gs.week());
+        settheLastWeek(WK.NFL);
         settheSeason(gs.season());
 
         UpdateSeasonWeek(gs.season(),gs.week());

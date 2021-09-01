@@ -65,7 +65,7 @@ public:
     std::unordered_map<string,std::pair<bool,std::chrono::steady_clock::time_point>> mLastTweet;
 
     static QString getLink(const string &is) {
-        return QString("protoblock.com/ticks.html?playerid=%1").arg(is.data());
+        return QString("fantasybit.com/ticks.html?playerid=%1").arg(is.data());
     }
     std::chrono::steady_clock::time_point last_tweet;
 #endif

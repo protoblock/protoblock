@@ -218,7 +218,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     QFileInfo check_file(genesisBootFile);
     if ( !check_file.exists() ) {
 
-        QString links("http://protoblock.com");
+        QString links("http://fantasybit.com");
         QString route(filename);
 
         QMap<QString,QString>  headers;
