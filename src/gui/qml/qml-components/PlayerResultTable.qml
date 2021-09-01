@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
@@ -7,6 +8,7 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
+import QtQuick.Controls 2.3 as Mat2
 
 Item {
     id: topwr
@@ -27,10 +29,6 @@ Item {
 
     property int ocol: 5
     property int numocols: 8
-//    property int pcol: ocol + ocount
-//    property int lcol: pcol + pcount
-//    property int qcol: lcol + lcount
-//    property int vcol: qcol + qcount
 
     Item {
         id: i2
@@ -41,25 +39,23 @@ Item {
         TableView {
             id: tvr
             Component.onCompleted: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
-//                selection.select(0);
-                console.log("prt tvr comleted")
+//                MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", tvr.sortIndicatorOrder)
+                tvr.model.sortAgain("result", tvr.sortIndicatorOrder)
+
             }
 
             onSelectionChanged: {
-                console.log("changed" + currentRow);
-//                console.log("selected" + currentRow + model.data(currentRow,"lastname"));
-//                            prevlpv.modelPick = model.data(currentRow,"awardsModel");
-                selectedRow = currentRow
+//                console.log("changed" + currentRow);
+                tvr.selectedRow = tvr.currentRow
             }
 
             onClicked: {
-                console.log("clicked" + currentRow);
-                tvr.selectedRow = currentRow
+//                console.log("clicked" + currentRow);
+                tvr.selectedRow = tvr.currentRow
             }
 
             onCurrentRowChanged: {
-                console.log("onCurrentRowChanged" + currentRow);
+//                console.log("onCurrentRowChanged" + currentRow);
                 tvr.selectedRow = currentRow
             }
 
@@ -72,11 +68,14 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+//                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                tvr.model.sortAgain(tvr.getColumn(tvr.sortIndicatorColumn).role, tvr.sortIndicatorOrder)
+
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                tvr.model.sortAgain(tvr.getColumn(tvr.sortIndicatorColumn).role, tvr.sortIndicatorOrder)
+//                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             headerDelegate: headerdel
@@ -167,7 +166,7 @@ Item {
                 title: "Position"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(7)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -524,7 +523,7 @@ Item {
                 width: parent.width
                 color: "transparent"
                 anchors.top: parent.top
-                ComboBox {
+                Mat2.ComboBox {
                     id: cbc
                     model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === 1
@@ -532,55 +531,32 @@ Item {
                     visible: styleData.column === 1
                     anchors.fill: parent
                     onCurrentTextChanged: {
-                       MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
-                        kicker = def = qb = (currentIndex === 0)
-
+                        MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
                         if ( currentIndex === 0 )
                             kicker = def = qb = rb = wr = true
                         else {
                             kicker = def = qb = rb = wr = false
 
-                        if ( currentIndex === 5) {
-                            kicker = true;
-                        }
-                        else if ( currentIndex === 6) {
-                            def = true
-                        }
-                        else if (currentIndex === 1 )
-                            qb = true
-                        else if ( currentIndex === 2)
-                            rb = true
-                        else wr = true
+                            if ( currentIndex === 5) {
+                                kicker = true;
+                            }
+                            else if ( currentIndex === 6) {
+                                def = true
+                            }
+                            else if (currentIndex === 1 ) {
+                                qb = true
+                            }
+                            else if ( currentIndex === 2) {
+                                rb = true
+                            }
+                            else {
+                                wr = true
+                            }
                         }
                     }
                 }
 
                 Material.IconButton {
-                    id: exportit
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    Layout.fillHeight: true
-                    Layout.fillWidth: false
-                    width: ProtoScreen.guToPx(6)
-                    height: parent.height
-                    onClicked: {
-                        importexportDialog.show();
-                    }
-
-                    size: ProtoScreen.guToPx(2.5)
-
-
-                    visible: false//styleData.column === 0
-                    enabled: false//styleData.column === 0
-                    action: Material.Action {
-                        iconName: "awesome/code"
-                        hoverAnimation: true
-                    }
-                }
-
-                Material.IconButton {
-//                    anchors.horizontalCenter: parent.horizontalCenter
-//                    anchors.bottom: parent.bottom
                     anchors.centerIn: parent
                     anchors.fill: parent
                     Layout.fillHeight: true
@@ -592,7 +568,6 @@ Item {
                         posvisible = true;
                     }
                     size: ProtoScreen.guToPx(1.5)
-
 
                     visible: styleData.column === ocol && !posvisible
                     enabled: visible
@@ -789,11 +764,9 @@ Item {
     }
 
     function update() {
-        console.log(" PlayerResultSelected update")
+//        console.log(" PlayerResultSelected update")
         tvr.selection.forEach(function(rowIndex) {
             MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
-            //,tvr.model.roleForName("awardsModel"))
-//            if (row && row.awardsModel) topwr.selectedModel = row.awardsModel
         })
     }
 

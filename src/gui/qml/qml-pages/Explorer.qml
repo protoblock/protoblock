@@ -1,10 +1,9 @@
-import QtQuick 2.4
+import QtQml.Models 2.2
+import QtQml 2.2
+import QtQuick 2.5
 import QtQuick.Controls 1.4
-//import ProRotoQml.Protoblock 1.0
-
-import Material 1.0
-import Material.ListItems 1.0 as ListItems
 import QtQuick.Layouts 1.1
+import Material 1.0
 import ProRotoQml.Theme 1.0
 
 Item {
@@ -64,29 +63,10 @@ Item {
                         MiddleMan.set_blocknum_string_num(blocknum.value)
                     }
                 }
-
-//                Button {
-//                    enabled: MiddleMan.liveSync === "Live"
-//                    elevation: 2
-//                    id: sendbut
-//                    text: "explore"
-//                    Layout.column: 2
-//                    Layout.row: 2
-//                    Layout.alignment: Qt.AlignLeft
-//                    Layout.fillWidth: false
-//                    Layout.fillHeight: false
-//                    onClicked : {
-//                        MiddleMan.set_blocknum_string_num(blocknum.value)
-//                        console.log(MiddleMan.blocknum_string)
-//                    }
-//                    Layout.preferredHeight: ProtoScreen.guToPx(3)
-//                    Layout.preferredWidth: ProtoScreen.guToPx(9)
-
-//                }
             }
         }
 
-        TextArea{
+        TextArea {
             Layout.preferredWidth: ProtoScreen.guToPx(80)
             Layout.preferredHeight: contentHeight
             Layout.fillHeight: true

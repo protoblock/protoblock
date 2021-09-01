@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
@@ -5,9 +6,9 @@ import Material 1.0 as Material
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
-//import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
+import QtQuick.Controls 2.1 as Mat2
 
 Item {
     id: topw
@@ -63,20 +64,12 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                console.log( " sort colm changed ")
+                model.sortAgain(tv.getColumn(tv.sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-
-                console.log( " sort ind ord changed ")
-
+                model.sortAgain(tv.getColumn(tv.sortIndicatorColumn).role, sortIndicatorOrder)
             }
-
 
             headerDelegate: headerdel
             frameVisible: false
@@ -162,14 +155,14 @@ Item {
             TableViewColumn {
                 id: tvm
                 role: "pos"
-                title: "Pos"
+                title: "Position"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
 
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
-                width: ProtoScreen.guToPx(4)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -431,25 +424,17 @@ Item {
         Rectangle {
             id: idd
             implicitWidth: textItem2.implicitWidth
-//            width: parent.width
             height: ProtoScreen.guToPx(8)
-//            anchors.fill: parent
             color: "white"
             Rectangle {
-//                enabled: styleData.column > 3
-//                visible: styleData.column > 3
                 id: rec
                 height: parent.height * .50
                 width: parent.width
                 color: "transparent"
-                //styleData.column < 3 ? "white" : "grey"
                 anchors.top: parent.top
-//                border.width: ProtoScreen.guToPx(.125)
-//                border.color: light.textColor
-//                radius: ProtoScreen.guToPx(.125)
-                ComboBox {
+                Mat2.ComboBox {
                     id: cbc
-                    model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+                    model: ["All", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1

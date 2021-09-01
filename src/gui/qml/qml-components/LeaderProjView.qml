@@ -1,3 +1,5 @@
+import QtQml.Models 2.2
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
@@ -9,13 +11,13 @@ import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
 
 
-
 Item {
     id: topi
 
     signal releasedit(string fname)
     property string dragtarget: "dropProxy"
     property int myTheWeek: MiddleMan.theWeek
+    property int lastweekseas: MiddleMan.theLastWeek
     anchors.fill: parent
 //    anchors.margins: ProtoScreen.guToPx(1)
 
@@ -308,7 +310,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -326,8 +328,7 @@ Item {
                 title: "Skill"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
-
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -346,7 +347,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -365,7 +366,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -384,7 +385,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -421,9 +422,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek >= 1 && myTheWeek < MiddleMan.lastWeekForTheSeason
-
-
+                visible: myTheWeek >= 1 && myTheWeek < lastweekseas
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -441,7 +440,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek > 1 && myTheWeek <= MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek > 1 && myTheWeek <= lastweekseas
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -459,7 +458,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek >= 1 || myTheWeek <= lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -477,7 +476,7 @@ Item {
                 title: "Overall"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek >= 1 || myTheWeek <= MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek >= 1 || myTheWeek <= lastweekseas
 
 
                 delegate: Material.Label {
@@ -497,7 +496,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= MiddleMan.lastWeekForTheSeason
+                visible: myTheWeek >= 1 || myTheWeek <= lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent

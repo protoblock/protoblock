@@ -17,11 +17,11 @@ Item {
                 delegate: ListItem.Subtitled {
                     text: modelData
                     selected: modelData === strCheck
-                    onSelectedChanged: console.log(index)
+//                    onSelectedChanged: console.log(index)
                     onClicked: {
                         strCheck= section[index]
                         pageHelper.title = modelData
-                        console.log(section[index])
+//                        console.log(section[index])
                         var theFile = modelData
 
                         rootLoader.source  = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )

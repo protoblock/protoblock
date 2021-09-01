@@ -18,8 +18,8 @@ Item {
 
     property int  currentLevel: 0
     onCurrentLevelChanged: console.log("currentlevel " + currentLevel)
-//    property string  baseUrl: "https://158.222.102.83:4545/"
-    property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
+//    property string  baseUrl: "http://158.222.102.83:4545/"
+    property string  baseUrl: "http://fantasybit.com/php/simple.php?url=https://158.222.102.83:4545/"
     property string currentFPlayer
 
     signal modelFull()
