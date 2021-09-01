@@ -36,11 +36,19 @@ Item {
             model: MiddleMan.pResultSelectedModel //? 0 : MiddleMan.pResultSelectedModel
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                tvl.model.sortAgain(tvl.getColumn(tvl,sortIndicatorColumn).role, tvl.sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged tvl.getColumn(tvl.sortIndicatorColumn).role" + tvl.getColumn(tvl.sortIndicatorColumn))
+                if ( tvl.getColumn(tvl.sortIndicatorColumn) )
+                    model.sortAgain(tvl.getColumn(sortIndicatorColumn).role, tvl.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-                tvl.model.sortAgain(tvl.getColumn(tvl.sortIndicatorColumn).role, tvl.sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged tvl.getColumn(tvl.sortIndicatorColumn).role" + tvl.getColumn(tvl.sortIndicatorColumn))
+                if ( tvl.getColumn(tvl.sortIndicatorColumn) )
+                    model.sortAgain(tvl.getColumn(sortIndicatorColumn).role, tvl.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
 

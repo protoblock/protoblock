@@ -48,12 +48,20 @@ Item {
 //            sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(tv.getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged tv.getColumn(tv.sortIndicatorColumn).role" + tv.getColumn(tv.sortIndicatorColumn))
+                if ( tv.getColumn(tv.sortIndicatorColumn) )
+                    model.sortAgain(tv.getColumn(sortIndicatorColumn).role, tv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
 //                resizeColumnsToContents();
             }
 
             onSortIndicatorOrderChanged: {
-                model.sortAgain(tv.getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged tv.getColumn(tv.sortIndicatorColumn).role" + tv.getColumn(tv.sortIndicatorColumn))
+                if ( tv.getColumn(tv.sortIndicatorColumn) )
+                    model.sortAgain(tv.getColumn(sortIndicatorColumn).role, tv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
 //                resizeColumnsToContents()
             }
 

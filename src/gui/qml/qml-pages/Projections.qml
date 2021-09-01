@@ -26,8 +26,6 @@ Item {
 //        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
     }
 
-
-
     Card {
         radius: 0
         flat: true
@@ -36,7 +34,7 @@ Item {
         width: parent.width
         height: parent.height
         anchors{
-            top: parent.top
+//            top: parent.top
 //                topMargin:ProtoScreen.guToPx(2)
 //                bottomMargin:ProtoScreen.guToPx(1)
             horizontalCenter: parent.horizontalCenter

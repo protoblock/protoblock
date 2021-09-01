@@ -14,7 +14,7 @@ Item {
     anchors.fill: parent
 
     property variant selectedModel
-//    property alias ccount: tvr.columnCount
+//    property alias ccount: rtvr.columnCount
     property int focuscount: 0
     property string who: "default"
     property int rw: 8
@@ -73,7 +73,7 @@ Item {
         height: parent.height - ProtoScreen.guToPx(5)
 
         TableView {
-            id: tvr
+            id: rtvr
             Component.onCompleted: {
 //                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
 //                selection.select(0);
@@ -89,12 +89,12 @@ Item {
 
             onClicked: {
                 console.log("clicked" + currentRow);
-                tvr.selectedRow = currentRow
+                rtvr.selectedRow = currentRow
             }
 
             onCurrentRowChanged: {
                 console.log("onCurrentRowChanged" + currentRow);
-                tvr.selectedRow = currentRow
+                rtvr.selectedRow = currentRow
             }
 
             highlightOnFocus: true
@@ -106,13 +106,20 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged rtvr.getColumn(rtvr.sortIndicatorColumn).role" + rtvr.getColumn(rtvr.sortIndicatorColumn))
+                if ( rtvr.getColumn(rtvr.sortIndicatorColumn) )
+                    model.sortAgain(rtvr.getColumn(sortIndicatorColumn).role, rtvr.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged rtvr.getColumn(rtvr.sortIndicatorColumn).role" + rtvr.getColumn(rtvr.sortIndicatorColumn))
+                if ( rtvr.getColumn(rtvr.sortIndicatorColumn) )
+                    model.sortAgain(rtvr.getColumn(sortIndicatorColumn).role, rtvr.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
-
             headerDelegate: headerdel
             frameVisible: false
             selectionMode: SelectionMode.SingleSelection
@@ -124,7 +131,7 @@ Item {
 //                  id: myPalette;
 //                  colorGroup: SystemPalette.Inactive
 //               }
-               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
+               color: styleData.row===rtvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
 //               {
 //                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
 //                  return styleData.selected?myPalette.highlight:baseColor
@@ -241,7 +248,7 @@ Item {
                     backgroundColor = Qt.binding(function() {
                         if ( !model )
                             return "transparent"
-                        else if (styleData.row===tvr.selectedRow )
+                        else if (styleData.row===rtvr.selectedRow )
                             return "Light Grey"
                         else {
                             switch(model.pos) {
@@ -292,7 +299,7 @@ Item {
                     }
                     Component.onCompleted: {
                         backgroundColor = Qt.binding(function() {
-                            if (styleData.row===tvr.selectedRow )
+                            if (styleData.row===rtvr.selectedRow )
                                 return "Light Grey"
                             else
                             switch(styleData.value) {
@@ -877,7 +884,7 @@ Item {
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tvr.sortIndicatorColumn ? themeroot.theme.accentColor
+                    styleData.column  === rtvr.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
@@ -985,7 +992,7 @@ Item {
 
 
     Connections {
-        target: tvr.selection
+        target: rtvr.selection
         onSelectionChanged: {
 
             rowtt.update();
@@ -995,14 +1002,14 @@ Item {
 
     Connections {
         target: MiddleMan
-        onThePrevWeekChanged: tvr.selectedRow = -1
+        onThePrevWeekChanged: rtvr.selectedRow = -1
     }
 
     function update() {
         console.log(" ROWtradng update")
-        tvr.selection.forEach(function(rowIndex) {
-            MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
-            //,tvr.model.roleForName("awardsModel"))
+        rtvr.selection.forEach(function(rowIndex) {
+            MiddleMan.startDepth(rtvr.model.getPlayerSliceModelUid(rowIndex));
+            //,rtvr.model.roleForName("awardsModel"))
 //            if (row && row.awardsModel) rowtt.selectedModel = row.awardsModel
         })
     }

@@ -68,14 +68,19 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-//                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                tvr.model.sortAgain(tvr.getColumn(tvr.sortIndicatorColumn).role, tvr.sortIndicatorOrder)
-
+                console.log( "onSortIndicatorColumnChanged tvr.getColumn(tv.sortIndicatorColumn).role" + tvr.getColumn(tvr.sortIndicatorColumn))
+                if ( tvr.getColumn(tvr.sortIndicatorColumn) )
+                    model.sortAgain(tvr.getColumn(sortIndicatorColumn).role, tvr.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-                tvr.model.sortAgain(tvr.getColumn(tvr.sortIndicatorColumn).role, tvr.sortIndicatorOrder)
-//                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged tvr.getColumn(tv.sortIndicatorColumn).role" + tvr.getColumn(tvr.sortIndicatorColumn))
+                if ( tvr.getColumn(tvr.sortIndicatorColumn) )
+                    model.sortAgain(tvr.getColumn(sortIndicatorColumn).role, tvr.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             headerDelegate: headerdel

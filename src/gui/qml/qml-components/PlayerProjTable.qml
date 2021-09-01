@@ -20,7 +20,7 @@ Item {
     signal donedrop
     signal addcolumn(string fname)
 
-    property alias ccount: tv.columnCount
+    property alias ccount: ltv.columnCount
     property int focuscount: 0
 
     property int pcol: 4
@@ -32,9 +32,9 @@ Item {
         height: parent.height //- ProtoScreen.guToPx(5)
 
         TableView {
-            id: tv
+            id: ltv
             Component.onCompleted: {
-//                tv.resizeColumnsToContents()
+//                ltv.resizeColumnsToContents()
 
                 //                width = Qt.binding(function(){
 //                   return ProtoScreen.guToPx(6) * columnCount
@@ -46,8 +46,8 @@ Item {
             function addcolumnMethod(fname) {
 //                customRoleNames[0] = fname
                 console.log(" addColumn " )
-                var role = MiddleMan.addFnameColumn(fname,tv.columnCount)
-                tv.addColumn(columnComponent.createObject(tv, {
+                var role = MiddleMan.addFnameColumn(fname,ltv.columnCount)
+                ltv.addColumn(columnComponent.createObject(ltv, {
                                                               "role": role,
                                                               "title": fname,
                                                               "horizontalAlignment": Text.AlignHCenter,
@@ -56,7 +56,7 @@ Item {
                              )
 
 
-//                tv.resizeColumnsToContents()
+//                ltv.resizeColumnsToContents()
             }
             highlightOnFocus: false
             anchors.horizontalCenter: parent.horizontalCenter
@@ -67,11 +67,19 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(tv.getColumn(tv.sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged tv.getColumn(tv.sortIndicatorColumn).role" + ltv.getColumn(ltv.sortIndicatorColumn))
+                if ( ltv.getColumn(ltv.sortIndicatorColumn) )
+                    model.sortAgain(ltv.getColumn(sortIndicatorColumn).role, ltv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-                model.sortAgain(tv.getColumn(tv.sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged tv.getColumn(tv.sortIndicatorColumn).role" + ltv.getColumn(ltv.sortIndicatorColumn))
+                if ( ltv.getColumn(ltv.sortIndicatorColumn) )
+                    ltv.model.sortAgain(ltv.getColumn(sortIndicatorColumn).role, ltv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             headerDelegate: headerdel
@@ -347,7 +355,7 @@ Item {
                         if ( lbl.text !== "  " && model.knownProjection !== model.projection ) {
 //                                parseInt(lbl.text) !== model.projection) {
                             model.projection = model.knownProjection
-//                            tv.model.setData(tv.model.index(styleData.row,0),
+//                            ltv.model.setData(ltv.model.index(styleData.row,0),
 //                                             parseInt(lbl.text), 0)
                             lbl.text = Qt.binding(function(){
                                 if ( !model ) return " ";
@@ -393,7 +401,7 @@ Item {
                 onEditingFinished: {
                    //                           styleData.value = value
                    console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + "v  " + styleData.value);
-//                   tv.model.setData(tv.model.index(styleData.row,0),
+//                   ltv.model.setData(ltv.model.index(styleData.row,0),
 //                                    value, 0)
                     model.projection = value
 
@@ -437,11 +445,12 @@ Item {
                 anchors.top: parent.top
                 ComboBox {
                     id: cbc
+//                    textRole: "display"
                     anchors.centerIn: parent
                     height: parent.height * .75
                     width: parent.width * .90
 
-                    model: ["ALL", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+                    model: ["ALL", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] //MiddleMan.pPosFilter//
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1
@@ -449,8 +458,6 @@ Item {
                     onCurrentTextChanged: {
                           MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
                     }
-
-//                    implicitIndicatorWidth: 4
                 }
 
                 Material.IconButton {
@@ -527,7 +534,7 @@ Item {
                         height: parent.height * .75
                         width: parent.width * .90
                         visible: styleData.column === pcol
-                        enabled: styleData.column === pcol && MiddleMan.allowAction && focus
+                        enabled: styleData.column === pcol && MiddleMan.allowAction
                         text: "Send"
 
                         onClicked : {
@@ -629,12 +636,12 @@ Item {
                 width: parent.width
                 height: parent.height * .50
                 backgroundColor: styleData.column === pcol ?
-                                 (but.focus ? "gray" : themeroot.theme.accentColor) :
+                                 (topw.focuscount > 0 ? "gray" : themeroot.theme.accentColor) :
                                  styleData.column < 6 ? themeroot.theme.primaryColor : "#AFE1FF"
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ?
+                    styleData.column  === ltv.sortIndicatorColumn ?
                        Qt.darker("white",1.5) : "black"
 //                        (styleData.column === pcol ? "black" :
 //                          themeroot.theme.accentColor  : "black"
@@ -715,9 +722,9 @@ Item {
 //        onUpdateWeekData: {
 //            Loader.source = themeroot.start
 //            console.log(" onLiveSyncChanged changd");
-////            tv.model.sortAgain("knownProjection",Qt.DescendingOrder)
+////            ltv.model.sortAgain("knownProjection",Qt.DescendingOrder)
 //            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-//            tv.sortIndicatorColumn =    MiddleMan.pProjectionsViewFilterProxyModel
+//            ltv.sortIndicatorColumn =    MiddleMan.pProjectionsViewFilterProxyModel
 //            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
 //        }
 
