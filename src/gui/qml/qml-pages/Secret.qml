@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.6
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.0
@@ -245,13 +246,13 @@ Pane {
 //                Layout.alignment: index < 6 ? Qt.AlignRight : Qt.AlignLeft
 
                 Label {
-                    height: parent.height
+//                    height: parent.height
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
 //                    horizontalAlignment: index < 6 ? Text.AlignLeft : Text.AlignRight
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: -2
+//                    Layout.verticalCenter: parent.verticalCenter - 2
+//                    Layout.vverticalCenterOffset: -2
                     Layout.preferredWidth: parent.width * .20
                     id: lb
                     text: (index < 9 ? " " : "") +(index+1) + ": "
@@ -261,8 +262,8 @@ Pane {
 
                 }
                 TextField {
-                    height: parent.height
-                    anchors.verticalCenter: parent.verticalCenter
+//                    height: parent.height
+//                    Layout.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignBottom
 //                    horizontalAlignment: Text.AlignLeft
 //                    Layout.alignment: Qt.AlignLeft

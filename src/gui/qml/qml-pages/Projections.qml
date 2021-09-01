@@ -1,4 +1,6 @@
-import QtQuick 2.0
+import QtQml.Models 2.2
+import QtQml 2.2
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import Material.ListItems 1.0 as ListItems
 import Material 1.0
@@ -21,15 +23,15 @@ Item {
                                          (stack.currentItem.objectName === "nextWeekS" ? "Schedule" : MiddleMan.liveSync))
 
     Component.onCompleted: {
-//         pageHelper.title = "Projections 2016 Week" + week
-        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
+//        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
     }
 
-        // spacer
-//    Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
 
 
     Card {
+        radius: 0
+        flat: true
+
         id: topcard
         width: parent.width
         height: parent.height
@@ -192,15 +194,6 @@ Item {
             height: parent.height - cBan.height
             id: stack
             initialItem: pptS
-//            property real leftwidth: (stack.currentItem.objectName === "pptS") ? schedr.width :
-//                                     (stack.currentItem.objectName === "prevWeekS") ? sched2.width : sched3.width
-
-//            property real midwidth: (stack.currentItem.objectName === "pptS") ? projr.width :
-//                                     (stack.currentItem.objectName === "prevWeekS") ? proj2.width : proj3.width
-
-//            property real ritwidth: (stack.currentItem.objectName === "pptS") ? rightr.width :
-//                                     (stack.currentItem.objectName === "prevWeekS") ? rightr2.width : rightr3.width
-
 
             Component.onCompleted: {
                stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
@@ -319,7 +312,6 @@ Item {
 
                         ScheduleViewPrev {
                             id: scheduleView2
-//                            scheduleModel: MiddleMan.pPrevQItemSelectionModel
                         }
                     }
                     Card {

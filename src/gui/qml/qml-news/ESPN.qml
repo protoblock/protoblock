@@ -15,7 +15,7 @@ Item {
             width: parent.width
             elevation:  5
             text: model.title
-            subText: model.summary + "  Copyright 2018 ESPN Inc"
+            subText: model.summary + "  Copyright 2021 ESPN Inc"
             maximumLineCount: 2
             onClicked:{
                 Qt.openUrlExternally( model.link)

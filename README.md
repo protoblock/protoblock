@@ -1,7 +1,7 @@
 # Protoblock 
 This repository contains the open source protoblock blockchain, fantasybit token and proof-of-skill consensus code. 
 
-[Webpage](https://protoblock.com)
+[Webpage](https://fantasybit.com)
 [Proof-of-Skill - Medium](https://medium.com/@jaybny/on-proof-of-skill-6af149f45ce8)
 
 QML/C++ desktop client for Protoblock blockchain full node + Fantasybit wallet 
@@ -64,10 +64,10 @@ Telgram is the preferred means of getting in touch with the developers.
 88     88  Yb  YbodP    88    YbodP  88oodP 88ood8  YbodP   YboodP 88  Yb
 ```
 
-[web-home]: https://protoblock.com
-[web-download]: https://protoblock.com/downloads
+[web-home]: https://fantasybit.com
+[web-download]: https://fantasybit.com/downloads
 [twitter-main]: https://twitter.com/protoblock
 [twitter-feed]: https://twitter.com/prototicker
 [reddit]: https://www.reddit.com/r/Protoblock/
-[coins]: http://protoblock.com/coins/
+[coins]: http://fantasybit.com/coins/
 [dev-email]: mailto:contact@protoblock.com

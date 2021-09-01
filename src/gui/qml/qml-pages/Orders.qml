@@ -1,7 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
-import Material 1.0 as Material
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0

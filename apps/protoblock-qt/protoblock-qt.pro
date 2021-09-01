@@ -2,7 +2,7 @@ include ($$PWD/../protoblockd/deps.pri)
 include ($$PWD/../../share/protos.pri)
 include ($$PWD/../../res/res.pri)
 
-win32 { DEFINES += INTEL_KLUDGE }
+#win32 { DEFINES += INTEL_KLUDGE }
 
 TARGET = protoblock-qt
 TEMPLATE = app
@@ -65,8 +65,8 @@ INCLUDEPATH += $$PWD/../../src/QmlModels
 INCLUDEPATH += $$PWD/../../src/QmlSuperMacros
 
 
-INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty
-INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty/secp256k1
+#INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty
+#INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty/secp256k1
 
 SOURCES += \
     $$PWD/src/main.cpp \

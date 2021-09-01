@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
@@ -9,8 +10,8 @@ import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
 //import Material 1.0
 
-import ProRotoQml.Theme 1.0
-
+import QtQuick.Controls.Private 1.0
+import QtQuick.Controls 2.1 as Mat2
 
 Material.Card {
     id: thisroot

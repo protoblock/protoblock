@@ -71,7 +71,7 @@ private:
 #else
             QString storageDirName =QString("/storage");
 #endif
-            QString logFileName = QString("/protoblock-2018.log");
+            QString logFileName = QString("/fantasybit-log.log");
 
             switch (settingKey) {
             case ServerIp:  return "127.0.0.1";

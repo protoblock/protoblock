@@ -58,7 +58,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pResultSelectedModel(new SortFilterProxyModel),
                     m_height(0),
                     m_blocknum(0) ,
-                    myFantasyName("") ,
+                    myFantasyName{},
                     m_theSeason(2014),
                     m_pAccountsModel(new SortFilterProxyModel)  {
 
@@ -170,14 +170,25 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
-    qDebug() << myFantasyName.data() << " mediator namestatus " << myname.DebugString().data();
+    qDebug() << myFantasyName.name().data() << " mediator namestatus " << myname.DebugString().data();
 
-    if ( myname.name() == myFantasyName &&  myname.name() != otherFantasyName)
-        return;
+    bool updatestatus = false;
+    if ( myname.name() == myFantasyName.name() && myname.name() != otherFantasyName)  {
+        if ( !(updatestatus = myname.status() > myFantasyName.status()) )
+            return;
+    }
 
     if ( nullptr != mGoodNameBalModel.getByUid(myname.name().data()) ) {
-//        if ( myFantasyName != "" ) return;
         qDebug() << " already have name in GoodName";
+
+        if ( updatestatus ) {
+            qDebug() << " updatestatus ";
+            if ( auto it = mFantasyNameBalModel.getByUid(myname.name().data() )) {
+                mGoodNameBalModel.update(it);
+            }
+            else
+                return;
+        }
     }
     else {
         auto it = mFantasyNameBalModel.getByUid(myname.name().data());
@@ -185,7 +196,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
             qDebug() << " dont have name in GoodName, have name in mFantasyNameBalMode adding good";
 
             auto it2 = new FantasyNameBalModelItem(*it);
-            mGoodNameBalModel.append(it2);
+            m_pGoodNameBalModel->append(it2);
         }
         else {
             qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
@@ -195,15 +206,19 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
             }
             else {
                 QString nn = myname.name().data();
-                mGoodNameBalModel.append(new FantasyNameBalModelItem(nn));
+                m_pGoodNameBalModel->append(new FantasyNameBalModelItem(nn));
             }
         }
+
+//        update_pGoodNameBalModel(&mGoodNameBalModel);
+//        emit pGoodNameBalModelChanged(&mGoodNameBalModel);
     }
 
     otherFantasyName = "";
-    myFantasyName = myname.name();
+    myFantasyName = myname;
+
     auto mgit = mGoodNameBalModel.getByUid(myname.name().data());
-    mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
+    mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName.name()));
     update_pMyFantasyNameBalance(mgit);
     qDebug() << "Mediator  emitting using fantasy name " << myname.name().data();
     myGamesSelectionModel.reset();
@@ -214,7 +229,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
 }
 
 void Mediator::OnPlayName(string pname) {
-    qDebug() << myFantasyName.data() << " mediator PlayName " << pname.data();
+    qDebug() << myFantasyName.name().data() << " mediator PlayName " << pname.data();
 
     if ( pname == otherFantasyName )
         return;
@@ -223,10 +238,15 @@ void Mediator::OnPlayName(string pname) {
         return;
 
     otherFantasyName = pname;
-    myFantasyName = otherFantasyName;
+    myFantasyName.set_name(otherFantasyName);
     auto mgit = m_pFantasyNameBalModel->getByUid(pname.data());
-    mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
+    mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName.name()));
     update_pMyFantasyNameBalance(mgit);
+
+    if ( nullptr == mGoodNameBalModel.getByUid(pname.data() )) {
+        mGoodNameBalModel.append(mgit);
+    }
+
     qDebug() << "Mediator PlayName emitting using fantasy name " << pname.data();
     myGamesSelectionModel.reset();
     emit usingFantasyName(pname.data());
@@ -240,7 +260,7 @@ void Mediator::LiveProj(FantasyBitProj proj) {
 
         item->set_avg(mGateway->dataService->GetAvgProjection(proj.playerid()));
 
-        if ( proj.name() == myFantasyName ) {
+        if ( proj.name() == myFantasyName.name() ) {
             set_busySend(false);
             if ( proj.proj() > 0 ) {
                 item->set_knownProjection(proj.proj());
@@ -265,7 +285,7 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
             heighest = m.status();
             hname = m.name();
         }
-        if ( m.name() == myFantasyName )
+        if ( m.name() == myFantasyName.name() )
             continue;
 
         if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
@@ -287,7 +307,7 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
-    if ( myFantasyName == "" && hname != "" && heighest >= 20)
+    if ( myFantasyName.name() == "" && hname != "" && heighest >= 20)
         useName(hname.data());
     else
         emit noName();
@@ -340,6 +360,7 @@ void Mediator::GlobalStateChange(GlobalState gs) {
 
         if ( amLive && gs.week() > m_theWeek) {
             settheWeek(gs.week());
+            settheLastWeek(WK.NFL);
             updateWeek();
         }
         else if ( !(gs.season() == 2014 && gs.week() <= 1) )
@@ -355,6 +376,7 @@ void Mediator::LiveGui(GlobalState gs) {
     if ( !amLive ) {
         amLive = true;
         settheWeek(gs.week());
+        settheLastWeek(WK.NFL);
         settheSeason(gs.season());
 
         UpdateSeasonWeek(gs.season(),gs.week());
@@ -502,7 +524,7 @@ void Mediator::updateWeek() {
             }
         }
 
-        if (myFantasyName != "" ) {
+        if (myFantasyName.name() != "" ) {
             updateOnChangeFantasyName();
             m_pMyFantasyNameBalance->updatePnl(mGateway->dataService->
                                              GetOpenPnl(m_pMyFantasyNameBalance->get_name().toStdString()));
@@ -530,7 +552,7 @@ void Mediator::updateOnChangeFantasyName() {
 
 void Mediator::updateCurrentFantasyPlayerProjections(){
     //update to recent projection projection and mark them a sent
-    auto  recentProjections = mGateway->dataService->GetProjByName(myFantasyName);
+    auto  recentProjections = mGateway->dataService->GetProjByName(myFantasyName.name());
     qDebug() << "updateCurrentFantasyPlayerProjections " << recentProjections.size();
 
     for ( auto it : mPlayerProjModel)  {
@@ -571,9 +593,9 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
     }
 
 
-    auto myorderpositions = mGateway->dataService->GetOrdersPositionsByName(myFantasyName);
-    mTradingPositionsModel.clearForUpdateFname(myFantasyName);
-    mROWTradingPositionsModel.clearForUpdateFname(myFantasyName);
+    auto myorderpositions = mGateway->dataService->GetOrdersPositionsByName(myFantasyName.name());
+    mTradingPositionsModel.clearForUpdateFname(myFantasyName.name());
+    mROWTradingPositionsModel.clearForUpdateFname(myFantasyName.name());
     TradingPositionsModelItem *t = nullptr;
     for ( auto p : myorderpositions ) {
       //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
@@ -675,6 +697,7 @@ void Mediator::NewWeek(int week) {
         updateLiveLeaders();
     }
     else {
+//        return;
         m_pWeeklyScheduleModel->clear();
         //ToDo: maybe only if live
         if ( !(m_theSeason == 2014 && week <= 1) )
@@ -753,8 +776,8 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     connect( this, SIGNAL(doNameCheck(QString)),
              that, SLOT(nameCheck(QString)));
 
-    connect( that, SIGNAL(nameAvail(QString &,bool)),
-             this, SLOT(nameAvail(QString &,bool)));
+    connect( that, SIGNAL(nameAvail(QString&,bool)),
+             this, SLOT(nameAvail(QString&,bool)));
 
     connect( that, SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)),
              this, SLOT(NewFantasyName(fantasybit::FantasyNameBal)));
@@ -876,11 +899,11 @@ QString Mediator::init() {
     connect(&myPrevGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
             this,SLOT(selectionPrevChanged(QItemSelection, QItemSelection)));
 
-    return myFantasyName.data(); //todo check if missed live event
+    return myFantasyName.name().data(); //todo check if missed live event
 }
 
 QString Mediator::getSecret() {
-    auto sec = mGateway->dataService->exportMnemonic(myFantasyName);
+    auto sec = mGateway->dataService->exportMnemonic(myFantasyName.name());
     return sec.data();
 }
 
@@ -909,9 +932,9 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
     if ( otherFantasyName != "" )
         return;
 
-    qDebug() << " do transfer" << amount << "from: " << myFantasyName.data() << "to: " << toname;
+    qDebug() << " do transfer" << amount << "from: " << myFantasyName.name().data() << "to: " << toname;
     TransferTrans tt;
-    tt.set_from(myFantasyName);
+    tt.set_from(myFantasyName.name());
     tt.set_to(toname.toStdString());
     tt.set_amount(amount);
 
@@ -983,7 +1006,7 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     qDebug() << "level2 Mediator::OnNewPos " << fp.pos.ToString().data() <<
                 fp.symbol.data() << fp.fname.data();
 
-    if ( fp.fname != myFantasyName )
+    if ( fp.fname != myFantasyName.name() )
         return;
 
     bool isweekly = isWeekly(fp.symbol);
@@ -1027,7 +1050,7 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     auto &tpm = isweekly ? mTradingPositionsModel : mROWTradingPositionsModel;
     double newtotal = tpm.get_totalopenpnl() + (pnl - holdpnl);
     tpm.settotalopenpnl(newtotal);
-    m_pMyFantasyNameBalance->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
+    m_pMyFantasyNameBalance->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName.name()));
 
 }
 
@@ -1082,7 +1105,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
 void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
     qDebug() << "level2 Trading::Mediator " << fo.fname << fo.symbol.data () << fo.openorder.DebugString().data();
 
-    if ( fo.fname != myFantasyName )
+    if ( fo.fname != myFantasyName.name() )
         return;
 
     (isWeekly(fo.symbol) ? mTradingPositionsModel : mROWTradingPositionsModel).Update(fo);

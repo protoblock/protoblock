@@ -117,6 +117,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
 
     QML_READONLY_CSTREF_PROPERTY (qint32, theWeek)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theLastWeek)
     QML_READONLY_CSTREF_PROPERTY (qint32, theSeason)
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
@@ -180,7 +181,7 @@ public:
 #endif
 
     void checkAllowAction() {
-         setallowAction(m_liveSync == "Live" && otherFantasyName == "" && myFantasyName != "");
+         setallowAction(m_liveSync == "Live" && otherFantasyName == "" && myFantasyName.name() != "");
     }
 
     void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
@@ -330,7 +331,7 @@ public:
             vector<FantasyBitProj> &vproj = projbygame[gameid.toStdString()];
 
             FantasyBitProj fproj;
-            fproj.set_name(myFantasyName);
+            fproj.set_name(myFantasyName.name());
             fproj.set_proj(projection);
             fproj.set_playerid(it->get_playerid().toStdString());
             vproj.push_back(fproj);
@@ -599,7 +600,7 @@ public:
 
 
         const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevSeason,m_thePrevWeek);
-        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName);
+        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName.name());
         myPrevGamesSelectionModel.reset();
         m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
         m_pResultSelectedModel->clear();
@@ -622,10 +623,6 @@ public:
 
     Q_INVOKABLE int lastWeekForSeason(int season) {
         return WeekForSeason(season).FFC;
-    }
-
-    Q_INVOKABLE int lastWeekForTheSeason() {
-        return WK.NFL;
     }
 
 //    bool usingRandomNames = false;
@@ -791,7 +788,7 @@ private slots:
 private:
 //    std::string lastPk2name;
     //fantasybit::FantasyAgent m_fantasy_agent;
-    std::string myFantasyName;
+    MyFantasyName myFantasyName;
     std::string otherFantasyName;
 
 //    QString m_playersName;
@@ -830,9 +827,9 @@ private:
 
     void getLeaders(int week,bool lastweek, bool all20XX = false) {
 #ifdef NO_SQL_LEADERS
-        return;
+//        return;
 #endif
-        QString links("https://app.trading.football:4545");
+        QString links(PAPIURL.data());
         QString route("fantasy/leaders");
         if ( !all20XX )
             route = route.append("?position=all%20positions&week=%1").arg(week);

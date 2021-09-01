@@ -9,6 +9,7 @@ Item {
     property string userInFocus
     property string currentWeek
     property string currentPostion
+    property string currentseason: MiddleMan.theSeason
 
     property string  lastUrl: "NULL"
     property string lastTitle
@@ -17,8 +18,8 @@ Item {
 
     property int  currentLevel: 0
     onCurrentLevelChanged: console.log("currentlevel " + currentLevel)
-//    property string  baseUrl: "https://158.222.102.83:4545/"
-    property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
+//    property string  baseUrl: "http://158.222.102.83:4545/"
+    property string  baseUrl: "http://fantasybit.com/php/simple.php?url=https://158.222.102.83:4545/"
     property string currentFPlayer
 
     signal modelFull()
@@ -63,7 +64,7 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
                 width: parent.width
                 wrapMode: Text.WordWrap
-                text: "2018 Leaderboard"
+                text: currentseason + " Leaderboard"
             }
             Label{
                 id: mainSubText
@@ -187,8 +188,8 @@ Item {
                 onClicked: {
                     currentLevel = currentLevel -1
                     if(currentLevel === 0 ){
-                        mainTitle.text = "2018 Leaderboard"
-                        mainSubText.text = (week.currentText == "all weeks" ? "2018" : "Week " + week.currentText )
+                        mainTitle.text = currentseason + " Leaderboard"
+                        mainSubText.text = (week.currentText == "all weeks" ? currentseason : "Week " + week.currentText )
                         jsonGetter.source =  baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
                     }else{
                         mainTitle.text = lastTitle
@@ -322,7 +323,7 @@ Item {
 
             text: "Fantasy Name: " + model.name
 
-            subText: (week.currentText == "all weeks" ? "2018" : "Week " + week.currentText ) + " Balance: " +  model.score
+            subText: (week.currentText == "all weeks" ? currentseason: "Week " + week.currentText ) + " Balance: " +  model.score
 
             subColor: MiddleMan.isMyName(model.name) ?
                        (model.name !== uname ? themeroot.theme.accentColor : Theme.light.textColor)

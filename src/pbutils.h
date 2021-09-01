@@ -198,5 +198,15 @@ std::string loadMerkleMap(const LdbWriter &ldb,,
 }
 */
 
+template<typename K, typename V>
+std::unordered_map<V,K> inverse_map(std::unordered_map<K,V> &map)
+{
+    std::unordered_map<V,K> inverse;
+    for (const auto &p: map) {
+        inverse.insert(std::make_pair(p.second, p.first));
+    }
+    return inverse;
+}
+
 }
 #endif

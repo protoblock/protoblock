@@ -1,8 +1,8 @@
-import QtQuick 2.4
+import QtQml 2.2
+import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtQuick.XmlListModel 2.0
 
-//import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
@@ -12,9 +12,6 @@ import Material.Extras 1.0
 
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
-
-
-//import Communi 3.0
 
 Material.ApplicationWindow{
     title: "Protoblock"
@@ -234,15 +231,15 @@ Material.ApplicationWindow{
     property var sectionLeftEnable: [ true, false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
-        property bool expanded: false
+        property bool expanded: true
         id: pageHelper
         title: "Protoblock"
-        selectedTabIndex: 1
+        selectedTabIndex: 0
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
-            console.log(" onSelectedTabChanged " + selectedTabIndex)
+//            console.log(" onSelectedTabChanged " + selectedTabIndex)
 //            navDrawer.enabled = sectionTitles[selectedTabIndex] === "Projections"
             expanded = sectionLeftEnable[selectedTabIndex];
         }
@@ -252,7 +249,7 @@ Material.ApplicationWindow{
         actionBar.customContent:    Material.Label {
             text: realRoot.uname + "   [" +
                   (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString()) + " ƑɃ]"
-            verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
+            verticalAlignment: Text.AlignTop//navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
                 family: fontfamFB
                 bold: true
@@ -265,15 +262,16 @@ Material.ApplicationWindow{
                 right: parent.left
                 rightMargin: ProtoScreen.guToPx(2)
                 top: parent.top
-                topMargin:{
-                    if (navDrawer.enabled === false ){
-                        ProtoScreen.guToPx(1)
-                    }
-                }
+                topMargin: ProtoScreen.guToPx(1)
+//                {
+//                    if (navDrawer.enabled === false ){
+//                        ProtoScreen.guToPx(1)
+//                    }
+//                }
                 bottom: parent.bottom
             }
         }
-        actionBar.maxActionCount: navDrawer.enabled ? 1:3
+        actionBar.maxActionCount: 3//navDrawer.enabled ? 1:3
         actions: [
             Material.Action {
                 iconName: "qrc:/icons/action_account_circle.png"
@@ -295,15 +293,18 @@ Material.ApplicationWindow{
 //                }
 //            }
         ]
+
+        /*
         backAction: navDrawer.action
         Material.NavigationDrawer {
             id: navDrawer
             enabled:{
                 if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ){
                     true
-                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
-                    true
                 }
+//                else if (pageHelper.width < ProtoScreen.guToPx(120)){
+//                    true
+//                }
                 else {
                     false
                 }
@@ -358,13 +359,13 @@ Material.ApplicationWindow{
                 }
             }
         }
-
+        */
         Loader {
             id: rootLoader
-            source: start
+            source: account
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: (navDrawer.enabled === true) ? themeroot.width  :
-                  pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
+//            width: (navDrawer.enabled === true) ? themeroot.width  :
+            width:  pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
             height: parent.height//navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
@@ -381,7 +382,7 @@ Material.ApplicationWindow{
         }
 
         Repeater {
-            model: !navDrawer.enabled  ? sections : 0
+            model: sections //!navDrawer.enabled  ? sections : 0
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
@@ -476,7 +477,7 @@ Material.ApplicationWindow{
                            "NO" ,
                            "NYG" ,
                            "NYJ" ,
-                           "OAK" ,
+                           "LV" ,
                            "PHI" ,
                            "PIT" ,
                            "LAC" ,
@@ -628,10 +629,10 @@ Material.ApplicationWindow{
                 elevation: 0
                 onClicked: {
                     if ( ProtoScreen.os === "osx" ) {
-                        Qt.openUrlExternally("http://protoblock.com/Downloads/MacOS/64/protoblock.dmg")
+                        Qt.openUrlExternally("http://fantasybit.com/Downloads/MacOS/64/protoblock.dmg")
                     }
                     else if ( ProtoScreen.os === "windows" ) {
-                        Qt.openUrlExternally("http://protoblock.com/Downloads/Windows/64/protoblock.exe")
+                        Qt.openUrlExternally("http://fantasybit.com/Downloads/Windows/64/protoblock.exe")
                     }
                     else if ( ProtoScreen.os === "ios"  ) {
                         Qt.openUrlExternally("https://itunes.apple.com/us/app/protoblock-2016/id1133758199");
@@ -640,7 +641,7 @@ Material.ApplicationWindow{
                         Qt.openUrlExternally("https://play.google.com/store/apps/details?id=org.proto.protoblock")
                     }
                     else
-                        Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
+                        Qt.openUrlExternally("http://fantasybit.com/template/downloads.html")
 
                     updateDialog.close()
                     themeroot.close()
@@ -704,7 +705,7 @@ Material.ApplicationWindow{
             else {
                 errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "
                 errorString = errorString + " Please click Import below."
-                errorString = errorString + "\n\nFor more assistance please contact the protoblock at <contact@protoblock.com>"
+                errorString = errorString + "\n\nFor more assistance please contact the protoblock at <contact@fantasybit.com>"
                 accountErrorDialog.open()
             }
         }
@@ -714,7 +715,7 @@ Material.ApplicationWindow{
             pageHelper.selectedTabIndex = startindex
             loginDialog.currentindex = loginDialog.start
             loginDialog.open();
-            firstname = true
+//            firstname = true
         }
 
         onUsingFantasyName: {
@@ -725,18 +726,22 @@ Material.ApplicationWindow{
             if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
+                console.log(msgString)
+//                console.log(" dosecret " + dosecret)
+//                console.log(" pageHelper.selectedTabIndex " + pageHelper.selectedTabIndex)
                 if( pageHelper.selectedTabIndex === accountIndex){
                     pageHelper.selectedTabIndex = startindex
 //                    rootLoader.source = start
                     if ( !dosecret )
                         usingNameDialog.open()
                 }
-                else if ( !firstname ) {
-                    pageHelper.selectedTabIndex = startindex
-                    firstname = true;
-                }
-                else
-                    console.log(" no popup")
+//                else if ( !firstname ) {
+//                    pageHelper.selectedTabIndex = startindex
+//                    firstname = true;
+//                    console.log("!firstname ")
+//                }
+//                else
+//                    console.log(" no popup")
 
                 if ( dosecret ) {
                     loginDialog.currentindex = loginDialog.secret
@@ -747,7 +752,7 @@ Material.ApplicationWindow{
         }
 
         onImportSuccess: {
-            console.log(passfail + "onImportSucess " + name )
+            console.log(passfail + " onImportSucess " + name )
             if ( passfail ) {
                 msgString = name + " - Imported!"
                 usingNameDialog.open()
@@ -773,7 +778,7 @@ Material.ApplicationWindow{
 //    // check for updates
     XmlListModel {
         id: updateMachine
-        source: "http://protoblock.com/version-" + ProtoScreen.os + ".xml"
+        source: "http://fantasybit.com/version-" + ProtoScreen.os + ".xml"
         query: "/updatemachine"
         XmlRole{name: "version";query: "version/string()"}
         XmlRole{name: "libs";query: "libs/string()"}
@@ -830,6 +835,7 @@ Material.ApplicationWindow{
       * tablets and phones and phablets. It is a swipe gesture to
       * open up the navbar. Kinda buggy but better then nothing.
       */
+    /*
     Rectangle{
         id:leftGesture
         color: "transparent"
@@ -875,4 +881,5 @@ Material.ApplicationWindow{
             }
         }
     }
+    */
 }

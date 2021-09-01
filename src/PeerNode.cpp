@@ -465,7 +465,6 @@ int32_t Node::myLastGlobalBlockNum() {
 
 int Node::getBootSeason() {
     QString links(PAPIURL.data());
-    //QString links("https://158.222.102.83:4545");
     QString route("season");
 
     QMap<QString,QString>  headers;
@@ -485,7 +484,7 @@ int Node::getBootSeason() {
     auto sseason = jo.value("season").toString().toStdString();
 
     if ( sseason == "" )
-        return 2018;
+        return 2021;
 
     return stoi(sseason);
 }

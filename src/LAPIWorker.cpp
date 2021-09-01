@@ -314,6 +314,7 @@ void MainLAPIWorker::Quit() {
     qDebug() << "ml Quit ";
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        if ( quitting ) return;
         quitting = true;
         timer->stop();
         timer->setSingleShot(true);
@@ -392,8 +393,6 @@ void MainLAPIWorker::Timer() {
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
-    qDebug() << "Process " << resetting;
-
     int32_t last = processor.process(b);
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };

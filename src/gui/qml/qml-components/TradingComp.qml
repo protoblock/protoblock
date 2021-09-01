@@ -1,14 +1,12 @@
-import QtQuick 2.0
+import QtQml 2.2
+import QtQuick 2.5
 import QtQuick.Controls 1.4
-//import QtQuick.Controls 2.2 as Controls
-
-//import ProRotoQml.Sql 1.0
 import Material.ListItems 1.0 as ListItems
 import Material 1.0
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.3
-
+import QtQuick.Controls 2.1 as Mat2
 Item {
     id: trcomp
     width: parent.width
