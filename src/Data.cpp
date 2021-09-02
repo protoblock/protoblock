@@ -473,7 +473,9 @@ GameInfo NFLStateData::GetGameInfo(string gameid) {
 
 void NFLStateData::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
     playerstore->Put(write_sync, playerid, pb.SerializeAsString());
-    qDebug() << QString::fromStdString(pb.DebugString());
+#ifdef TRACE
+    qDebug() << pb.DebugString().data();
+#endif
 }
 
 PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
@@ -521,7 +523,7 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
     MyPlayerStatus[playerid] = ps;
     auto it = MyTeamRoster.find(mps.teamid());
     if ( it == end(MyTeamRoster)) {
-        qDebug() << " cant find  it" << mps.teamid().data();
+        qDebug() << "error cant find  it" << mps.teamid().data();
     }
 
     std::swap(MyTeamRoster[ps.teamid()], it->second);
@@ -608,7 +610,9 @@ void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedul
     else {
         qDebug() << "AddNewWeeklySchedule " << key.data();
     }
+#ifdef TRACE
     qDebug() << ws.DebugString().data();
+#endif
     GameStatus gs{};
     gs.set_status(GameStatus::SCHEDULED);
 
@@ -677,8 +681,9 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
 #endif
         if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
             qWarning() << "bad write statusstore";
+#ifdef TRACE
         qDebug() << "UpdatePlayerStatus" << ps2.DebugString().data();
-
+#endif
         mSym2Pid[ps2.symbol()] = playerid;
         MyPlayerStatus[playerid] = ps2;
         OnNewPlayer(playerid);
@@ -705,7 +710,6 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
 #endif
         if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
             qWarning() << "bad write statusstore";
-        qDebug() << ps2.DebugString().data();
 
         MyPlayerStatus[playerid] = ps2;
 
@@ -850,11 +854,12 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
     string key = "gamestatus:" + gameid;
     if (!statusstore->Put(write_sync, key, use.SerializeAsString()).ok())
         qWarning() << "!ok" << "cant update status";
-    qDebug() << key.data ()<< use.DebugString().data();
 }
 
 void NFLStateData::OnWeekOver(int in) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+    qDebug() << "week over" << in << " commit result";
 
     auto ws = GetWeeklySchedule(theSeason(),in);
     for (auto game : ws.games() ) {
@@ -863,8 +868,6 @@ void NFLStateData::OnWeekOver(int in) {
             qWarning() << " no result " << game.id().data();
             continue;
         }
-        else
-            qDebug() << "week over" << in << " commit result " << game.id().data();
 
         auto tr = GetTeamRoster(game.home());
         for ( auto pr : gs.home_result() ) {
@@ -960,11 +963,9 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
     vector<GameRoster> retgr{};
     std::map<GameStatus_Status,vector<GameRoster>> mretgr;
 
-    if ( !amlive ) {
-        qWarning() << "am not live" ;
-    }
-
-    qDebug() << week();
+//    if ( !amlive ) {
+//        qWarning() << "am not live" ;
+//    }
 
     WeeklySchedule ws = getWeeklyStaticSchedule(theSeason(),week());
 
@@ -1016,29 +1017,10 @@ std::unordered_map<std::string,PlayerDetail>
         NFLStateData::GetTeamRoster(const std::string &teamid) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
-    qDebug() << "get team roster" << teamid.data();
     std::unordered_map<std::string,PlayerDetail> vpb{};
 
-//    auto it = MyTeamRoster.find(teamid);
-//    if ( it != end(MyTeamRoster))
-//        qDebug() << " found it" << it->second.size();
-
-//    auto teamroster = MyTeamRoster[teamid];
-//    qDebug() << teamroster.size();
-//    string temp;
     for ( auto p : MyTeamRoster.at (teamid)) {
-//        auto ps = MyPlayerStatus[p];
-//        if ( ps.teamid() != teamid  ||
-//             false)//ps.status() != PlayerStatus::ACTIVE)
-//            continue;
-
         vpb[p] = GetPlayerDetail(p,true);
-//        PlayerDetail pd;
-//        pd.base = GetPlayerBase(p);
-//        pd.team_status = ps.status();
-//        pd.game_status = PlayerGameStatus::NA;
-//        pd.symbol = ps.symbol();
-//        vpb[p] = pd;
     }
     return vpb;
 }

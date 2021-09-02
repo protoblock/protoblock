@@ -188,9 +188,9 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     auto lastvalid = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
             std::chrono::hours{50};
-
+#ifdef TRACE
     qDebug() << BlockRecorder::BlockTimestamp << "lastvalid " << lastvalid.count();
-
+#endif
 
     auto iter = mTimeOfTxidBlock.begin();
     while ( iter != end(mTimeOfTxidBlock) ) {
@@ -503,7 +503,6 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
 
                 for (auto ha : {QString("home"),QString("away")}) {
-                    qDebug() << "****" << ha;
                     int size =  (ha == QString("home")) ?
                                 rd.game_result().home_result_size()
                                 :  rd.game_result().away_result_size();
@@ -873,7 +872,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
 
         for (auto t : indt.gamedata()) {
-            qInfo() <<  "Kickoff for game " << t.DebugString().data();
+//            qInfo() <<  "Kickoff for game " << t.DebugString().data();
             doStartGame(t.gameid(),t.status());
         }
         break;
@@ -1035,17 +1034,18 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
 //        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
 
         if ( std::chrono::duration_cast<std::chrono::hours>(diff).count() > std::chrono::hours{48}.count() )  {
-            qCritical() << " !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp;
+            qCritical() << "error !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp <<
+                           "hours: " << std::chrono::duration_cast<std::chrono::hours>(diff).count();
             return false;
         }
 
         if ( std::chrono::duration_cast<std::chrono::minutes>(diff).count() < std::chrono::minutes{-60}.count() ) {
-            qCritical() << " !isValidTx from the future - max 60 minutes allowed" << BlockRecorder::BlockTimestamp;
+            qCritical() << "error !isValidTx from the future - max 60 minutes allowed" << BlockRecorder::BlockTimestamp;
             return false;
         }
 
         if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
-            qDebug() << "isValidTx invalid id already used ";
+            qDebug() << "error !isValidTx invalid id already used ";
             return false;
         }
         else if ( mCurrBTxid )
@@ -1065,18 +1065,21 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
 
+#ifdef TRACE
+        qDebug() << "processing name tx " << i;
+#endif
         if ( b.signed_transactions(i).trans().type() == TransType::NAME) {
             if ( !b.signed_transactions(i).trans().HasExtension(NameTrans::name_trans) ) {
-                qWarning() << " is not name - bad tx?";
+                qWarning() << i << "error is not name - bad tx?" << b.DebugString().data();
                 continue;
             }
         }
         else continue;
 
-        qDebug() << "processing name tx " << i;//b.signed_transactions(i).trans().DebugString().data();// TransType_Name(t.type());
+        //b.signed_transactions(i).trans().DebugString().data();// TransType_Name(t.type());
         auto &st = b.signed_transactions(i);
         if ( !isValidTx(st)) {
-            qDebug() << " imvalid tx 1" << st.DebugString().data() ;
+            qDebug() << b.signedhead().head().num() << "error invalid tx 1" << st.DebugString().data() ;
             continue;
         }
 
@@ -1111,7 +1114,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         //qDebug() << "processing tx " << st.DebugString().data();
 
         if (!isValidTx(st)) {
-            qDebug() << " imvalid tx 2" << st.DebugString().data();
+            qDebug() << b.signedhead().head().num() << "error invalid tx 2" << st.DebugString().data();
             continue;
         }
 #ifdef CLEAN_BLOCKS
@@ -1542,7 +1545,6 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
             return false;
         }
     }
-    else qDebug() << " ssssss veroify name";
 
     auto proof = nt.proof();
     switch (proof.type())

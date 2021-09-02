@@ -142,13 +142,13 @@ public:
         std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
         auto iter = Hash2Pk.find(FantasyName::name_hash(fn));
         if (iter == Hash2Pk.end()) {
-            qCritical() << "cant find fantasyname: " << fn.data();
+            qCritical() << "error cant find fantasyname: " << fn.data();
             return false;
         }
         else {
             auto ret = verify(sig, digest, iter->second);
             if ( !ret )
-                qCritical()  << "!verify(sig, digest, iter->second)";
+                qCritical()  << "error !verify(sig, digest, iter->second)";
             return ret;
         }
     }

@@ -261,7 +261,9 @@ bool FantasyNameData::DeltaTransfer(const std::string name, int64_t openpnl, int
 void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     auto hash = FantasyName::name_hash(name);
 
+#ifdef TRACE
     qDebug() << "adding pnl " << name.data() << pnl;
+#endif
     string temp;
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
@@ -338,7 +340,10 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
 void FantasyNameData::UpdateProjBlockNum(const std::string name, int32_t bnum) {
     auto hash = FantasyName::name_hash(name);
 
+#ifdef TRACE
     qDebug() << "adding proj block " << name.data() << bnum;
+#endif
+
     string temp;
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {

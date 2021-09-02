@@ -353,7 +353,9 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     }
 
     mBookDelta->set_blocknum(blocknum);
+#ifdef TRACE
     qDebug() << symbol.data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
+#endif
 
     int stake = fn->getStakeBalance();
     int openpnl = GetOpenPnl(fn->alias());

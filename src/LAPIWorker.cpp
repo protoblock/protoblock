@@ -202,7 +202,10 @@ void MainLAPIWorker::OnInSync(int32_t num) {
 }
 
 bool MainLAPIWorker::doProcessBlock() {
+#ifdef TRACE
     qDebug() << " doprocess" << resetting;
+#endif
+
     int32_t next;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
