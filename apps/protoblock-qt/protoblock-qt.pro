@@ -6,7 +6,7 @@ include ($$PWD/../../res/res.pri)
 
 TARGET = protoblock-qt
 TEMPLATE = app
-QT += qml quick core websockets network qml-private quick-private quickcontrols2
+QT += qml quick core websockets network qml-private quick-private quickcontrols2 xmlpatterns xml
 CONFIG += c++11
 
 contains(DEFINES, SQLSTUFF){
