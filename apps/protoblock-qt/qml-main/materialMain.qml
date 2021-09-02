@@ -1,7 +1,7 @@
 import QtQml 2.2
 import QtQuick 2.5
-import QtQuick.Window 2.0
 import QtQuick.XmlListModel 2.0
+import QtQuick.Window 2.5
 
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
@@ -16,7 +16,7 @@ import QtQuick.Layouts 1.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "3.0.2" //version
+    property string version: "3.2.0" //version
     property alias realRoot: themeroot
 
     property string  uname

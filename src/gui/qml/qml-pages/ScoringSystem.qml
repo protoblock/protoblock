@@ -2,7 +2,7 @@ import QtQuick 2.4
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import QtQml.Models 2.2

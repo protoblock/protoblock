@@ -829,6 +829,7 @@ private:
 #ifdef NO_SQL_LEADERS
 //        return;
 #endif
+        if ( !amLive ) return;
         QString links(PAPIURL.data());
         QString route("fantasy/leaders");
         if ( !all20XX )

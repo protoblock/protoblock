@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.XmlListModel 2.0
 import QtQuick.Controls 1.4
 

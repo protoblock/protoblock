@@ -9,7 +9,7 @@
  */
 
 
-import QtQuick 2.0
+import QtQuick 2.12
 
 Item {
     FontLoader {source: Qt.resolvedUrl("roboto/Roboto-BlackItalic.ttf")}

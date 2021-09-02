@@ -490,6 +490,7 @@ void Mediator::updateWeek() {
             m_pWeeklyScheduleModel->clear();
             mPlayerProjModel.clear();
             set_thisWeekPrev(false);
+            getQuoteModel (false).clear ();
         }
 
 //        std::string sss = "BMWR17w01";
@@ -615,6 +616,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
 #ifdef TRACE
     qDebug() << "level2 Trading SetMyPositions" << myFantasyName.data() << myorderpositions.size();
+    qDebug() << "level2 Trading SetMyPositions" << myFantasyName.DebugString().data() << myorderpositions.size();
 #endif
 
    mTradingPositionsModel.settotalopenpnl(calcTotalPnl(mTradingPositionsModel,mPlayerQuoteSliceModel));
