@@ -1,5 +1,5 @@
 osx {
-QMAKE_MAC_SDK = macosx10.12
+#QMAKE_MAC_SDK = macosx10.12
 }
 TEMPLATE = lib
 TARGET = Material.ListItems

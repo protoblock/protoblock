@@ -1,4 +1,6 @@
-import QtQuick 2.0
+import QtQml.Models 2.2
+import QtQml 2.2
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import Material.ListItems 1.0 as ListItems
 import Material 1.0
@@ -21,20 +23,18 @@ Item {
                                          (stack.currentItem.objectName === "nextWeekS" ? "Schedule" : MiddleMan.liveSync))
 
     Component.onCompleted: {
-//         pageHelper.title = "Projections 2016 Week" + week
-        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
+//        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
     }
 
-        // spacer
-//    Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
-
-
     Card {
+        radius: 0
+        flat: true
+
         id: topcard
         width: parent.width
         height: parent.height
         anchors{
-            top: parent.top
+//            top: parent.top
 //                topMargin:ProtoScreen.guToPx(2)
 //                bottomMargin:ProtoScreen.guToPx(1)
             horizontalCenter: parent.horizontalCenter
@@ -140,10 +140,15 @@ Item {
     //                    hoverAnimation: true
                     tooltip: "Next Week"
                 }
-                enabled: MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && (
+                enabled: MiddleMan.liveSync !== "Sync" && stack && stack.currentItem &&
+                         (
                              (stack.currentItem.objectName === "prevWeekS") ||
-                             (stack.currentItem.objectName === "pptS" && MiddleMan.theWeek < 16) ||
-                             (stack.currentItem.objectName === "nextWeekS" && (MiddleMan.theNextWeek < 16 || MiddleMan.theSeason > MiddleMan.theNextSeason)))
+                             (stack.currentItem.objectName === "pptS" &&
+                              MiddleMan.theWeek < MiddleMan.lastWeekForSeason(MiddleMan.theSeason)) ||
+                             (stack.currentItem.objectName === "nextWeekS" &&
+                              (MiddleMan.theNextWeek < MiddleMan.lastWeekForSeason(MiddleMan.theNextSeason) ||
+                               MiddleMan.theSeason > MiddleMan.theNextSeason))
+                         )
 
 //                enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && MiddleMan.thePrevWeek > 1
                 onClicked : {
@@ -153,11 +158,16 @@ Item {
                                 ||
                              (MiddleMan.thisWeekPrev && MiddleMan.thePrevWeek === MiddleMan.theWeek)
                                 ||
-                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason-1 &&
-                                (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev )))
+                             (  MiddleMan.thePrevWeek === MiddleMan.lastWeekForSeason(MiddleMan.thePrevSeason) &&
+                                MiddleMan.thePrevSeason === MiddleMan.theSeason-1 &&
+                                (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev ))
+                             )
                                 ||
-                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason && MiddleMan.theWeek > 16)
-                                )
+                             (  MiddleMan.thePrevWeek === MiddleMan.lastWeekForSeason(MiddleMan.thePrevSeason) &&
+                                MiddleMan.thePrevSeason === MiddleMan.theSeason &&
+                                MiddleMan.theWeek > MiddleMan.lastWeekForSeason(MiddleMan.theSeason)
+                             )
+                            )
                             stack.push({item: pptS, properties:{objectName:"pptS"}});
                         else {
                             MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek+1,MiddleMan.thePrevSeason)
@@ -182,15 +192,6 @@ Item {
             height: parent.height - cBan.height
             id: stack
             initialItem: pptS
-//            property real leftwidth: (stack.currentItem.objectName === "pptS") ? schedr.width :
-//                                     (stack.currentItem.objectName === "prevWeekS") ? sched2.width : sched3.width
-
-//            property real midwidth: (stack.currentItem.objectName === "pptS") ? projr.width :
-//                                     (stack.currentItem.objectName === "prevWeekS") ? proj2.width : proj3.width
-
-//            property real ritwidth: (stack.currentItem.objectName === "pptS") ? rightr.width :
-//                                     (stack.currentItem.objectName === "prevWeekS") ? rightr2.width : rightr3.width
-
 
             Component.onCompleted: {
                stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
@@ -309,7 +310,6 @@ Item {
 
                         ScheduleViewPrev {
                             id: scheduleView2
-//                            scheduleModel: MiddleMan.pPrevQItemSelectionModel
                         }
                     }
                     Card {

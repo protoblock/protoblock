@@ -18,6 +18,12 @@ static void remove_all(const std::string &indir) {
     dir.removeRecursively();
 }
 
+static void make_all(const std::string &indir) {
+    QDir dir(indir.data());
+    if (!dir.exists())
+        dir.mkpath(".");
+}
+
 static std::string makeMerkleRoot(decltype(fantasybit::MerkleTree::default_instance().leaves()) &in) {
     std::queue<pb::sha256> merkle;
 
@@ -191,6 +197,16 @@ std::string loadMerkleMap(const LdbWriter &ldb,,
     return mtree.root();
 }
 */
+
+template<typename K, typename V>
+std::unordered_map<V,K> inverse_map(std::unordered_map<K,V> &map)
+{
+    std::unordered_map<V,K> inverse;
+    for (const auto &p: map) {
+        inverse.insert(std::make_pair(p.second, p.first));
+    }
+    return inverse;
+}
 
 }
 #endif

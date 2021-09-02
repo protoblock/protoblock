@@ -717,7 +717,7 @@ Item {
         property string player
         id: myTradeDialog
         positiveButtonText: side + " Now"
-        title: "Confirm Trade - " + (isweekly ? ("2018 Week- " + tradingroot.theqmlweek) : ("Season " + theqmlseason)) + " Contract"
+        title: "Confirm Trade - " + (isweekly ? (theqmlseason + " Week- " + tradingroot.theqmlweek) : (" Season " + theqmlseason)) + " Contract"
         text: "Protoblock Player: " + realRoot.uname
         dialogContent: Column {
             anchors.fill: parent

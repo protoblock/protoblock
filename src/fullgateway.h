@@ -13,10 +13,10 @@ using namespace std;
 
 using namespace fantasybit;
 
-class FullGateway : public QObject, public IPBGateway, public ITradingProxy {
+class FullGateway : public QObject, public IPBGateway {
     Q_OBJECT
     Q_INTERFACES(pb::IPBGateway)
-    Q_INTERFACES(pb::ITradingProxy)
+//    Q_INTERFACES(pb::ITradingProxy)
 
     IPBGateway *gatepass;
     IDataService *datapass;
@@ -29,12 +29,12 @@ public:
                                     mlapi(immlapi),
                                     dataservice(datain),
                                     gatepass{qobject_cast<pb::IPBGateway *>(immlapi)},
-                                    datapass{datain} ,
-                                    m_PlayerQuoteSliceModel{} {
+                                    datapass{datain} {
+//                                    m_PlayerQuoteSliceModel{} {
 
 //        mlapi->dataService = dataservice;
         this->dataService = datain;
-        this->tradingProxy = this;
+//        this->tradingProxy = this;
         connect(mlapi, &MainLAPIWorker::PlayName,
                 this, [this](string inname) {
             qDebug() << " FullGateway PlayName" << inname.data();
@@ -58,7 +58,7 @@ public:
             if ( heslive )
                 emit MyNames(mynames);
 
-            for ( auto name : m_mynames) {
+            for ( const auto &name : m_mynames) {
                  std::shared_ptr<FantasyName> &s = mynamebal[name.name()];
                  if ( s ) continue;
                  s = fantasybit::Commissioner::getName(name.name());
@@ -188,7 +188,7 @@ public:
 //                this, &FullGateway::OnFinishMarketSnapShot);
 
 //        connect(exchangedata,&ExchangeData::StartMarketSnapShot,
-//                this, &FullGateway::OnStartMarketSnapShot);
+//                this, &FullGateway::OnStaFrtMarketSnapShot);
 
         QObject::connect(Mediator::instance(),SIGNAL(NewHeightStop(int)),mlapi,SLOT(OnSeenBlock(int32_t)));
 
@@ -236,8 +236,8 @@ public slots:
                 holdfresh.clear();
             }
 
-            if ( gotAllSnaps )
-                emit GotMarketSnaps();
+//            if ( gotAllSnaps )
+//                emit GotMarketSnaps();
         }
     }
 
@@ -291,8 +291,8 @@ public slots:
             initBothLive();
 
             emit LiveGui(m_gs);
-            if ( gotAllSnaps )
-                emit GotMarketSnaps();
+//            if ( gotAllSnaps )
+//                emit GotMarketSnaps();
         }
 
         if ( !holdfresh.empty() ) {
@@ -318,17 +318,17 @@ public slots:
 //    void OnNewPos(fantasybit::FullPosition);
 //    void OnNewOO(fantasybit::FullOrderDelta);
 
-    void OnFinishMarketSnapShot(int week) {
-        gotAllSnaps = true;
-        if ( heslive && amLive )
-            emit GotMarketSnaps();
-    }
+//    void OnFinishMarketSnapShot(int week) {
+//        gotAllSnaps = true;
+//        if ( heslive && amLive )
+//            emit GotMarketSnaps();
+//    }
 
-    void OnStartMarketSnapShot(int week) {
-        gotAllSnaps = false;
-        m_PlayerQuoteSliceModel.initWeek(week);
-        m_PlayerQuoteSliceModel.clear();
-    }
+//    void OnStartMarketSnapShot(int week) {
+//        gotAllSnaps = false;
+//        m_PlayerQuoteSliceModel.initWeek(week);
+//        m_PlayerQuoteSliceModel.clear();
+//    }
 
 private:
     bool amLive = false, heslive = false;
@@ -338,13 +338,13 @@ private:
     vector<FantasyNameBal> holdfresh;
     MyFantasyName myName;
 
-    bool gotAllSnaps = false;
+//    bool gotAllSnaps = false;
 public:
-    PlayerQuoteSliceModel & GetPlayerQuoteSliceModel() {
-        return  m_PlayerQuoteSliceModel;
-   }
+//    PlayerQuoteSliceModel & GetPlayerQuoteSliceModel() {
+//        return  m_PlayerQuoteSliceModel;
+//   }
 
-    PlayerQuoteSliceModel m_PlayerQuoteSliceModel;
+//    PlayerQuoteSliceModel m_PlayerQuoteSliceModel;
 
     /*
     std::unordered_map<std::string,PlayerDetail>

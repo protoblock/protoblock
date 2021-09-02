@@ -2,11 +2,11 @@ include ($$PWD/../protoblockd/deps.pri)
 include ($$PWD/../../share/protos.pri)
 include ($$PWD/../../res/res.pri)
 
-win32 { DEFINES += INTEL_KLUDGE }
+#win32 { DEFINES += INTEL_KLUDGE }
 
 TARGET = protoblock-qt
 TEMPLATE = app
-QT += qml quick core websockets network xmlpatterns qml-private quick-private quickcontrols2
+QT += qml quick core websockets network qml-private quick-private quickcontrols2 xmlpatterns xml
 CONFIG += c++11
 
 contains(DEFINES, SQLSTUFF){
@@ -19,7 +19,7 @@ contains(DEFINES, CONSOLE) {
 
 osx{
     CONFIG+=app_bundle
-    QMAKE_MAC_SDK = macosx10.14
+#    QMAKE_MAC_SDK = macosx10.14
 }
 
 macx {
@@ -65,8 +65,8 @@ INCLUDEPATH += $$PWD/../../src/QmlModels
 INCLUDEPATH += $$PWD/../../src/QmlSuperMacros
 
 
-INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty
-INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty/secp256k1
+#INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty
+#INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty/secp256k1
 
 SOURCES += \
     $$PWD/src/main.cpp \

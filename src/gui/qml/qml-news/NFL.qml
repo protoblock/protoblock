@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.XmlListModel 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
@@ -15,7 +15,7 @@ Item {
             width: parent.width
             elevation:  5
             text: model.title
-            subText: model.summary + "  © 2018 NFL Enterprises LLC"
+            subText: model.summary + "  © 2021 NFL Enterprises LLC"
             maximumLineCount: 2
             onClicked:{model.link
                 console.log()

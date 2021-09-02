@@ -1,5 +1,5 @@
 
-import QtQuick 2.0
+import QtQuick 2.12
 import "tweetsearch.js" as Helper
 import Material 1.0
 import Material.ListItems 1.0 as ListItems

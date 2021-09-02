@@ -10,6 +10,9 @@
 #include <vector>
 #include "Commissioner.h"
 
+#ifdef DEBUG_TIMINGS
+#include <QElapsedTimer>
+#endif
 
 using namespace std;
 using namespace fantasybit;
@@ -19,11 +22,11 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 {
     timer = new QTimer(this);
 #ifndef NOSYNC
-    node.thread()->connect(node.thread(),
+    nodeworker_thread.thread()->connect(nodeworker_thread.thread(),
                            SIGNAL(started()),
-                           node.object(),
+                           nodeworker_thread.object(),
                            SLOT(init()));
-    myNodeWorker = node.object();
+    myNodeWorker = nodeworker_thread.object();
 
 
     //QObject::connect(this,SIGNAL(Timer()),myNodeWorker,SLOT(TryNext()));
@@ -130,14 +133,11 @@ void MainLAPIWorker::startPoint(){
 #ifndef NOSYNC
     auto h = myNodeWorker->preinit();
     emit Height(h);
-    node.thread()->start();
-
-
-
+    nodeworker_thread.thread()->start();
 #endif
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        last_block = processor.init();
+        last_block = processor.init(h);
         qDebug() << " startPoint last_block " << last_block;
 #ifdef NOSYNC
         Node node;
@@ -165,20 +165,28 @@ void MainLAPIWorker::startPoint(){
 }
 
 void MainLAPIWorker::ResetIndex() {
-    std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-    processor.hardReset();
-    last_block = processor.init();
-    if ( last_block < 0 ) {
-        last_block = BlockRecorder::zeroblock;
+
+    qDebug() << "ml ResetIndex ";
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        intervalstart = 2000;
+        timer->stop();
+        resetting = true;
+        timer->start(intervalstart);
     }
 }
 
 //blockchain
 void MainLAPIWorker::OnInSync(int32_t num) {
-    qDebug() << "OnInSync" << num;
+    qDebug() << "OnInSync" << num << resetting;
     bool myamlive;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        if ( resetting ) {
+            numto = num;
+            return;
+        }
+
         myamlive = (!amlive && num == last_block);
         qDebug() << "myamlive" << myamlive << last_block;
     }
@@ -194,7 +202,7 @@ void MainLAPIWorker::OnInSync(int32_t num) {
 }
 
 bool MainLAPIWorker::doProcessBlock() {
-    qDebug() << " doprocess";
+    qDebug() << " doprocess" << resetting;
     int32_t next;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
@@ -204,23 +212,34 @@ bool MainLAPIWorker::doProcessBlock() {
             QCoreApplication::exit();
             return false;
         }
+        else if ( resetting )
+            return false;
     }
     auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
         qWarning() << " !b" << next;
         return false;
     }
+#ifdef DEBUG_TIMINGS
+    QElapsedTimer timer;
+    timer.start();
+#endif
+
     if ( !Process(*b) ) {
         qWarning() << "MainLAPIWorker::doProcessBlock nope !Process";
         return false;
     }
+
+#ifdef DEBUG_TIMINGS
+    qDebug() << "Process operation took" << timer.elapsed() << " milliseconds";
+#endif
 
     return true;
 }
 
 #include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
-    qDebug() << " ProcessBlock";
+    qDebug() << "ProcessBlock" << resetting;
     int docount = 0;
     bool catchingup;
     do {
@@ -235,6 +254,8 @@ void MainLAPIWorker::ProcessBlock() {
                 QCoreApplication::exit();
                 return;
             }
+            else if ( resetting )
+                return;
         }
 
         if ( catchingup )
@@ -269,6 +290,8 @@ void MainLAPIWorker::ProcessBlock() {
 }
 
 void MainLAPIWorker::OnSeenBlock(int32_t num) {
+    qDebug() << "OnSeenBlock " << resetting;
+
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         if (amlive)
@@ -291,6 +314,7 @@ void MainLAPIWorker::Quit() {
     qDebug() << "ml Quit ";
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        if ( quitting ) return;
         quitting = true;
         timer->stop();
         timer->setSingleShot(true);
@@ -308,16 +332,25 @@ void MainLAPIWorker::Timer() {
         justwentlive = false;
     }
 #endif
-
     bool numtogtlast;
     {
-        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        numtogtlast = (numto > last_block);
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };        
         if ( quitting ) {
             qDebug() << " Timer quiting";
             QCoreApplication::exit();
             return;
         }
+        else if ( resetting ) {
+            processor.hardReset();
+            last_block = processor.init(0);
+            if ( last_block < 0 ) {
+                last_block = BlockRecorder::zeroblock;
+            }
+            bcount = pcount = 0;
+            resetting = false;
+        }
+
+        numtogtlast = (numto > last_block);
     }
     bcount++;
     pcount++;
@@ -361,30 +394,23 @@ void MainLAPIWorker::Timer() {
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
     int32_t last = processor.process(b);
-    if ( last == -1 ) {
-        //emit OnError();
-        timer->start(5000);
-        return false;
-    }
-
-    //if ( last != last_block+1) {
-        //emit OnError
-        //should never be here
-    //    return false;
-    //}
-
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        if ( last == last_block+1)
-            last_block = last;
-        else
-            qDebug() << " shoud bever be here! ? reorg? fork? ";
-
         if ( quitting ) {
             qDebug() << "Process quiting";
             QCoreApplication::exit();
             return false;
         }
+
+        if ( last == -1 ) {
+            if ( !resetting ) timer->start(5000);
+            return false;
+        }
+
+        if ( last == last_block+1)
+            last_block = last;
+        else
+            qDebug() << " shoud bever be here! ? reorg? fork? ";
     }
     return true;
 }

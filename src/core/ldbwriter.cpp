@@ -6,7 +6,7 @@ namespace fantasybit {
 void LdbWriter::init(leveldb::DB * db) {
     //qDebug() << BlockMeta::descriptor()->file()->DebugString().data();
 
-    write_sync.sync = true;
+//    write_sync.sync = true;
     this->db = db;
 
 /*

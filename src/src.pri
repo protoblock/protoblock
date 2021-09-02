@@ -22,7 +22,6 @@ SOURCES += \
     $$PWD/NodeWorker.cpp \
     $$PWD/iresolvable.cpp \
     $$PWD/dataservice.cpp \
-    $$PWD/fullgateway.cpp \
     $$PWD/importLoader.cpp
 
 HEADERS += \
@@ -39,5 +38,4 @@ HEADERS += \
     $$PWD/threadedqobject.h \
     $$PWD/iresolvable.h \
     $$PWD/dataservice.h \
-    $$PWD/fullgateway.h \
     $$PWD/importLoader.h

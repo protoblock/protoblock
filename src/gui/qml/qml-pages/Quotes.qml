@@ -61,11 +61,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
             bold: true
-            text: "Prices - 2016 Rest of the Way (0/16)"
+            text: "Prices - 2021 Rest of the Way (0/17)"
             color: "white"
             backgroundColor: themeroot.theme.primaryColor
             helpShown: true
-            helperHeader: "2016 Rest of the Way"
+            helperHeader: "2021 Rest of the Way"
             helperTxt: "List of active markets for Season long trading. This is the 3rd level of the Protoblock Fantasy Football skill test. Click a player to see in-depth market and to trade."
             width: fl.width / 1.07
             height: ProtoScreen.guToPx(6)

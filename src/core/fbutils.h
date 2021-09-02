@@ -300,6 +300,40 @@ namespace fantasybit {
     static uint64_t time_since_epoch() {
         return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
+
+    struct NFL_Weeks {
+        NFL_Weeks(int iseason = 2014) {
+            SetSeason(iseason);
+        }
+        void SetSeason(int season) {
+            if ( season > 2020 ) {
+                NFL = 18;
+                FFC = 17;
+                NFL_GAMES = 17;
+                SUPERBOWL = 22;
+            }
+            else {
+                NFL = 17;
+                FFC = 16;
+                NFL_GAMES = 16;
+                SUPERBOWL = 21;
+            }
+        }
+        char NFL;
+        char FFC;
+        char NFL_GAMES;
+        char SUPERBOWL;
+    };
+
+    static NFL_Weeks WK(2014);
+    static NFL_Weeks PRE2021(2014);
+    static NFL_Weeks POST2021(2021);
+    static NFL_Weeks WeekForSeason(int season) {
+        if ( season > 2020 )
+            return POST2021;
+
+        return PRE2021;
+    }
 }
 
 #endif

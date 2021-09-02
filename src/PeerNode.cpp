@@ -41,28 +41,30 @@ namespace fantasybit
 Node::Node() { current_boot.set_blocknum(-1);}
 void Node::init() {
 
-#ifndef NO_REMOVEALL_FORK1
-    QFileInfo check_file( (GET_ROOT_DIR() + "postfork1.2").data ());
+#ifdef REMOVE_2021_LDB
+    QFileInfo check_file( (GET_ROOT_DIR() + "ldb2021.0").data ());
     if (!check_file.exists() ) {
+        qDebug() <<  "ldb2021.0 not found- delete all" << current_hight;
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "postfork1.2").data () );
+        QFile file( (GET_ROOT_DIR() + "ldb2021.0").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
 
-    write_sync.sync = true;
+    pb::make_all(GET_ROOT_DIR() + "block/");
+//    write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
-    leveldb::Options optionsInt;
+    leveldb::Options optionsInt{};
     optionsInt.create_if_missing = true;
     optionsInt.comparator = cmp;
 
     qDebug() << "init node";
-    leveldb::Options options;
+    leveldb::Options options{};
     options.create_if_missing = true;
-    leveldb::Status status;
+    leveldb::Status status{};
 
 
     leveldb::DB *db2;
@@ -73,9 +75,9 @@ void Node::init() {
     }
     Node::blockchain.reset(db2);
 
-    leveldb::Options options2;
+    leveldb::Options options2{};
     options2.create_if_missing = true;
-    leveldb::DB *db3;
+    leveldb::DB *db3{};
     status = leveldb::DB::Open(options2, filedir("block/bootstrap"), &db3);
     if ( !status.ok()) {
         qCritical() << " error opening block/bootstrap";
@@ -91,26 +93,51 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
     qDebug() <<  "PeerNode current_hight" << current_hight;
 
-#ifdef BLK18
-    if ( current_hight == 0) {
-            Block bl;
-            Reader<Block> reader{ GET_ROOT_DIR(true) + "blk18.out"};
-            //"D:\\work\\build-ProRoto2016-Desktop_Qt_5_10_1_MSVC2013_64bit-Debug\\Applications\\ProtoBlock2016\\debug\\storage\\newblocks.out"};
-            if ( !reader.good() )
-                qCritical() << "!good" << GET_ROOT_DIR() + "blk18.out";
-            else {
-                int count = 0;
-                while ( reader.ReadNext(bl) ) {
-                    int32_t height = bl.signedhead().head().num();
-                    leveldb::Slice value((char*)&height, sizeof(int32_t));
-                    blockchain->Put(write_sync, value, bl.SerializeAsString());
-                    qDebug() << "jayberg blockchain put " << height << count++;
-                }
-                qDebug() << " jayberg wrote " << bl.signedhead().head().num();
-            }
+#ifdef MAKE_BLOCK_2020
+    {
+    Block b{};
+    Writer<Block> writer{ GET_ROOT_DIR(true) + "blk2020.out"};
+    auto *it = Node::blockchain->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst() ;it->Valid();it->Next() ) {
+        b.ParseFromString(it->value().ToString());
+        qDebug() << " going to write block " << b.signedhead().head().num();
+        writer(b);
+    }
+    delete it;
+    }
+#endif
+
+#ifdef DUMP_BLOCK_2020
+    {
+    Block b{};
+    Reader<Block> reader{ GET_ROOT_DIR(true) + "blk2020.out"};
+    if ( !reader.good() )
+        qCritical() << "!good" << GET_ROOT_DIR() + "blk2020.out";
+    else while ( reader.ReadNext(b) ) {
+        qDebug() << " read block " <<  b.signedhead().head().num();
+//        qDebug() << b.DebugString().data();
+    }
+
+    }
+#endif
+
+#ifdef BLOCK_2020
+    {
+    if ( current_hight == -1) {
+        Block b{};
+        Reader<Block> reader{ GET_ROOT_DIR(true) + "blk2020.out"};
+        int count = 0;
+        if ( !reader.good() )
+            qCritical() << "!good" << GET_ROOT_DIR() + "blk2020.out";
+        else while ( reader.ReadNext(b) ) {
+            int32_t height = b.signedhead().head().num();
+            leveldb::Slice value((char*)&height, sizeof(int32_t));
+            blockchain->Put(write_sync, value, b.SerializeAsString());
+            qDebug() << "2020 blockchain put " << height << count++;
+        }
     }
     current_hight = getLastLocalBlockNum();
-//    intSTOP_HEIGHT_TEST = current_hight;
+    }
 #endif
 
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
@@ -148,7 +175,7 @@ void Node::init() {
 
 
 #ifndef NOUSE_GENESIS_BOOT
-    if ( current_hight == 0 ) {
+    if ( current_hight == -1 ) {
         LdbWriter ldb;
         ldb.init(Node::bootstrap.get());
         current_boot = Commissioner::makeGenesisBoot(ldb);
@@ -181,12 +208,13 @@ void Node::init() {
 #endif
 
 #ifndef USE_LOCAL_GENESIS
-    if (current_hight == 0)
+    if (current_hight == -1)
         qDebug() << " ERROR? - NO Boot - No Local Genesis!";
     else
         qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
 #else
-    if (current_hight == 0) {
+    if (current_hight == -1) {
+        WK.SetSeason(2014);
         auto  sb = Commissioner::makeGenesisBlock();
 
 #ifdef TRACEDEBUG
@@ -420,7 +448,7 @@ int32_t Node::getLastLocalBlockNum() {
 
     if (!it->Valid()) {
         delete it;
-        return 0;
+        return -1;
     }
     auto slice = it->key();
 
@@ -463,7 +491,6 @@ int32_t Node::myLastGlobalBlockNum() {
 
 int Node::getBootSeason() {
     QString links(PAPIURL.data());
-    //QString links("https://158.222.102.83:4545");
     QString route("season");
 
     QMap<QString,QString>  headers;
@@ -483,7 +510,7 @@ int Node::getBootSeason() {
     auto sseason = jo.value("season").toString().toStdString();
 
     if ( sseason == "" )
-        return 2018;
+        return 2021;
 
     return stoi(sseason);
 }
@@ -519,6 +546,7 @@ Bootstrap Node::getLastLocalBoot() {
     //todo: season
     int sseason = getBootSeason();
 
+    WK.SetSeason(sseason);
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif
@@ -535,18 +563,17 @@ Bootstrap Node::getLastLocalBoot() {
     ldb.init(Node::bootstrap.get());
     string localhead = ldb.read("head");
 
+    bool dateyear = QDate::currentDate().year();
     bool done = false;
     while ( !done ) {
         if ( week < 0 ) {
             sseason--;
-            if ( sseason < 2017 ) {
+            if ( sseason < (dateyear - 3) ) {
                 done = true;
                 break;
-
             }
-            else {
-                week = 16;
-            }
+            WK.SetSeason(sseason);
+            week = WK.FFC;
         }
 
         string globalhead = to_string(sseason) + (week < 10 ?  + "0" : "") + to_string(week);
@@ -644,11 +671,11 @@ Block Node::getlastLocalBlock() {
 
 fc::optional<Block> Node::getLocalBlock(int32_t num, bool force) {
 
+    std::lock_guard<std::mutex> lockg{ blockchain_mutex };
+
     fc::optional<Block> block;
     if ( forking && !force )
         return block;
-
-    std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 
     if ( getLastLocalBlockNum() < num ) {
         qDebug() << "getLastLocalBlockNum() < num " << num;

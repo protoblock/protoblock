@@ -1,7 +1,7 @@
 include ($$PWD/../../macrosAndModels.pri)
 
 osx {
-    QMAKE_MAC_SDK = macosx10.12
+#    QMAKE_MAC_SDK = macosx10.12
 }
 
 ios{

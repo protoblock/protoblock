@@ -33,9 +33,10 @@ int domain(int argc, char *argv[])
 
     fantasybit::BlockProcessor processor(data,namedata, exchangedata);
 
-    int32_t last_block = processor.init();
-
     auto gnum = node.getLastGlobalBlockNum();
+
+    int32_t last_block = processor.init(*gnum);
+
 
     while ( last_block < *gnum) {
         int32_t next;

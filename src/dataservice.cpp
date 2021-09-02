@@ -106,7 +106,7 @@ MyFantasyName DataService::importMnemonic(const std::string &in) {
     return worker->Agent().UseMnemonic(in);
 }
 
-string DataService::exportMnemonic(std::string &in) {
+string DataService::exportMnemonic(const std::string &in) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->Agent().getMnemonic(in);
 }

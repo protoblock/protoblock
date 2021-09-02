@@ -1,10 +1,10 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4
+import QtQml 2.2
+import QtQuick 2.5
+import QtQuick.Controls 2.5
 import Material.ListItems 1.0 as ListItems
 import Material 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.3
-
 
 Item {
     property string seasontext: "NFL Season " + MiddleMan.theSeason +

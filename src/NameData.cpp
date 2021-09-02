@@ -27,12 +27,14 @@ using namespace std;
 using namespace fantasybit;
 
 void FantasyNameData::init() {
-    write_sync.sync = true;
-    leveldb::Options options;
-    options.create_if_missing = true;
-    leveldb::Status status;
+    pb::make_all(filedir(""));
 
-    leveldb::DB *db1;
+//    write_sync.sync = true;
+    leveldb::Options options{};
+    options.create_if_missing = true;
+    leveldb::Status status{};
+
+    leveldb::DB *db1{};
     status = leveldb::DB::Open(options, filedir("namestore"), &db1);
     namestore.reset(db1);
     if ( !status.ok() ) {
@@ -60,8 +62,8 @@ void FantasyNameData::init() {
             auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
             if ( fnp != nullptr ) {
                 fnp->initBalance(fn.bits());
-                fnp->initStakePNL(fn.stake());
-                fnp->setBlockNump (0,0);
+                fnp->initStakePNL(fn.stake());           
+                fnp->setBlockNump (fn.block(),0);
 
 //                if ( fn.name() == "JayBNY")
 //                    qDebug() << "JayBNY123 stakedelta " << fnp->getStakeBalance();
@@ -114,12 +116,12 @@ void FantasyNameData::init() {
                 PlayerIDSumProj[nflplayer] += proj;
             }
             else {
-                if ( 0 == strncmp(str.c_str(), "time^", 5) ) {
-                    int32_t ts = *(reinterpret_cast<const int32_t *>(it->value().data()));
-                    auto fnp = Commissioner::getName(str.substr(5));
-                    if ( fnp && ts)
-                        fnp->setBlockNum(ts);
-                }
+//                if ( 0 == strncmp(str.c_str(), "time^", 5) ) {
+//                    int32_t ts = *(reinterpret_cast<const int32_t *>(it->value().data()));
+//                    auto fnp = Commissioner::getName(str.substr(5));
+//                    if ( fnp && ts)
+//                        fnp->setBlockNum(ts);
+//                }
             }
         }
         delete it;
@@ -134,7 +136,7 @@ void FantasyNameData::init() {
 void FantasyNameData::clearProjCounts() {
     for ( auto fff : FantasyNameProjections) {
         auto fnp = Commissioner::getName(fff.first);
-        fnp->setBlockNump(0,0);
+        fnp->setNump(0);
     }
 }
 
@@ -179,9 +181,11 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t bl
     if ( fnp  != nullptr) {
         fnp->setBlockNump (blocknum,0);
 
-        OnFantasyName(fnp);
         if ( amlive ) {
             emit NewFantasyName(fn);
+
+        OnFantasyName(fnp);
+
 //            fantasybit::FantasyBitProj fpj{};
 //            fpj.set_name(name);
 //            fpj.set_playerid(0);
@@ -304,18 +308,18 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
         sum += proj - prev;
         PlayerIDSumProj[player] =  sum;
 
-        auto fnp = Commissioner::getName(name);
-        if ( fnp != nullptr) {
-            int nump = FantasyNameProjections[name].size();
-            fnp->setBlockNump (blocknum,nump);
+//        auto fnp = Commissioner::getName(name);
+//        if ( fnp != nullptr) {
+//            int nump = FantasyNameProjections[name].size();
+//            fnp->setBlockNump (blocknum,nump);
 
-            key = "time^" + name;
-            leveldb::Slice bval((char*)&blocknum, sizeof(int32_t));
-            projstore->Put(write_sync, key, bval);
+//            key = "time^" + name;
+//            leveldb::Slice bval((char*)&blocknum, sizeof(int32_t));
+//            projstore->Put(write_sync, key, bval);
 
-            OnProjection(name,player,proj,blocknum,nump);
+            OnProjection(name,player,proj,blocknum,FantasyNameProjections[name].size());
 
-        }
+//        }
     }
 
 
@@ -328,6 +332,28 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     qDebug() << " ============== ";
     dump(GetProjById(player));
     */
+}
+
+
+void FantasyNameData::UpdateProjBlockNum(const std::string name, int32_t bnum) {
+    auto hash = FantasyName::name_hash(name);
+
+    qDebug() << "adding proj block " << name.data() << bnum;
+    string temp;
+    leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+    if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
+        qWarning() << "cant UpdateProjBlockNum" << name.c_str();
+        return;
+    }
+
+    FantasyNameBal fn{};
+    fn.ParseFromString(temp);
+    fn.set_block(bnum);
+    namestore->Put(write_sync, hkey, fn.SerializeAsString());
+    auto fnp = Commissioner::getName(hash);
+    if ( fnp != nullptr) {
+        fnp->setBlockNump (bnum,FantasyNameProjections[name].size());
+    }
 }
 
 std::unordered_map<std::string,int> FantasyNameData::GetProjById(const std::string &pid) {

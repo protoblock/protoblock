@@ -206,7 +206,7 @@ protected:
         if (model==NULL) return true;
 
 
-        if ( mygames != "All")
+        if ( mygames != "ALL")
             if ( model->at(sourceRow)->get_status() != mygames )
                 return false;
 

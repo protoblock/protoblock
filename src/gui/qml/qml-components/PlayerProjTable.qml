@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
@@ -5,9 +6,12 @@ import Material 1.0 as Material
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
-//import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
+//import QtQuick.Controls 2.1 as Mat2
+//import QtQuick.Controls.Material 2.12
+//import QtQuick.Controls.Material 2.4
+
 
 Item {
     id: topw
@@ -16,7 +20,7 @@ Item {
     signal donedrop
     signal addcolumn(string fname)
 
-    property alias ccount: tv.columnCount
+    property alias ccount: ltv.columnCount
     property int focuscount: 0
 
     property int pcol: 4
@@ -28,9 +32,9 @@ Item {
         height: parent.height //- ProtoScreen.guToPx(5)
 
         TableView {
-            id: tv
+            id: ltv
             Component.onCompleted: {
-//                tv.resizeColumnsToContents()
+//                ltv.resizeColumnsToContents()
 
                 //                width = Qt.binding(function(){
 //                   return ProtoScreen.guToPx(6) * columnCount
@@ -42,8 +46,8 @@ Item {
             function addcolumnMethod(fname) {
 //                customRoleNames[0] = fname
                 console.log(" addColumn " )
-                var role = MiddleMan.addFnameColumn(fname,tv.columnCount)
-                tv.addColumn(columnComponent.createObject(tv, {
+                var role = MiddleMan.addFnameColumn(fname,ltv.columnCount)
+                ltv.addColumn(columnComponent.createObject(ltv, {
                                                               "role": role,
                                                               "title": fname,
                                                               "horizontalAlignment": Text.AlignHCenter,
@@ -52,7 +56,7 @@ Item {
                              )
 
 
-//                tv.resizeColumnsToContents()
+//                ltv.resizeColumnsToContents()
             }
             highlightOnFocus: false
             anchors.horizontalCenter: parent.horizontalCenter
@@ -63,20 +67,20 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                console.log( " sort colm changed ")
+                console.log( "onSortIndicatorColumnChanged tv.getColumn(tv.sortIndicatorColumn).role" + ltv.getColumn(ltv.sortIndicatorColumn))
+                if ( ltv.getColumn(ltv.sortIndicatorColumn) )
+                    model.sortAgain(ltv.getColumn(sortIndicatorColumn).role, ltv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-
-                console.log( " sort ind ord changed ")
-
+                console.log( "onSortIndicatorOrderChanged tv.getColumn(tv.sortIndicatorColumn).role" + ltv.getColumn(ltv.sortIndicatorColumn))
+                if ( ltv.getColumn(ltv.sortIndicatorColumn) )
+                    ltv.model.sortAgain(ltv.getColumn(sortIndicatorColumn).role, ltv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
-
 
             headerDelegate: headerdel
             frameVisible: false
@@ -169,7 +173,7 @@ Item {
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
-                width: ProtoScreen.guToPx(4)
+                width: ProtoScreen.guToPx(7)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -351,7 +355,7 @@ Item {
                         if ( lbl.text !== "  " && model.knownProjection !== model.projection ) {
 //                                parseInt(lbl.text) !== model.projection) {
                             model.projection = model.knownProjection
-//                            tv.model.setData(tv.model.index(styleData.row,0),
+//                            ltv.model.setData(ltv.model.index(styleData.row,0),
 //                                             parseInt(lbl.text), 0)
                             lbl.text = Qt.binding(function(){
                                 if ( !model ) return " ";
@@ -397,12 +401,12 @@ Item {
                 onEditingFinished: {
                    //                           styleData.value = value
                    console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + "v  " + styleData.value);
-//                   tv.model.setData(tv.model.index(styleData.row,0),
+//                   ltv.model.setData(ltv.model.index(styleData.row,0),
 //                                    value, 0)
                     model.projection = value
 
-                    if ( model && (model.knownProjection !==  value) && (topw.focuscount != 1))
-                        topw.focuscount = 1
+                    if ( model && (model.knownProjection !==  value))
+                        topw.focuscount++;
 
                    lbl.text = Qt.binding(function(){
                        if ( !model ) return ""
@@ -431,31 +435,28 @@ Item {
         Rectangle {
             id: idd
             implicitWidth: textItem2.implicitWidth
-//            width: parent.width
             height: ProtoScreen.guToPx(8)
-//            anchors.fill: parent
             color: "white"
             Rectangle {
-//                enabled: styleData.column > 3
-//                visible: styleData.column > 3
                 id: rec
                 height: parent.height * .50
                 width: parent.width
                 color: "transparent"
-                //styleData.column < 3 ? "white" : "grey"
                 anchors.top: parent.top
-//                border.width: ProtoScreen.guToPx(.125)
-//                border.color: light.textColor
-//                radius: ProtoScreen.guToPx(.125)
                 ComboBox {
                     id: cbc
-                    model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+//                    textRole: "display"
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
+
+                    model: ["ALL", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] //MiddleMan.pPosFilter//
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
-                       MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
+                          MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
                     }
                 }
 
@@ -634,13 +635,16 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === pcol ? themeroot.theme.accentColor :
+                backgroundColor: styleData.column === pcol ?
+                                 (topw.focuscount > 0 ? "gray" : themeroot.theme.accentColor) :
                                  styleData.column < 6 ? themeroot.theme.primaryColor : "#AFE1FF"
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? (styleData.column === pcol ? "black" : themeroot.theme.accentColor)
-                                                                 : "black"
+                    styleData.column  === ltv.sortIndicatorColumn ?
+                       Qt.darker("white",1.5) : "black"
+//                        (styleData.column === pcol ? "black" :
+//                          themeroot.theme.accentColor  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
                     id: textItem2
@@ -651,7 +655,10 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === pcol ? Material.Theme.light.textColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+                    color: (styleData.column === pcol && !topw.focuscount > 0 ) ?
+                               themeroot.theme.primaryColor :
+                               styleData.column < 6 ? "white" :
+                               Material.Theme.light.textColor
 //                    font.bold: styleData.column === 4
                 }
             }
@@ -715,9 +722,9 @@ Item {
 //        onUpdateWeekData: {
 //            Loader.source = themeroot.start
 //            console.log(" onLiveSyncChanged changd");
-////            tv.model.sortAgain("knownProjection",Qt.DescendingOrder)
+////            ltv.model.sortAgain("knownProjection",Qt.DescendingOrder)
 //            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-//            tv.sortIndicatorColumn =    MiddleMan.pProjectionsViewFilterProxyModel
+//            ltv.sortIndicatorColumn =    MiddleMan.pProjectionsViewFilterProxyModel
 //            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
 //        }
 

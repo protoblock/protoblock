@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.XmlListModel 2.0
 import QtQuick.Controls 1.4
 
@@ -19,7 +19,7 @@ Item {
             width: parent.width
             elevation:  5
             text: model.title
-            subText: model.summary + "   Copyright 2018, RotoWorld"
+            subText: model.summary + "   Copyright 2021, RotoWorld"
             maximumLineCount: 2
             onClicked:{
                 Qt.openUrlExternally(model.link)

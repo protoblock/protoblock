@@ -42,7 +42,7 @@ public:
 */
     void startBlock(int32_t num);
     int32_t endBlock(int32_t num);
-    bool isValid();
+    bool isValid(int32_t height);
     int32_t getLastBlockId();
     /*
     void recordName(const hash_t &hash,const std::string &pubkey,const std::string &name);

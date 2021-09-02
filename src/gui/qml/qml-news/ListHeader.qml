@@ -1,5 +1,5 @@
 
-import QtQuick 2.0
+import QtQuick 2.12
 import ProRotoQml.Theme 1.0
 // this is used to refresh the current page
 // we could also put this on a timmer if we like

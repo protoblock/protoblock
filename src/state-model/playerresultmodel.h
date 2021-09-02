@@ -20,6 +20,7 @@
 #include "weeklyschedulemodel.h"
 #include <QItemSelectionModel>
 #include "fantasynamemodel.h"
+#include "math.h"
 
 namespace pb {
 using namespace fantasybit;
@@ -233,7 +234,7 @@ class ResultsViewFilterProxyModel : public SortFilterProxyModel
     QItemSelectionModel * mySelectedGames;
 //    QStringListModel * myPositionCombobox;
     bool myIsEnabled = true;
-    QString myPos = "All";
+    QString myPos = "ALL";
 
 public:
     Q_PROPERTY(QStringList userRoleNames READ userRoleNames CONSTANT)
@@ -340,7 +341,7 @@ protected:
 
 //        qDebug() << " !null " << myPos;
 
-        if ( myPos != "All")
+        if ( myPos != "ALL")
             if ( model->at(sourceRow)->get_pos() != myPos )
                 return false;
 

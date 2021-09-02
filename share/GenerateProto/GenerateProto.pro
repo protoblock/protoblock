@@ -15,7 +15,8 @@ PROTOS += \
     $$PROTOLOC/NameData.proto \
     $$PROTOLOC/StaticData.proto \
     $$PROTOLOC/StatusData.proto \
-    $$PROTOLOC/ProtoData.proto
+    $$PROTOLOC/ProtoData.proto \
+    $$PROTOLOC/StateData.proto
 
 
 DEFINES += BUILD_PROTO

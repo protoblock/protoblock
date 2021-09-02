@@ -10,7 +10,7 @@
 #ifndef APP_SETTINGS
 #define APP_SETTINGS
 #define ORGANIZATION_NAME "Protoblock"
-#define ORGANIZATION_DOMAIN "protoblock.com"
+#define ORGANIZATION_DOMAIN "fantasybit.com"
 #define APPLICATION_NAME "Protoblock"
 #endif
 
@@ -71,7 +71,7 @@ static QString fromTime_t_toFantasyString(uint dtt) {
     QByteArray zone = "America/New_York";
     QTimeZone tz(zone);//str.c_str();
 
-    return QDateTime::fromTime_t(dtt,tz).toString("ddd h:mm a").remove(" pm");
+    return QDateTime::fromSecsSinceEpoch(dtt,tz).toString("ddd h:mm a").remove(" pm");
 }
 
 static QString TimetoTweetString() {

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.XmlListModel 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
@@ -15,7 +15,7 @@ Item {
             width: parent.width
             elevation:  5
             text: model.title.trim()
-            subText: model.summary.trim() + "  Copyright 2018, CBSSports.com"
+            subText: model.summary.trim() + "  Copyright 2021, CBSSports.com"
             maximumLineCount: 2
             onClicked:{
                 Qt.openUrlExternally(model.link.trim())

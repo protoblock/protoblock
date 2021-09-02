@@ -2,7 +2,7 @@ import QtQuick 2.4
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import ProRotoQml.Theme 1.0
@@ -69,9 +69,9 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "2018 Season Long Contracts "
+                        bannerText: "Season Long Contracts "
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Hedge dynasty risk, with  future season long 2018 contracts. Contact us for more info. contact@protoblock.com"
+                        text: "Hedge dynasty risk, with future season long contracts. Contact us for more info. contact@protoblock.com"
                     }
 
                 }

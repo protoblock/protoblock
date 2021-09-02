@@ -25,6 +25,9 @@
 #include "pbutils.h"
 #include "ldbwriter.h"
 
+#ifdef DEBUG_TIMINGS
+#include <QElapsedTimer>
+#endif
 
 
 #ifdef BLOCK_EXPLORER
@@ -40,6 +43,7 @@ namespace fantasybit
 
 
 void BlockProcessor::hardReset() {
+    qInfo() <<  "delete all leveldb, should have nothing";
     mRecorder.closeAll();
     mData.closeAll();
     mNameData.closeAll();
@@ -53,18 +57,19 @@ void BlockProcessor::hardReset() {
     NFLStateData::InitCheckpoint();
 #endif
     BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
-
+    qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
 }
 
-int32_t BlockProcessor::init() {
+int32_t BlockProcessor::init(int32_t height) {
 
     mRecorder.init();
-    if (!mRecorder.isValid() ) {
+    if (!mRecorder.isValid(height) ) {
         emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
         pb::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
+        mExchangeData.removeAll();
 
 #ifndef NOUSE_GENESIS_BOOT
         NFLStateData::InitCheckpoint();
@@ -73,7 +78,7 @@ int32_t BlockProcessor::init() {
         qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
 
         mRecorder.init();
-        if (!mRecorder.isValid() ) {
+        if (!mRecorder.isValid(height) ) {
             qInfo() <<  "mRecorder not valid! ";
             InvalidState(mRecorder.getLastBlockId());
             return -1;
@@ -123,6 +128,11 @@ int32_t BlockProcessor::process(Block &sblock) {
     }
 #endif
 
+#ifdef DEBUG_TIMINGS
+    QElapsedTimer timer;
+    timer.start();
+#endif
+
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
@@ -131,6 +141,11 @@ int32_t BlockProcessor::process(Block &sblock) {
     else {
         //qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
     }
+
+#ifdef DEBUG_TIMINGS
+    qDebug() << "Process verifySignedBlock took" << timer.elapsed() << " milliseconds";
+    timer.restart();
+#endif
 
 //    if ( sblock.signedhead().head().num() == 139 ) {
 //        auto bs = sblock.DebugString();
@@ -747,7 +762,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     if ( pbpospair.second != nullptr) {
         playerresultP->set_symbol(pbpospair.second->playerid());
         SettleROWPositionsRawStake set(*(pbpospair.second));
-        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == 16);
+        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == WK.FFC);
         for (auto r : pnls ) {
             FantasyBitPnl &fba = *playerresult.mutable_rowposdividend()->Add();
             fba.mutable_spos()->CopyFrom(r.second.first);
@@ -789,7 +804,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     case TrType::SEASONEND:
         if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-            if ( mGlobalState.week() >= 17) {
+            if ( mGlobalState.week() > WK.FFC) {
                 OnSeasonEnd(mGlobalState.season());
                 mGlobalState.set_season(indt.season()+1);
                 mGlobalState.set_week(0);
@@ -828,6 +843,12 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         if (mGlobalState.week() != indt.week()) {
             if ( mGlobalState.week() == 0 && indt.week() == 1) {
+                if ( mGlobalState.state() != GlobalState_State_INSEASON ) {
+                    mGlobalState.set_state(GlobalState_State_INSEASON);
+                    mData.OnGlobalState(mGlobalState);
+                    OnSeasonStart(indt.season());
+                }
+
                 mGlobalState.set_week(1);
                 mData.OnGlobalState(mGlobalState);
                 OnWeekStart(1);
@@ -870,7 +891,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
         for ( auto &sbp : pos ) {
-            if ( !isWeekly(sbp.first) && indt.week() < 16)
+            if ( !isWeekly(sbp.first) && indt.week() < WK.FFC)
                 continue;
 
             SettlePositionsRawStake set(sbp.second);
@@ -886,13 +907,13 @@ void BlockProcessor::process(const DataTransition &indt) {
 #endif
 
 #ifdef JAYHACK
-//        if (indt.week() == 16)
+//        if (indt.week() == WK.FFC)
 //            break;
 #endif
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
-        if (indt.week() >= 16) {
+        if (indt.week() >= WK.FFC) {
             qInfo() <<  "season " << indt.season() << " Over ";
             if ( mGlobalState.season() == 2017 && indt.season() == 2017 && indt.week() < 21) {
                 OnSeasonEnd(mGlobalState.season());
@@ -1036,6 +1057,11 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
 
 void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
+#ifdef DEBUG_TIMINGS
+    QElapsed timer;
+    timer.start();
+#endif
+
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
 
@@ -1062,11 +1088,16 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         mNameData.AddNewName(nt.fantasy_name(), nt.public_key(), b.signedhead().head().num() );
         qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
 
+#ifdef DEBUG_TIMINGS
+        qDebug() << "processTxfrom name" << timer.elapsed() << " milliseconds";
+        timer.restart();
+#endif
     }
 
     if ( nameonly ) return;
 
     map<int,SignedTransaction> doStamped;
+    unordered_set<string> madeProjection{};
    // for (const SignedTransaction &st : b.signed_transactions()) //
     for (int j = start; j < b.signed_transactions_size(); j++)
     {
@@ -1102,12 +1133,21 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         case TransType::PROJECTION_BLOCK: {
             const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
             //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
+#ifdef DEBUG_TIMINGS
+            QElapsedTimer timer2;
+            timer2.start();
+#endif
             for (const PlayerPoints & pt : ptb.player_points() ) {
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
 //                if ( st.fantasy_name() == "@SpreadSheetFF" && pt.playerid() == "1179")
 //                    qDebug() << pt.DebugString().data();
+#ifdef DEBUG_TIMINGS
+                qDebug() << "AddProjection took " << timer2.elapsed() << " milliseconds";
+                timer2.restart();
+#endif
             }
 
+            madeProjection.insert(st.fantasy_name());
             break;
 
         }
@@ -1117,6 +1157,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
 //            qDebug() << st.fantasy_name() << "new projection " << pt.DebugString().data();
             mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
+            madeProjection.insert(st.fantasy_name());
             break;
         }
 
@@ -1135,11 +1176,18 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         default:
             break;
         }
+#ifdef DEBUG_TIMINGS
+        qDebug() << "processTxfrom " << t.type() << " " << timer.elapsed() << " milliseconds";
+        timer.restart();
+#endif
     }
 
     for ( auto & nextstamped : doStamped) {
         ProcessInsideStamped(nextstamped.second,nextstamped.first,b.signedhead().head().num());
     }
+
+    for ( const auto & fname : madeProjection )
+        mNameData.UpdateProjBlockNum(fname, b.signedhead().head().num());
 }
 
 void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum,int32_t blocknum) {
@@ -1298,6 +1346,7 @@ void BlockProcessor::OnWeekStart(int week) {
 }
 
 void BlockProcessor::OnSeasonStart(int season) {
+    WK.SetSeason(season);
     mNameData.OnSeasonStart(season);
     mData.OnSeasonStart(season);
     mExchangeData.OnSeasonStart(season);
@@ -1316,6 +1365,7 @@ void BlockProcessor::OnSeasonEnd(int oldseason) {
 #ifdef TRADE_FEATURE
     mFutContract.set_season(oldseason+1);
 #endif
+    WK.SetSeason(oldseason+1);
 }
 
 

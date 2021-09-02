@@ -3,7 +3,9 @@
 #include "ApiData.pb.h"
 //#include "mediator.h"
 
-Core::Core(){}
+Core::Core(){
+    WK.SetSeason(2014);
+}
 void Core::bootstrap(){
 
 

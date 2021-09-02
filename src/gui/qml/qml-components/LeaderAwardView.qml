@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
@@ -7,8 +8,6 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 //import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
-
-import ProRotoQml.Theme 1.0
 
 
 Item {
@@ -22,9 +21,9 @@ Item {
         TableView {
             id: tvl
             Component.onCompleted: {
-                if ( model ) {
+                if ( tvl.model ) {
 //                    resizeColumnsToContents()
-                    model.sortAgain("award",Qt.DescendingOrder)
+                    tvl.model.sortAgain("award",Qt.DescendingOrder)
                 }
             }
 
@@ -37,11 +36,19 @@ Item {
             model: MiddleMan.pResultSelectedModel //? 0 : MiddleMan.pResultSelectedModel
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged tvl.getColumn(tvl.sortIndicatorColumn).role" + tvl.getColumn(tvl.sortIndicatorColumn))
+                if ( tvl.getColumn(tvl.sortIndicatorColumn) )
+                    model.sortAgain(tvl.getColumn(sortIndicatorColumn).role, tvl.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged tvl.getColumn(tvl.sortIndicatorColumn).role" + tvl.getColumn(tvl.sortIndicatorColumn))
+                if ( tvl.getColumn(tvl.sortIndicatorColumn) )
+                    model.sortAgain(tvl.getColumn(sortIndicatorColumn).role, tvl.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
 
@@ -179,7 +186,7 @@ Item {
         target: MiddleMan.pResultSelectedModel
 
         onSourceModelChanged: {
-            console.log(" finally model changd");
+//            console.log(" finally model changd");
             tvl.model = MiddleMan.pResultSelectedModel
         }
 

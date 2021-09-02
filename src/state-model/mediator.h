@@ -117,6 +117,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
 
     QML_READONLY_CSTREF_PROPERTY (qint32, theWeek)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theLastWeek)
     QML_READONLY_CSTREF_PROPERTY (qint32, theSeason)
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
@@ -180,7 +181,7 @@ public:
 #endif
 
     void checkAllowAction() {
-         setallowAction(m_liveSync == "Live" && otherFantasyName == "" && myFantasyName != "");
+         setallowAction(m_liveSync == "Live" && otherFantasyName == "" && myFantasyName.name() != "");
     }
 
     void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
@@ -330,7 +331,7 @@ public:
             vector<FantasyBitProj> &vproj = projbygame[gameid.toStdString()];
 
             FantasyBitProj fproj;
-            fproj.set_name(myFantasyName);
+            fproj.set_name(myFantasyName.name());
             fproj.set_proj(projection);
             fproj.set_playerid(it->get_playerid().toStdString());
             vproj.push_back(fproj);
@@ -506,7 +507,6 @@ public:
     Q_INVOKABLE void setNextWeekData(int week) {
         if ( !amLive ) return;
 
-
         int season = m_theNextSeason;
 
         if ( week <= 0 ) {
@@ -515,9 +515,9 @@ public:
             if ( season < m_theSeason )
                 return;
 
-            week = 16;
+            week = lastWeekForSeason(season);
         }
-        else if (week >= 17) {
+        else if (week > lastWeekForSeason(season)) {
             season = m_theNextSeason + 1;
 
             if ( season > m_theSeason )
@@ -542,15 +542,14 @@ public:
                                   mGateway->dataService->GetWeeklySchedule(season,week));
     }
 
+    //
+    // PrevWeekSeason is the past data currently being viewed in the model
+    // Projections.qml
+    //
     Q_INVOKABLE void setPrevWeekData(int week, int season) {
         qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
-
-//        int season = m_thePrevSeason;
-//        if ( season != m_thePrevSeason )
-//            setthePrevSeason(season);
-//        m_thePrevSeason = season;
 
         if ( week <= 0 ) {
             season = m_thePrevSeason-1;
@@ -558,11 +557,11 @@ public:
             if ( season < 2014 )
                 return;
 
-            week = 16;
+            week = lastWeekForSeason(season);
         }
-        else if (week >= 17 ) {
+        else if (week > lastWeekForSeason(season) ) {
             if ( week < m_theWeek && season == m_theSeason) {
-                week = 16;
+                week = lastWeekForSeason(season);
             }
             else {
                 season = m_thePrevSeason + 1;
@@ -593,7 +592,6 @@ public:
 
         if ( week == m_theWeek && season == m_theSeason) {
            m_pPreviousWeekScheduleModel->clear();
-//           for ( auto *it : m_pWeekClosedScheduleModel->)
            m_pPreviousWeekScheduleModel->append(m_pWeekClosedScheduleModel->toList());
         }
         else
@@ -602,7 +600,7 @@ public:
 
 
         const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevSeason,m_thePrevWeek);
-        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName);
+        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName.name());
         myPrevGamesSelectionModel.reset();
         m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
         m_pResultSelectedModel->clear();
@@ -615,13 +613,7 @@ public:
 
         auto it = mPlayerResultModel.getByUid(in);
         if ( it ) {
-            //update_pResultSelectedModel(it->get_awardsModel());
-
             m_pResultSelectedModel->setSourceModel(it->get_awardsModel());
-//            m_pResultSelectedModel->setSortRole("award");//mPlayerProjModel.roleForName("pos"));
-//            m_pResultSelectedModel->setDynamicSortFilter(true);
-//            m_pResultSelectedModel->setSource();
-
             QString fordisply("%1 (%2) %3 - %4 ƑɃ");
             QString fd2 = fordisply.arg(it->get_fullname()).arg(it->get_pos()).arg(it->get_teamid())
                     .arg(it->get_fb());
@@ -629,6 +621,9 @@ public:
         }
     }
 
+    Q_INVOKABLE int lastWeekForSeason(int season) {
+        return WeekForSeason(season).FFC;
+    }
 
 //    bool usingRandomNames = false;
 
@@ -793,7 +788,7 @@ private slots:
 private:
 //    std::string lastPk2name;
     //fantasybit::FantasyAgent m_fantasy_agent;
-    std::string myFantasyName;
+    MyFantasyName myFantasyName;
     std::string otherFantasyName;
 
 //    QString m_playersName;
@@ -832,9 +827,10 @@ private:
 
     void getLeaders(int week,bool lastweek, bool all20XX = false) {
 #ifdef NO_SQL_LEADERS
-        return;
+//        return;
 #endif
-        QString links("https://app.trading.football:4545");
+        if ( !amLive ) return;
+        QString links(PAPIURL.data());
         QString route("fantasy/leaders");
         if ( !all20XX )
             route = route.append("?position=all%20positions&week=%1").arg(week);
@@ -894,7 +890,6 @@ private:
         mWeeklySuffix += "w";
         mWeeklySuffix += (week <= 9) ? "0" : "";
         mWeeklySuffix += to_string(week);
-
     }
 
 public slots:

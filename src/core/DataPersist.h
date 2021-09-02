@@ -79,7 +79,7 @@ public:
             gd = true;
             _IstreamInputStream = new GOOGLE_NAMESPACE::protobuf::io::IstreamInputStream(&mFs);
             _CodedInputStream = new GOOGLE_NAMESPACE::protobuf::io::CodedInputStream(_IstreamInputStream);
-            _CodedInputStream->SetTotalBytesLimit(128000000,128000000);
+            _CodedInputStream->SetTotalBytesLimit(512000000,512000000);
         }
     }
 

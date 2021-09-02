@@ -1,5 +1,6 @@
-import QtQuick 2.4
-import QtQuick.Controls 2.3
+import QtQml 2.2
+import QtQuick 2.5
+//import QtQuick.Controls 1.4
 //import ProRotoQml.Protoblock 1.0
 
 import QtQuick.Controls 1.4 as C12
@@ -62,7 +63,7 @@ Item {
                 anchors.margins: ProtoScreen.guToPx(2)
                 columns: 8
                 rows: 3
-                Label {
+                Material.Label {
                     text: "Send to:"
                     Layout.preferredWidth: ProtoScreen.guToPx(10)
 
@@ -207,7 +208,7 @@ Item {
 
             }
 
-                Label {
+                Material.Label {
                     text: "Amount:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight

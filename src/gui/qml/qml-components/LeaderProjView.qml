@@ -1,3 +1,5 @@
+import QtQml.Models 2.2
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
@@ -9,13 +11,13 @@ import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
 
 
-
 Item {
     id: topi
 
     signal releasedit(string fname)
     property string dragtarget: "dropProxy"
     property int myTheWeek: MiddleMan.theWeek
+    property int lastweekseas: MiddleMan.theLastWeek
     anchors.fill: parent
 //    anchors.margins: ProtoScreen.guToPx(1)
 
@@ -46,12 +48,20 @@ Item {
 //            sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged tv.getColumn(tv.sortIndicatorColumn).role" + tv.getColumn(tv.sortIndicatorColumn))
+                if ( tv.getColumn(tv.sortIndicatorColumn) )
+                    model.sortAgain(tv.getColumn(sortIndicatorColumn).role, tv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
 //                resizeColumnsToContents();
             }
 
             onSortIndicatorOrderChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged tv.getColumn(tv.sortIndicatorColumn).role" + tv.getColumn(tv.sortIndicatorColumn))
+                if ( tv.getColumn(tv.sortIndicatorColumn) )
+                    model.sortAgain(tv.getColumn(sortIndicatorColumn).role, tv.sortIndicatorOrder)
+                else
+                    console.log( " role null")
 //                resizeColumnsToContents()
             }
 
@@ -131,7 +141,7 @@ Item {
                     anchors.bottom: parent.bottom
                     radius: 1
                     border.color:
-                        styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor : "black"
+                        styleData.column  === tv.sortIndicatorColumn ? "gray"  : "black"
 
                     Material.Label {
                         id: textItem2
@@ -301,14 +311,14 @@ Item {
                 }
             }
 
-            //2018 Leaders - off season
+            //Leaders - off season
             TableViewColumn {
                 role: "leaders20XX"
                 title: myTheWeek === 0 ? MiddleMan.theSeason-1 : MiddleMan.theSeason
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -326,8 +336,7 @@ Item {
                 title: "Skill"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek < 1 || myTheWeek > 17
-
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -346,7 +355,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -365,7 +374,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -384,7 +393,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: myTheWeek < 1 || myTheWeek > lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -421,9 +430,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek >= 1 && myTheWeek < 17
-
-
+                visible: myTheWeek >= 1 && myTheWeek < lastweekseas
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -441,7 +448,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek > 1 && myTheWeek <= 17
+                visible: myTheWeek > 1 && myTheWeek <= lastweekseas
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -452,14 +459,14 @@ Item {
                 }
             }
 
-            //2018 Leaders - in season
+            //Leaders - in season
             TableViewColumn {
                 role: "leaders20XX"
                 title: MiddleMan.theSeason
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: myTheWeek >= 1 || myTheWeek <= lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -477,7 +484,7 @@ Item {
                 title: "Overall"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: myTheWeek >= 1 || myTheWeek <= lastweekseas
 
 
                 delegate: Material.Label {
@@ -497,7 +504,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: myTheWeek >= 1 || myTheWeek <= lastweekseas
 
                 delegate: Material.Label {
                     anchors.centerIn: parent

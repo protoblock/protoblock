@@ -26,8 +26,8 @@ using namespace fantasybit;
 void NFLStateData::InitCheckpoint() {
 
     leveldb::WriteOptions write_sync;
-    write_sync.sync = true;
-    leveldb::Options options;
+//    write_sync.sync = true;
+    leveldb::Options options{};
     options.create_if_missing = true;
     leveldb::Status status;
 
@@ -106,40 +106,43 @@ void NFLStateData::InitCheckpoint() {
 }
 #endif
 
-#ifndef NOUSE_GENESIS_BOOT
+#if !defined(NOUSE_GENESIS_BOOT) || !defined(NOCHECK_LOCAL_BOOTSTRAP)
 #include "PeerNode.h"
 void NFLStateData::InitCheckpoint(bool onlyresult) {
 
-    leveldb::WriteOptions write_sync;
-    write_sync.sync = true;
-    leveldb::Options options;
-    options.create_if_missing = true;
-    leveldb::Status status;
+    pb::make_all(filedir(""));
 
-    leveldb::DB *db2;
+    leveldb::WriteOptions write_sync{};
+//    write_sync.sync = true;
+    leveldb::Options options{};
+    options.create_if_missing = true;
+    leveldb::Status status{};
+
+    leveldb::DB *db2{};
     leveldb::DB::Open(options, filedir("statusstore"), &db2);
-    leveldb::DB *db4;
+    leveldb::DB *db4{};
     leveldb::DB::Open(options, filedir("staticstore"), &db4);
-    leveldb::DB *db3;
+    leveldb::DB *db3{};
     leveldb::DB::Open(options, filedir("playerstore"), &db3);
-    leveldb::DB *db5;
+    leveldb::DB *db5{};
     leveldb::DB::Open(options, filedir("namestore"), &db5);
-    leveldb::DB *db6;
+    leveldb::DB *db6{};
     string file = GET_ROOT_DIR();
     file += "trade/posstore";
     leveldb::DB::Open(options, file, &db6);
 
 
-    Bootstrap head;
-    LdbWriter ldb;
+    Bootstrap head{};
+    LdbWriter ldb{};
     ldb.init(Node::bootstrap.get());
     ldb.read(ldb.read(ldb.read("head")),head);
 
     if ( !onlyresult ) {
+        WK.SetSeason(head.season());
         GlobalState gs;
         gs.set_season(head.season());
         gs.set_week(head.week());
-        if ( gs.week() >= 1 && gs.week() <= 16)
+        if ( gs.week() >= 1 && gs.week() <= WK.FFC)
             gs.set_state(GlobalState_State_INSEASON);
         else
             gs.set_state(GlobalState_State_OFFSEASON);
@@ -272,8 +275,10 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
 #endif
 
 void NFLStateData::init() {
-    write_sync.sync = true;
-    leveldb::Options options;
+    pb::make_all(filedir(""));
+
+//    write_sync.sync = true;
+    leveldb::Options options{};
     options.create_if_missing = true;
     leveldb::Status status;
 
@@ -328,6 +333,8 @@ void NFLStateData::init() {
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+
 #ifdef WRITESYMBOLS_FORCE_INITALL
         SqlStuff sql("tfprod","symbolstatausforce");
 #endif
@@ -398,7 +405,9 @@ void NFLStateData::init() {
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
         auto gs = GetGlobalState();
-        for (int i=1; i<=17;i++) {
+        WK.SetSeason(gs.season());
+
+        for (int i=1; i<=WK.NFL;i++) {
             string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
@@ -536,7 +545,7 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
 }
 
 void NFLStateData::OnSeasonEnd(int season) {
-    for ( int i=0;i<16;i++) {
+    for ( int i=0;i<WK.FFC;i++) {
         auto ws = GetWeeklySchedule(season,i+1);
 
         string key = to_string(season) + "scheduleweek:" + to_string(i+1);
@@ -623,7 +632,7 @@ void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs)
     if (!staticstore->Put(write_sync, key, gs.SerializeAsString()).ok()) {
         qWarning() << "cant add gameresult" << gameid;
     }
-    qDebug() << key.data ()<< gs.DebugString().data ();
+//    qDebug() << key.data ()<< gs.DebugString().data ();
     if ( amlive )
         emit NewGameResult(gameid);
 

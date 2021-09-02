@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
@@ -15,7 +16,7 @@ Item {
     property bool ss: false
     property bool posvisible: false
     property variant selectedModel
-//    property alias ccount: tvr.columnCount
+//    property alias ccount: wtvr.columnCount
     property int focuscount: 0
     property string who: "default"
     property int rw: 8
@@ -44,7 +45,7 @@ Item {
     property string dsymbol: ""
     property int symbindex: -1
 
-    property alias viewselection: tvr.selection
+    property alias viewselection: wtvr.selection
     //My Orders
         // My Positions
         // My PnL
@@ -67,7 +68,7 @@ Item {
         height: parent.height// - ProtoScreen.guToPx(5)
 
         TableView {
-            id: tvr
+            id: wtvr
             alternatingRowColors: true
             Component.onCompleted: {
 //                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
@@ -75,15 +76,15 @@ Item {
                 quotemodel.sortAgain("blocknum",Qt.DescendingOrder)
                 console.log("wk tvr comleted")
                 console.log(quotemodel)
-                tvr.selection.select(0)
+                wtvr.selection.select(0)
 //                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
 //                currentRow = Qt.binding(function() {
 //                        return quotemodel.getViewIndexFromSymbol(dsymbol) ;
 //                })
 //                currentRow = 0
-//                tvr.selection.select(0)
+//                wtvr.selection.select(0)
 //                currentRowChanged()
-//                tvr.selection
+//                wtvr.selection
             }
 
             onSelectionChanged: {
@@ -95,12 +96,12 @@ Item {
 
             onClicked: {
                 console.log("clicked" + currentRow);
-//                tvr.selectedRow = currentRow
+//                wtvr.selectedRow = currentRow
             }
 
 //            onCurrentRowChanged: {
 //                console.log("onCurrentRowChanged" + currentRow);
-//                tvr.selectedRow = currentRow
+//                wtvr.selectedRow = currentRow
 //            }
 
 
@@ -114,11 +115,19 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                quotemodel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorColumnChanged wtvr.getColumn(tv.sortIndicatorColumn).role" + wtvr.getColumn(wtvr.sortIndicatorColumn))
+                if ( wtvr.getColumn(wtvr.sortIndicatorColumn) )
+                    model.sortAgain(wtvr.getColumn(sortIndicatorColumn).role, wtvr.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             onSortIndicatorOrderChanged: {
-                quotemodel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( "onSortIndicatorOrderChanged wtvr.getColumn(wtvr.sortIndicatorColumn).role" + wtvr.getColumn(wtvr.sortIndicatorColumn))
+                if ( wtvr.getColumn(wtvr.sortIndicatorColumn) )
+                    model.sortAgain(wtvr.getColumn(sortIndicatorColumn).role, wtvr.sortIndicatorOrder)
+                else
+                    console.log( " role null")
             }
 
             headerDelegate: headerdel
@@ -187,8 +196,8 @@ Item {
 //                        if ( styleData.value === dsymbol ) {
 //                            console.log(" oncompleted " + styleData.value)
 
-//                            if ( tvr.selectedRow !== styleData.row )
-//                                tvr.selectedRow = styleData.row
+//                            if ( wtvr.selectedRow !== styleData.row )
+//                                wtvr.selectedRow = styleData.row
 //                        }
 //                    }
                 }
@@ -260,12 +269,12 @@ Item {
                             return styleData.value
                         else {
 //                            if ( model.symbol === dsymbol) {
-//                                if (styleData.row !==tvr.selectedRow ) {
-//                                    tvr.currentRow = styleData.row;
+//                                if (styleData.row !==wtvr.selectedRow ) {
+//                                    wtvr.currentRow = styleData.row;
 //                                }
 //                            }
-//                            else if (styleData.row===tvr.selectedRow ) {
-//                                tvr.currentRow = -1;
+//                            else if (styleData.row===wtvr.selectedRow ) {
+//                                wtvr.currentRow = -1;
 //                            }
                             return model.fullname
                         }
@@ -275,7 +284,7 @@ Item {
                     backgroundColor = Qt.binding(function() {
                         if ( !model )
                             return "transparent"
-//                        else if (m.row===tvr.selectedRow ) {
+//                        else if (m.row===wtvr.selectedRow ) {
 //                            return "transparent"//Light Grey";
 //                        }
                         else if (dsymbol === model.symbol) {
@@ -335,7 +344,7 @@ Item {
                     }
                     Component.onCompleted: {
                         backgroundColor = Qt.binding(function() {
-//                            if (styleData.row===tvr.selectedRow )
+//                            if (styleData.row===wtvr.selectedRow )
 //                                return "Light Grey"
 //                            else
                             if ( !model ) {
@@ -377,7 +386,7 @@ Item {
                 role: "teamid"
                 title: "Team"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(6)
+                width: ProtoScreen.guToPx(7)
 
                 delegate: Material.Label {
                     text: styleData.value
@@ -736,14 +745,18 @@ Item {
                 anchors.top: parent.top
                 ComboBox {
                     id: cbc
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
+
                     model: styleData.column === poscol ? postionModel :
-//                               ["All", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] :
+//                               ["ALL", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] :
                             styleData.column === teamcol ?
                                teamModel : [""]
                     enabled: styleData.column === poscol || styleData.column === teamcol
                     currentIndex: 0
                     visible: enabled
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
                         if ( styleData.column === poscol )
                             quotemodel.setPos(currentText)
@@ -901,7 +914,7 @@ Item {
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tvr.sortIndicatorColumn ? themeroot.theme.accentColor
+                    styleData.column  === wtvr.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
@@ -1051,7 +1064,7 @@ Item {
 
 
     Connections {
-        target: tvr.selection
+        target: wtvr.selection
 
         onSelectionChanged : {
             wktt.update();
@@ -1062,10 +1075,10 @@ Item {
 
     function update() {
         console.log(" MkTrading update")
-        tvr.selection.forEach(function(rowIndex) {
+        wtvr.selection.forEach(function(rowIndex) {
             dsymbol = quotemodel.getPlayerSliceModelUid(rowIndex)
             MiddleMan.startDepth(dsymbol);
-            //,tvr.model.roleForName("awardsModel"))
+            //,wtvr.model.roleForName("awardsModel"))
 //            if (row && row.awardsModel) rowtt.selectedModel = row.awardsModel
         })
     }

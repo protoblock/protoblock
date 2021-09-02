@@ -200,6 +200,7 @@ public:
         init();
     }
     bool DeltaTransfer(const std::string name, int64_t openpnl, int64_t amount, bool = false);
+    void UpdateProjBlockNum(const std::string, int32_t);
 };
 
 }
