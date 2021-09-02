@@ -61,6 +61,8 @@ void Node::init() {
     if (!check_file.exists() ) {
         qDebug() <<  "delme.0 not found- delete state";
         pb::remove_all(GET_ROOT_DIR() + "block/bootstrap");
+        pb::remove_all(GET_ROOT_DIR() + "index/");
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
         QFile file( (GET_ROOT_DIR() + "delme.0").data () );
         file.open(QIODevice::WriteOnly);
         BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
