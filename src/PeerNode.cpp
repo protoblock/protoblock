@@ -42,6 +42,7 @@ Node::Node() { current_boot.set_blocknum(-1);}
 void Node::init() {
 
 #ifdef REMOVE_2021_LDB
+{
     QFileInfo check_file( (GET_ROOT_DIR() + "ldb2021.0").data ());
     if (!check_file.exists() ) {
         qDebug() <<  "ldb2021.0 not found- delete all" << current_hight;
@@ -51,7 +52,22 @@ void Node::init() {
         QFile file( (GET_ROOT_DIR() + "ldb2021.0").data () );
         file.open(QIODevice::WriteOnly);
     }
+}
 #endif
+
+#ifndef NO_RESET_STATE_FEATURE
+{
+    QFileInfo check_file( (GET_ROOT_DIR() + "delme.0").data ());
+    if (!check_file.exists() ) {
+        qDebug() <<  "delme.0 not found- delete state";
+        pb::remove_all(GET_ROOT_DIR() + "block/bootstrap");
+        QFile file( (GET_ROOT_DIR() + "delme.0").data () );
+        file.open(QIODevice::WriteOnly);
+        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
+    }
+}
+#endif
+
 
     pb::make_all(GET_ROOT_DIR() + "block/");
 //    write_sync.sync = true;
