@@ -3,7 +3,7 @@ include($$PWD/../../src/src.pri)
 include($$PWD/../../share/protos.pri)
 
 
-QT += core network websockets qml
+QT += core network websockets qml sql
 CONFIG += qt c++11 static
 TEMPLATE = lib
 TARGET = fantasybit-server
