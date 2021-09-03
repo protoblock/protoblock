@@ -129,7 +129,7 @@ icons.path = $$installPath/icons
 
 fonts.path = $$installPath/fonts/
 fontsRoboto.path = $$installPath/fonts/roboto/
-INSTALLS += target qmldir icons fonts
+INSTALLS += target qmldir icons fonts fontsRoboto
 
 HEADERS += \
     dummyios.h
