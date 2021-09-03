@@ -181,7 +181,7 @@ public:
 #endif
 
     void checkAllowAction() {
-         setallowAction(m_liveSync == "Live" && otherFantasyName == "" && myFantasyName.name() != "");
+         setallowAction(m_liveSync == "Live" && otherFantasyName == "");
     }
 
     void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
