@@ -24,7 +24,7 @@
 #endif
 
 #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
-#include "SqlStuff.h"
+#include "../apps/dataagent-qt/src/SqlStuff.h"
 #endif
 
 

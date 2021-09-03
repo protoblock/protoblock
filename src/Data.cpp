@@ -18,7 +18,7 @@ using namespace std;
 using namespace fantasybit;
 
 #if  defined(DATAAGENTWRITENAMES) || defined(WRITESYMBOLS)
-#include "SqlStuff.h"
+#include "../apps/dataagent-qt/src/SqlStuff.h"
 #endif
 
 

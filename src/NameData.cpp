@@ -21,7 +21,7 @@
 #include "DataPersist.h"
 
 #ifdef DATAAGENTWRITENAMES
-#include "SqlStuff.h"
+#include "../apps/dataagent-qt/src/SqlStuff.h"
 #endif
 using namespace std;
 using namespace fantasybit;

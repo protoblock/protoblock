@@ -29,7 +29,7 @@
 #include "PeerNode.h"
 
 #ifdef TIMEAGENTWRITEFILLS
-#include "SqlStuff.h"
+#include "../apps/dataagent-qt/src/SqlStuff.h"
 #endif
 
 using namespace std;
