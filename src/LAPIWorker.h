@@ -150,7 +150,7 @@ public slots:
     void OnProjLive(fantasybit::FantasyBitProj);
     void OnClaimName(QString);
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
-
+    void importedName(QString);
     void OnNewOrder(fantasybit::ExchangeOrder);
     void OnNewTransfer(fantasybit::TransferTrans);
 

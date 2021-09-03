@@ -431,17 +431,10 @@ void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal bal) {
 
 void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
-
     my = agent.getMyNamesStatus();
-    for(auto p : my) {
-        /*
-        if ( amlive )
-        if ( p.second.status() < MyNameStatus::confirmed )
-            namedata.Subscribe(p.first);
-        */
+    for(auto &p : my) {
         myfantasynames[p.name()] = p;
     }
-
 
     qDebug() << " MyNames(my)";
     emit MyNames(my);
@@ -453,14 +446,13 @@ void MainLAPIWorker::OnUseName(QString name) {
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::requested);
 
-    //myfantasynames = agent.getMyNamesStatus();
+//    myfantasynames = agent.getMyNamesStatus();
 
     auto it = myfantasynames.find(name.toStdString());
     if ( it != end(myfantasynames)) {
         if ( agent.UseName(myCurrentName.name()) ) {
             myCurrentName = it->second;
         }
-
 
         if ( myCurrentName.status() >= MyNameStatus::requested)
             DoSubscribe(myCurrentName.name(),true);
@@ -473,6 +465,26 @@ void MainLAPIWorker::OnUseName(QString name) {
     }
 }
 
+void MainLAPIWorker::importedName(QString name) {
+    qDebug() << " MainLAPIWorker::importedName";
+    if ( myfantasynames.find(name.toStdString()) != end(myfantasynames ) )
+        return;
+
+    MyFantasyName myn = agent.getCurrentNamesStatus();
+    if ( myn.name() != name.toStdString() ) {
+        vector<MyFantasyName> my;
+        for(auto &p : agent.getMyNamesStatus()) {
+            if ( name.toStdString() == p.name() ) {
+                myn = p;
+                break;
+            }
+        }
+    }
+
+    if ( myn.name() == name.toStdString()
+         && myn.status() == MyNameStatus::confirmed)
+        myfantasynames[ myn.name()] = myn;
+}
 
 //tx
 void MainLAPIWorker::OnClaimName(QString name) {

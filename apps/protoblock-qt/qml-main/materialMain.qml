@@ -16,7 +16,7 @@ import QtQuick.Layouts 1.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "3.2.0" //version
+    property string version: "3.2.2" //version
     property alias realRoot: themeroot
 
     property string  uname

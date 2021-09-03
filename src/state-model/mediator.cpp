@@ -743,6 +743,9 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     connect(that, SIGNAL(PlayName(string)),
             this, SLOT(OnPlayName(string)));
 
+    connect(this, SIGNAL(importSuccess(QString, bool)),
+            that, SLOT(importSuccess(QString, bool)));
+
     connect(that, SIGNAL(NameStatus(fantasybit::MyFantasyName)),
             this, SLOT(NameStatus(fantasybit::MyFantasyName)));
 

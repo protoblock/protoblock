@@ -146,6 +146,9 @@ public:
         connect( this, &FullGateway::OnUseName,
                  mlapi, &MainLAPIWorker::OnUseName);
 
+        connect( this, &FullGateway::importedName,
+                 mlapi, &MainLAPIWorker::importedName);
+
         connect(Mediator::instance(),&Mediator::ready,this, &FullGateway::ClientReady);
 //                [this](){101
 //                       if ( this->amLive ) {
@@ -219,8 +222,16 @@ signals:
     void FinishedResults();
     //trading
     void GotMarketSnaps();
+    void importedName(QString);
 
 public slots:
+    void importSuccess(const QString name, bool passfail) {
+        qDebug() << passfail << "FullGateway importSuccess " << name;
+
+        if ( passfail )
+            emit importedName(name);
+    }
+
     void OnLiveGui(fantasybit::GlobalState gs) {
         qDebug() << "FullGateway received Livegui ";
         amLive = true;
