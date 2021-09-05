@@ -146,7 +146,7 @@ void Node::init() {
         Reader<Block> reader{ GET_ROOT_DIR(true) + "blk2020.out"};
         int count = 0;
         if ( !reader.good() )
-            qCritical() << "!good" << GET_ROOT_DIR() + "blk2020.out";
+            qCritical() << "!good" << GET_ROOT_DIR(true) + "blk2020.out";
         else while ( reader.ReadNext(b) ) {
             int32_t height = b.signedhead().head().num();
             leveldb::Slice value((char*)&height, sizeof(int32_t));

@@ -24,10 +24,21 @@ osx{
 
 macx {
     # set fags
-    QMAKE_CFLAGS += -gdwarf-2
-    QMAKE_CXXFLAGS += -gdwarf-2
+#    QMAKE_CFLAGS += -gdwarf-2
+#    QMAKE_CXXFLAGS += -gdwarf-2
     ICON = icon.icns
-    CONFIG += x86
+#    CONFIG += x86
+    OTHER_FILES += Info.plist
+    QMAKE_INFO_PLIST = Info.plist
+
+    plist.files = $$PWD/Info.plist
+    plist.path = Contents
+    QMAKE_BUNDLE_DATA += plist
+
+
+    APP_RESOURCE.files = $$PWD/blk2020.out
+    APP_RESOURCE.path =  Contents/Resources
+    QMAKE_BUNDLE_DATA += APP_RESOURCE
 }
 
 win32:RC_ICONS += myappico.ico
