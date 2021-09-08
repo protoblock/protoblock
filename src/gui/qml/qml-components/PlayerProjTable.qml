@@ -382,31 +382,40 @@ Item {
             SpinBox {
                 id: sb
                 enabled: (!model || MiddleMan.liveSync !== "Live") ? false : model.isopen
-//                anchors.left: lbl.right
                 anchors.right: parent.right
                 anchors.margins: ProtoScreen.guToPx(.125)
-//                anchors.right: parent.right
                 width: ProtoScreen.guToPx(8)
                 height: parent.height * .86
-    //            width: parent.width * .70
                 font: lbl.font
                 anchors.verticalCenter: parent.verticalCenter
                 decimals: 0
                 stepSize: 1.0
                 maximumValue: 40
-                minimumValue:       0
-                value: styleData.value// !model ? 0 : model.projection
+                minimumValue:  0
+                value: styleData.value
                 horizontalAlignment: Text.AlignHCenter
+//                onFocusChanged: {
+//                    console.log(" focus change done ");
+//                }
+
+                onValueChanged: {
+                    if ( model && hovered && value !== model.knownProjection && !activeFocus ) {
+                        //console.log(" forcing active focus");
+                        forceActiveFocus();
+                    }
+                }
 
                 onEditingFinished: {
-                   //                           styleData.value = value
-                   console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + "v  " + styleData.value);
-//                   ltv.model.setData(ltv.model.index(styleData.row,0),
-//                                    value, 0)
-                    model.projection = value
+                    //console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + " v " + value);
+                    if ( !model ) {
+                        //console.log(" !model ");
+                        return;
+                    }
 
-                    if ( model && (model.knownProjection !==  value))
+                    model.projection = value
+                    if ( model && (model.knownProjection !==  value)) {
                         topw.focuscount++;
+                    }
 
                    lbl.text = Qt.binding(function(){
                        if ( !model ) return ""
@@ -538,6 +547,7 @@ Item {
                         text: "Send"
 
                         onClicked : {
+                            forceActiveFocus();
                             console.log("clicked send")
                             topw.focuscount = 0
                             if ( realRoot.uname === "" ) {

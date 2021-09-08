@@ -14,13 +14,13 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 
 Material.ApplicationWindow{
-    title: "Protoblock"
+    title: "Fantasybit"
+    id: themeroot
+    visible: true
 
-    property string version: "3.2.2" //version
+    property string version: "3.2.3" //version
     property alias realRoot: themeroot
-
-    property string  uname
-
+    property string  uname: ""
     property string waitingName: ""
     property string  err
     property string currentTeamInFocus
@@ -38,18 +38,14 @@ Material.ApplicationWindow{
     property int accountTab: 4
 
     statusBar: StatusBar {
-
         RowLayout {
             spacing: 2
             anchors.fill: parent
             Material.Label {
-//                height: parent.height
-//                anchors.left: parent.left
                 text: " Block Number: " + MiddleMan.blocknum
                       + " - " + MiddleMan.liveSync
                       + " - " + MiddleMan.theSeason + " Week " + MiddleMan.theWeek
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
-
             }
 
             Material.Label {
@@ -60,46 +56,24 @@ Material.ApplicationWindow{
             }
 
             Material.Label {
-                text: "® Protoblock, Inc.   Version " + version + "   Pat. Pending"
+                text: "Fantasybit Version " + version
                 font.pixelSize: ProtoScreen.font( ProtoScreen.VERYSMALL)
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignRight
             }
-
-            /*
-            SpinBox {
-                enabled: false
-                visible: false
-                decimals: 0
-                stepSize: 1.0
-                maximumValue: 50000
-                minimumValue:  MiddleMan.blocknum
-                value: MiddleMan.height
-                onValueChanged: {
-                    MiddleMan.settheHeight(value)
-                }
-            }
-            */
         }
     }
 
-//    title: "Protoblock " + MiddleMan.theSeason + " Devel"
-//    flags: Qt.Window
-    id: themeroot
-    visible: true
-//    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
-//    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
 
     width: (Device.productType === "windows" || Device.productType === "osx" || Device.productType === "macos") ?
                Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
-//    height: (Device.productType === "windows" || Device.productType === "osx") ?
-//               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
-
     height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
-    color: "transparent"
+    x: ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2
+    y: ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height)
+
     Component.onCompleted: {
-        setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
-        setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
+//        setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
+//        setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
 
         console.log ( "Device.productType " + Device.productType + " Qt.platform.os " + Qt.platform.os);
         console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
@@ -110,22 +84,7 @@ Material.ApplicationWindow{
 
         console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
 
-        uname = MiddleMan.init()
-        if ( MiddleMan.liveSync === "Sync" ) {
-            pageHelper.selectedTabIndex = 1
-        }
-
-
-//        themeroot.show();
-//        width = (Device.productType === "windows" || Device.productType === "osx") ?
-//                   Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
-//        height = (Device.productType === "windows" || Device.productType === "osx") ?
-//                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
-
-//        themeroot.showMaximized()
-        themeroot.show();
-//        pageHelper.selectedTabIndex = startindex
-//        rootLoader.source = start
+        pageHelper.selectedTabIndex = startindex
     }
 
     property string defaultname
@@ -141,8 +100,6 @@ Material.ApplicationWindow{
     property string importExportStatus
     property string secretTxt
     property string statusTxt
-    //    property string mypk
-
 
     // Pages
     property var sections: [ levelZero, levelOne, levelTwo, levelThree,levelFour, levelFive ]
@@ -166,12 +123,9 @@ Material.ApplicationWindow{
     ]
 
 
-//    property int  currentTabInFocus: 3
-
     property string pageSwitcher
     property string currentPage: sections[0][0]
     property int loginCardScale: 1
-
     theme {
         primaryColor: "#103558"
         accentColor: Colors.accentColor
@@ -225,22 +179,17 @@ Material.ApplicationWindow{
         "qrc:/icons/ic_contact_mail.png" ,
     ]
 
-
     property string selectedComponent: sections[0][0]
-
     property var sectionLeftEnable: [ true, false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
         property bool expanded: true
         id: pageHelper
-        title: "Protoblock"
-        selectedTabIndex: 0
+        title: "Fantasybit"
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
-//            console.log(" onSelectedTabChanged " + selectedTabIndex)
-//            navDrawer.enabled = sectionTitles[selectedTabIndex] === "Projections"
             expanded = sectionLeftEnable[selectedTabIndex];
         }
 
@@ -249,127 +198,37 @@ Material.ApplicationWindow{
         actionBar.customContent:    Material.Label {
             text: realRoot.uname + "   [" +
                   (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString()) + " ƑɃ]"
-            verticalAlignment: Text.AlignTop//navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
+            verticalAlignment: Text.AlignTop
             font{
                 family: fontfamFB
                 bold: true
                 pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
             }
             color: "white"
-
-
             anchors{
                 right: parent.left
                 rightMargin: ProtoScreen.guToPx(2)
                 top: parent.top
                 topMargin: ProtoScreen.guToPx(1)
-//                {
-//                    if (navDrawer.enabled === false ){
-//                        ProtoScreen.guToPx(1)
-//                    }
-//                }
                 bottom: parent.bottom
             }
         }
-        actionBar.maxActionCount: 3//navDrawer.enabled ? 1:3
+        actionBar.maxActionCount: 3
         actions: [
             Material.Action {
                 iconName: "qrc:/icons/action_account_circle.png"
                 name: "Account"
                 onTriggered: {
-//                    rootLoader.source = "qrc:/Account.qml"
                     pageHelper.selectedTabIndex = accountIndex
-//                    pageHelper.title = "Account Settings"
                 }
             }
-//            ,Material.Action {
-//                iconName: "qrc:/icons/action_settings.png"
-//                name: "Settings"
-//                hoverAnimation: true
-//                onTriggered: {
-//                    rootLoader.source  = "qrc:/Settings.qml"
-//                    pageHelper.selectedTabIndex = 3
-//                    pageHelper.title = "System Settings"
-//                }
-//            }
         ]
-
-        /*
-        backAction: navDrawer.action
-        Material.NavigationDrawer {
-            id: navDrawer
-            enabled:{
-                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ){
-                    true
-                }
-//                else if (pageHelper.width < ProtoScreen.guToPx(120)){
-//                    true
-//                }
-                else {
-                    false
-                }
-
-            }
-            Flickable {
-                anchors.fill: parent
-                contentHeight: Math.max( (content.implicitHeight + ProtoScreen.guToPx(1)), height)
-                Column {
-                    id: content
-                    anchors.fill: parent
-                    Repeater {
-                        model: sections
-                        delegate: Column {
-                            width: parent.width
-                            ListItem.Subtitled {
-                                id: tabMin
-                                backgroundColor: themeroot.theme.primaryColor
-                                text: sectionTitles[index]
-                                action: Image{
-                                    source: sectionTitlesIcons[index]
-                                    height: ProtoScreen.guToPx(4)
-                                    width:ProtoScreen.guToPx(4)
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                onClicked:{
-                                    var theFile = sectionTitles[index];
-                                    var theSource = Qt.resolvedUrl("qrc:/" +  theFile.replace(/\s/g, "")  + ".qml" )
-                                    rootLoader.source = theSource
-
-                                    navDrawer.close()
-                                    navDrawer.showing = false
-                                }
-                            }
-                            Repeater {
-                                model: modelData
-                                // TODO iocns
-                                delegate: ListItem.Standard {
-                                    text: modelData
-                                    selected: modelData == currentPage
-                                    onClicked: {
-                                        var theFile = modelData;
-                                        var theSource = Qt.resolvedUrl("qrc:/" +theFile.replace(/\s/g, "") + ".qml" )
-                                        rootLoader.source = theSource
-                                        navDrawer.close()
-                                        navDrawer.showing = false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        */
         Loader {
             id: rootLoader
             source: account
-            // sidebar is ProtoScreen.guToPx(31.25)
-//            width: (navDrawer.enabled === true) ? themeroot.width  :
             width:  pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
-            height: parent.height//navDrawer.enabled === true ? themeroot.height : navDrawer.height
-            visible: status == Loader.Ready
+            height: parent.height
             anchors.right: parent.right
-
             Component.onCompleted: {
                 console.log(" matmain " + rootLoader.width)
             }
@@ -382,7 +241,7 @@ Material.ApplicationWindow{
         }
 
         Repeater {
-            model: sections //!navDrawer.enabled  ? sections : 0
+            model: sections
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
@@ -416,15 +275,6 @@ Material.ApplicationWindow{
         visible: MiddleMan.liveSync === "Sync"
     }
 
-    /////////////
-    // End OF GUI Easy Look up
-    ///////////////////
-
-    //     WHY !!!!!!!!!!!!!!!!!!!
-
-    //    SIMPLE MODELS
-
-
     ListModel{id: postionModel}
     ListModel{
         id: weekModel
@@ -436,7 +286,6 @@ Material.ApplicationWindow{
     ListModel { id: teamModel}
 
     function fillDefaultModels(theweek){
-
         weekModel.clear()
         postionModel.clear()
         teamModel.clear();
@@ -491,17 +340,14 @@ Material.ApplicationWindow{
         for (var iii in teamsArray){
             teamModel.append({'text': teamsArray[iii] })
         }
-
-
     }
-
 
     /// DIALOGS
     Material.Dialog {
         height: parent.height / 2
         width: parent.width / 2
         id: usingNameDialog
-        title: "Protoblock Player Name"
+        title: "Fantasy Name"
         Text{
             width: parent.width
             height: parent.height
@@ -532,12 +378,9 @@ Material.ApplicationWindow{
 
         onRejected: {
             ImportLoader.doImport(uname)
-
         }
     }
 
-
-    //Login dialog (only when user does not have a secert3)
     GetName {
         id: loginDialog
         anchors.fill: parent
@@ -566,34 +409,6 @@ Material.ApplicationWindow{
         }
     }
 
-
-//    Material.Dialog{
-//        id: loginErrorDialog
-//        title: "Error in Signup"
-//        Material.Label{
-//            width: parent.width
-//            height: parent.height
-//            wrapMode: Text.WordWrap
-//            text:  themeroot.errorString
-//            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
-//        }
-//    }
-
-
-//    Material.Dialog{
-//        id: chatErrorDialog
-//        title: "Error In chat"
-//        Material.Label{
-//            width: parent.width
-//            height: parent.height
-//            wrapMode: Text.WordWrap
-//            text:  "We are sorry but you are either not on the internet or have not cliamed a name"
-//            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
-//        }
-//    }
-
-
-
     Material.Dialog {
         id: myImportDialog
         title: "Import status"
@@ -608,7 +423,6 @@ Material.ApplicationWindow{
             }
         }
     }
-
 
     Material.Dialog {
         id: updateDialog
@@ -655,7 +469,6 @@ Material.ApplicationWindow{
         }
     }
 
-
     Material.Dialog {
         id: helperDialog
         title: realRoot.helperHeader
@@ -672,7 +485,6 @@ Material.ApplicationWindow{
             font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             Component.onCompleted: {
                 console.log (" Material.Label " + parent.width)
-
             }
         }
     }
@@ -775,7 +587,7 @@ Material.ApplicationWindow{
         }
     }
 
-//    // check for updates
+    // check for updates
     XmlListModel {
         id: updateMachine
         source: "http://fantasybit.com/version-" + ProtoScreen.os + ".xml"
@@ -797,89 +609,4 @@ Material.ApplicationWindow{
     }
 
 
-//    IrcConnection {
-//        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
-//        property string tempName1: ""
-//        id: ircConnectionPoint
-//        host: "162.254.24.67"
-//        port: 6667
-//        secure: false
-//        saslMechanism: ""
-//        nickName: tempName
-//        realName:tempName
-//        userName:tempName
-//        password:""
-//    }
-
-//    IrcBufferModel {
-//        id: ircBufferModel
-//        sortMethod: Irc.SortByTitle
-//        connection:ircConnectionPoint
-//        onMessageIgnored: ircServerBuffer.receiveMessage(message)
-//        function quit() {
-//            bufferModel.clear()
-//            ircConnectionPoint.quit("The Origional Football Blockchain")
-//            ircConnectionPoint.close()
-//        }
-//    }
-//    IrcBuffer {
-//        id: ircServerBuffer
-//        sticky: true
-//        persistent: true
-//        name: ircConnectionPoint.displayName
-//        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
-//    }
-
-    /*!
-      * This is the left gesture bar that is used only for
-      * tablets and phones and phablets. It is a swipe gesture to
-      * open up the navbar. Kinda buggy but better then nothing.
-      */
-    /*
-    Rectangle{
-        id:leftGesture
-        color: "transparent"
-        width:{
-            if(ProtoScreen.formFactor === "phone"
-                    || ProtoScreen.formFactor === "phablet"
-                    || ProtoScreen.formFactor === "tablet" )
-            {
-                ProtoScreen.guToPx(1)
-            }
-            else
-            {
-                0
-            }
-        }
-        height: parent.height
-        x: {
-            if (navDrawer.enabled === true && navDrawer.showing === false){
-                0
-            }else{
-                navDrawer.width
-            }
-        }
-    }
-    MouseArea{
-        anchors.fill: leftGesture
-        anchors.margins:leftGesture.width > 0 ? ProtoScreen.guToPx(3) : 0
-        drag.target: leftGesture
-        drag.minimumX: 0
-        drag.axis: Drag.XAxis
-        onPressed: {
-            if(ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "phablet"
-                    || ProtoScreen.formFactor === "tablet" )
-            {
-                if (navDrawer.showing === false)
-                {
-                    navDrawer.showing = true
-                }
-                else if (navDrawer.showing === true)
-                {
-                    navDrawer.showing = false
-                }
-            }
-        }
-    }
-    */
 }

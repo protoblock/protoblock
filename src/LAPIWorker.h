@@ -2,7 +2,7 @@
 #define LAPIWORKER_H
 
 #include "globals.h"
-#include <QTimer.h>
+#include <QTimer>
 #include "threadedqobject.h"
 #include "NodeWorker.h"
 #include "FantasyAgent.h"

@@ -88,7 +88,7 @@ void Node::init() {
     leveldb::DB *db2;
     status = leveldb::DB::Open(optionsInt, filedir("block/blockchain"), &db2);
     if ( !status.ok()) {
-        qCritical() << " error opening block/blockchain";
+        qCritical() << " error opening block/blockchain" << status.ToString().data();
         return;
     }
     Node::blockchain.reset(db2);
@@ -98,7 +98,7 @@ void Node::init() {
     leveldb::DB *db3{};
     status = leveldb::DB::Open(options2, filedir("block/bootstrap"), &db3);
     if ( !status.ok()) {
-        qCritical() << " error opening block/bootstrap";
+        qCritical() << " error opening block/bootstrap" << status.ToString().data();
         return;
     }
     Node::bootstrap.reset(db3);
@@ -309,7 +309,7 @@ bool Node::SyncTo(int32_t gh) {
     }
     while ( current_hight < global_height ) {
 
-        if (count > 50) return false;
+//        if (count > 50) return false;
 #ifdef TRACE4
         qDebug() << current_hight << global_height;
 #endif
@@ -322,9 +322,11 @@ bool Node::SyncTo(int32_t gh) {
 #endif
         auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
 
+        int sleept = count++ * 100;
+        if ( sleept > 5000) sleept = 5000;
         if ( vsb.size() == 0 ) {
             qCritical() << " no getGlobalBlockNum" << current_hight+1;
-            QThread::currentThread()->msleep(100 * count++);
+            QThread::currentThread()->msleep(sleept);
             continue;
         }
 #ifdef TRACE4
@@ -334,7 +336,7 @@ bool Node::SyncTo(int32_t gh) {
             Block *sb = &ssb;
             if (!BlockProcessor::verifySignedBlock(*sb)) {
                 qCritical() << " !SyncTo::verifySignedBlock(sb) ";
-                QThread::currentThread()->msleep(100 * count++);
+                QThread::currentThread()->msleep(sleept);
                 break;
             }
 

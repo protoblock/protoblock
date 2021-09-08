@@ -211,7 +211,7 @@ public:
         setupConnection(mGateway);
     }
 
-    Q_INVOKABLE QString init();
+    QString init();
 
     Q_INVOKABLE bool isTestNet() { return fantasybit::IS_TEST_NET; }
 
@@ -713,6 +713,8 @@ public:
 //    void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
 
     void updateCurrentFantasyPlayerProjections();
+    bool already_ready = false;
+
 signals:
     void importSuccess(const QString name, bool passfail);
     void usingFantasyName(const QString &name);
@@ -741,9 +743,12 @@ signals:
 
 protected slots:
     Q_INVOKABLE void guiReady() {
+        if ( already_ready ) return;
+
+        already_ready = true;
         qDebug() << " mediator guiReady";
-//        setliveSync("Sync");
         set_busySend(false);
+        init();
         Core::instance()->guiIsAwake();
     }
 
