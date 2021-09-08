@@ -68,12 +68,12 @@ Material.ApplicationWindow{
     width: (Device.productType === "windows" || Device.productType === "osx" || Device.productType === "macos") ?
                Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
     height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
-    x: ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2
-    y: ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height)
+//    x: ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2
+//    y: ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height)
 
     Component.onCompleted: {
-//        setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
-//        setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
+        setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
+        setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
 
         console.log ( "Device.productType " + Device.productType + " Qt.platform.os " + Qt.platform.os);
         console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
@@ -186,6 +186,7 @@ Material.ApplicationWindow{
         property bool expanded: true
         id: pageHelper
         title: "Fantasybit"
+        selectedTabIndex: 0
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
