@@ -138,11 +138,11 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     ldb.read(ldb.read(ldb.read("head")),head);
 
     if ( !onlyresult ) {
-        WK.SetSeason(head.season());
+        Commissioner::WK.SetSeason(head.season());
         GlobalState gs;
         gs.set_season(head.season());
         gs.set_week(head.week());
-        if ( gs.week() >= 1 && gs.week() <= WK.FFC)
+        if ( gs.week() >= 1 && gs.week() <= Commissioner::WK.FFC)
             gs.set_state(GlobalState_State_INSEASON);
         else
             gs.set_state(GlobalState_State_OFFSEASON);
@@ -405,9 +405,9 @@ void NFLStateData::init() {
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
         auto gs = GetGlobalState();
-        WK.SetSeason(gs.season());
+        Commissioner::WK.SetSeason(gs.season());
 
-        for (int i=1; i<=WK.NFL;i++) {
+        for (int i=1; i<=Commissioner::WK.NFL;i++) {
             string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
@@ -547,7 +547,7 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
 }
 
 void NFLStateData::OnSeasonEnd(int season) {
-    for ( int i=0;i<WK.FFC;i++) {
+    for ( int i=0;i<Commissioner::WK.FFC;i++) {
         auto ws = GetWeeklySchedule(season,i+1);
 
         string key = to_string(season) + "scheduleweek:" + to_string(i+1);

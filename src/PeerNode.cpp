@@ -232,7 +232,7 @@ void Node::init() {
         qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
 #else
     if (current_hight == -1) {
-        WK.SetSeason(2014);
+        Commissioner::WK.SetSeason(2014);
         auto  sb = Commissioner::makeGenesisBlock();
 
 #ifdef TRACEDEBUG
@@ -566,7 +566,7 @@ Bootstrap Node::getLastLocalBoot() {
     //todo: season
     int sseason = getBootSeason();
 
-    WK.SetSeason(sseason);
+    Commissioner::WK.SetSeason(sseason);
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif
@@ -592,8 +592,8 @@ Bootstrap Node::getLastLocalBoot() {
                 done = true;
                 break;
             }
-            WK.SetSeason(sseason);
-            week = WK.FFC;
+            Commissioner::WK.SetSeason(sseason);
+            week = Commissioner::WK.FFC;
         }
 
         string globalhead = to_string(sseason) + (week < 10 ?  + "0" : "") + to_string(week);

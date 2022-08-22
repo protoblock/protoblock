@@ -331,4 +331,8 @@ decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS {
     "WAS"
 };
 
+
+fantasybit::NFL_Weeks Commissioner::WK{};
+
 }
+

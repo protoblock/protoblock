@@ -194,6 +194,7 @@ public:
         return GENESIS_NFL_TEAMS;
     }
 
+    static NFL_Weeks WK;
 };
 
 }
