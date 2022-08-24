@@ -552,7 +552,7 @@ public:
         if ( !amLive ) return;
 
         if ( week <= 0 ) {
-            season = m_thePrevSeason-1;
+            season = season-1;//m_thePrevSeason-1; //weird bug skipping a year back from offseason week 0 8/23/2022 jaybny
 
             if ( season < 2014 )
                 return;
