@@ -163,9 +163,9 @@ void Node::init() {
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
     if ( current_boot.blocknum() > 0 ) {
+        auto current_lastblock = BlockRecorder::GetInitLastBlockProccsed();
         BlockRecorder::zeroblock = current_boot.blocknum();
-        if ( current_boot.blocknum() >= current_hight ) {
-            current_hight = current_boot.blocknum();
+        if ( current_boot.blocknum() >= current_lastblock ) {
             LdbWriter ldb;
             ldb.init(Node::bootstrap.get());
             if (!BlockProcessor::verifyBootstrap(ldb,current_boot)) {
@@ -173,8 +173,10 @@ void Node::init() {
                 //return;
             }
             else {
-                current_hight = current_boot.blocknum();
-                auto sbgood = getLocalBlock(current_hight);
+                if ( current_hight < current_boot.blocknum())
+                    current_hight = current_boot.blocknum();
+
+                auto sbgood = getLocalBlock(current_boot.blocknum());
                 if ( !sbgood || current_boot.previd() != FantasyAgent::BlockHash(*sbgood) ) {
                     Block sb;
                     leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
@@ -183,9 +185,11 @@ void Node::init() {
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
+                pb::remove_all(Platform::instance()->getRootDir() + "trade/");
+
 
                 NFLStateData::InitCheckpoint();
-                BlockRecorder::InitCheckpoint(current_hight);
+                BlockRecorder::InitCheckpoint(current_boot.blocknum());
             }
         }
     }

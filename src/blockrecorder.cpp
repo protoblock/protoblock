@@ -23,6 +23,27 @@ void BlockRecorder::InitCheckpoint(int32_t lastblock) {
     delete db1;
 }
 
+int32_t BlockRecorder::GetInitLastBlockProccsed() {
+    pb::make_all(filedir(""));
+
+    leveldb::DB *db1{};
+    leveldb::Status status{};
+    leveldb::Options options{};
+    options.create_if_missing = true;
+
+    leveldb::DB::Open(options, filedir("blockstatus"), &db1);
+    int32_t ret = -1;
+    std::string value;
+    if (db1->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound()) {
+        status = db1->Get(leveldb::ReadOptions(), "lastblock", &value);
+        if (status.ok()) {
+            ret =  *(reinterpret_cast<const int32_t *>(value.data()));
+        }
+    }
+    delete db1;
+    return ret;
+}
+
 void BlockRecorder::init() {
     pb::make_all(filedir(""));
 

@@ -127,6 +127,8 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     leveldb::DB *db5{};
     leveldb::DB::Open(options, filedir("namestore"), &db5);
     leveldb::DB *db6{};
+
+    pb::make_all(GET_ROOT_DIR() + "/trade");
     string file = GET_ROOT_DIR();
     file += "trade/posstore";
     leveldb::DB::Open(options, file, &db6);
@@ -256,7 +258,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
         std::vector< std::pair<std::string,  GameResult> > mapt;
         pb::loadMerkleMap(ldb,head.gameresultroot(),mtree,mapt);
 
-        for ( auto p : mapt) {
+        for ( auto &p : mapt) {
             GameResult &gr = p.second;
             string key = "gameresult:" + gr.gameid();
             db4->Put(write_sync, key,
