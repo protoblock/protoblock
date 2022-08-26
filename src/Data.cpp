@@ -157,7 +157,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
             pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
 
             std::unordered_map<int, unordered_map<int,WeeklySchedule>> wsm;
-            for ( auto p : mapt) {
+            for ( auto &p : mapt) {
                 GameStatusMeta &gsm = p.second;
                 auto its = wsm.find(gsm.season());
                 if ( its == end(wsm) )
@@ -175,9 +175,9 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
                     db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
                 }
             }
-            for ( auto wgs : wsm ) {
+            for ( auto &wgs : wsm ) {
                 int se = wgs.first;
-                for ( auto wg : wgs.second ) {
+                for ( auto &wg : wgs.second ) {
                     string key = to_string(se)  + "scheduleweek:" + to_string(wg.first);
                     db4->Put(write_sync, key,
                                    wg.second.SerializeAsString() );
@@ -191,7 +191,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
             std::vector< std::pair<std::string,  PlayerMeta> > mapt;
             pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
 
-            for ( auto p : mapt) {
+            for ( auto &p : mapt) {
                 PlayerMeta &pm = p.second;
                 if ( pm.has_player_status() )
                     db2->Put(write_sync, pm.playerid(),

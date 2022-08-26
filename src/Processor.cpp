@@ -211,9 +211,10 @@ int32_t BlockProcessor::process(Block &sblock) {
         int week = mData.GetGlobalState().week();
         auto boot = mData.makeBootStrap(mData.GetGlobalState().season (),
                                         mData.GetGlobalState().week(),
-                                        lastidprocessed-1);
+                                        lastidprocessed);
         boot.set_key(to_string(mData.GetGlobalState().season ()) +  (week < 10 ? "0" : "") + to_string(week));
-        boot.set_previd(sblock.signedhead().head().prev_id());
+//        boot.set_previd(sblock.signedhead().head().prev_id());
+        boot.set_previd(FantasyAgent::BlockHash(sblock));
         mExchangeData.addBootStrap(&boot);
         mNameData.addBootStrap(&boot,true);
     }
@@ -779,7 +780,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     {
     case TrType::SEASONSTART:
         if (mGlobalState.state() != GlobalState_State_OFFSEASON)
-            qWarning() << indt.type() << " bad transition for current state " << mGlobalState.state();
+            qWarning() << indt.type() << "warning SEASONSTART from INSEASON" << mGlobalState.state();
 
         {
             qInfo() <<  indt.season() << " Season Start week" << indt.week();
@@ -787,8 +788,10 @@ void BlockProcessor::process(const DataTransition &indt) {
                 qWarning() << "wrong season! " << indt.DebugString().data();
                 mGlobalState.set_season(indt.season());
             }
-            else if ( mGlobalState.week () != indt.week())
+            else if ( mGlobalState.week () != indt.week()) {
+                qInfo() <<  indt.season() << " setting week to 0 " << indt.week();
                 mGlobalState.set_week(0);//indt.week());
+            }
 
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
