@@ -41,15 +41,15 @@ namespace fantasybit
 Node::Node() { current_boot.set_blocknum(-1);}
 void Node::init() {
 
-#ifdef REMOVE_2021_LDB
+#ifdef REMOVE_2022_LDB
 {
-    QFileInfo check_file( (GET_ROOT_DIR() + "ldb2021.0").data ());
+    QFileInfo check_file( (GET_ROOT_DIR() + "ldb2022.0").data ());
     if (!check_file.exists() ) {
-        qDebug() <<  "ldb2021.0 not found- delete all" << current_hight;
+        qDebug() <<  "ldb2022.0 not found- delete all" << current_hight;
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "ldb2021.0").data () );
+        QFile file( (GET_ROOT_DIR() + "ldb2022.0").data () );
         file.open(QIODevice::WriteOnly);
     }
 }
@@ -201,8 +201,8 @@ void Node::init() {
         LdbWriter ldb;
         ldb.init(Node::bootstrap.get());
         current_boot = Commissioner::makeGenesisBoot(ldb);
-        if ( current_boot.blocknum() < 0 )
-            qCritical() << " !current_boot.blocknum() <= 0 ";
+        if ( current_boot.blocknum() <= 0 )
+            qDebug() << " !current_boot.blocknum() <= 0 ";
         else if (current_boot.blocknum() < current_hight)
             qCritical() << " current_boot.blocknum() < current_hight" << current_boot.blocknum() <<  current_hight;
         else {
@@ -534,7 +534,7 @@ int Node::getBootSeason() {
     auto sseason = jo.value("season").toString().toStdString();
 
     if ( sseason == "" )
-        return 2021;
+        return QDate::currentDate().year();
 
     return stoi(sseason);
 }

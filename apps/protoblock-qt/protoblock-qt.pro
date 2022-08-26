@@ -1,3 +1,6 @@
+#PRODORSTAGEFOOTBALL=PRODFOOTBALL
+PRODORSTAGEFOOTBALL=STAGEFOOTBALL
+
 include ($$PWD/../protoblockd/deps.pri)
 include ($$PWD/../../share/protos.pri)
 include ($$PWD/../../res/res.pri)
