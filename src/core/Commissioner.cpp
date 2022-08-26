@@ -208,6 +208,7 @@ bool Commissioner::BootStrapFileExists(string genesiskey) {
 
 Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
+    head.set_blocknum(-1);
     string headhash;
 
     string prefix = "boot4strap";

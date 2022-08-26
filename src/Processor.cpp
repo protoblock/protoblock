@@ -1449,12 +1449,15 @@ bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
 }
 */
 bool BlockProcessor::verifyBootstrap(LdbWriter &ldb,const Bootstrap &bs) {
-
-//    std::string errorstr;
-//    std::unordered_map<std::string,PlayerMeta> m_playermetamap;
-    //    auto mroot = loadMerkleMap(ldb,bs.playermetaroot(),m_playermetamap);
-
     std::vector<std::string> roots{bs.playermetaroot(), bs.gamemetaroot(), bs.fnamemetaroot(), bs.posmetaroot() };
+
+    if ( bs.blocknum() <= 0 )
+        return false;
+    else if ( bs.season() < 2014 )
+        return false;
+    else if ( bs.previd() == "" )
+        return false;
+
     for ( auto root : roots) {
         MerkleTree mtree;
         ldb.read(root,mtree);
