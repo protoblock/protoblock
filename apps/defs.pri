@@ -10,6 +10,7 @@ DIRPREFIX = $$PWD/../libs/
 ##############
 win32 {
     message(win32 Build)
+    DIRPREFIX = $$DIRPREFIX/win/
     INCLUDEPATH += $$DIRPREFIX/include
     LIBS+= -L$$DIRPREFIX
 
@@ -28,8 +29,10 @@ win32 {
 }
 macx {
     message(macx Build)
+    DIRPREFIX = $$DIRPREFIX/osx/
     INCLUDEPATH += $$DIRPREFIX/include
     LIBS+= -L$$DIRPREFIX
+    message(macx $$LIBS)
 
     #protobuf
     LIBS += -lprotobuf
@@ -38,3 +41,16 @@ macx {
     LIBS += -lcrypto
 }
 
+ios {
+
+    DIRPREFIX = /Users/$$(USER)/Desktop/fc/ios/extrenal/
+    message(iosmacx Build)
+    INCLUDEPATH += $$DIRPREFIX/include
+    LIBS+= -L$$DIRPREFIX/lib
+
+    #protobuf
+    LIBS += -lprotobuf
+    LIBS += -lleveldb
+    LIBS += -lssl
+    LIBS += -lcrypto
+}
