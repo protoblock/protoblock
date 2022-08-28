@@ -832,7 +832,7 @@ private:
 
     void getLeaders(int week,bool lastweek, bool all20XX = false) {
 #ifdef NO_SQL_LEADERS
-//        return;
+        return;
 #endif
         if ( !amLive ) return;
         QString links(PAPIURL.data());

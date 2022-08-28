@@ -320,8 +320,8 @@ private slots:
     void sslErrorsSlot(QNetworkReply * reply, const QList<QSslError> & errors) {
         if (reply !=NULL)
             myCurentSSLErrors.clear();
-        if (errors.count()>1)
-            qDebug() << "ssl error for: ";
+//        if (errors.count()>1)
+//            qDebug() << "ssl error for: ";
         myCurentSSLErrors.append(errors);
         reply->ignoreSslErrors();
     }
