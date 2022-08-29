@@ -17,10 +17,42 @@ void BlockRecorder::InitCheckpoint(int32_t lastblock) {
     leveldb::Options options{};
     options.create_if_missing = true;
 
-    leveldb::DB::Open(options, filedir("blockstatus"), &db1);
+    status = leveldb::DB::Open(options, filedir("blockstatus"), &db1);
+    if ( !status.ok() ) {
+        qDebug() << "cant open blockstatus" << status.ToString().data();
+    }
     leveldb::Slice value((char*)&lastblock, sizeof(int32_t));
     db1->Put(leveldb::WriteOptions(), "lastblock", value);
+
+    int32_t none = -1;
+    leveldb::Slice value2((char*)&none, sizeof(int32_t));
+    db1->Put(leveldb::WriteOptions(), "processing", value2);
+
     delete db1;
+}
+
+int32_t BlockRecorder::GetInitLastBlockProccsed() {
+    pb::make_all(filedir(""));
+
+    leveldb::DB *db1{};
+    leveldb::Status status{};
+    leveldb::Options options{};
+    options.create_if_missing = true;
+
+    leveldb::DB::Open(options, filedir("blockstatus"), &db1);
+    int32_t ret = -1;
+    std::string value;
+    if (!db1->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound()) {
+        int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
+        if ( num == -1 ) {
+            status = db1->Get(leveldb::ReadOptions(), "lastblock", &value);
+            if (status.ok()) {
+                ret =  *(reinterpret_cast<const int32_t *>(value.data()));
+            }
+        }
+    }
+    delete db1;
+    return ret;
 }
 
 void BlockRecorder::init() {
@@ -96,7 +128,7 @@ bool BlockRecorder::isValid(int32_t height) {
         return true;
 
     int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
-    return num < 0 && lastBlock > BlockRecorder::zeroblock && lastBlock <= height;
+    return num < 0 && lastBlock >= 0 && lastBlock >= BlockRecorder::zeroblock && lastBlock <= height;
 }
 
 

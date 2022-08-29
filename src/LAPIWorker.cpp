@@ -242,7 +242,7 @@ bool MainLAPIWorker::doProcessBlock() {
 
 #include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
-    qDebug() << "ProcessBlock" << resetting;
+//    qDebug() << "ProcessBlock" << resetting;
     int docount = 0;
     bool catchingup;
     do {

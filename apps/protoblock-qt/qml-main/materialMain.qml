@@ -18,7 +18,7 @@ Material.ApplicationWindow{
     id: themeroot
     visible: true
 
-    property string version: "3.2.3" //version
+    property string version: "3.2.4" //version
     property alias realRoot: themeroot
     property string  uname: ""
     property string waitingName: ""

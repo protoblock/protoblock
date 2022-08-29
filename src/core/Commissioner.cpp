@@ -206,8 +206,15 @@ bool Commissioner::BootStrapFileExists(string genesiskey) {
     return check_file.exists();
 }
 
+/*
+ * given a key of season+week - we try to find a bootstrap file from disk
+ * or from server and then write it ot disk
+ * then we read the file and process it into leveleb
+ *
+*/
 Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
+    head.set_blocknum(-1);
     string headhash;
 
     string prefix = "boot4strap";
@@ -218,7 +225,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     QFileInfo check_file(genesisBootFile);
     if ( !check_file.exists() ) {
 
-        QString links("http://fantasybit.com");
+        QString links("https://fantasybit.com");
         QString route(filename);
 
         QMap<QString,QString>  headers;
@@ -331,4 +338,8 @@ decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS {
     "WAS"
 };
 
+
+fantasybit::NFL_Weeks Commissioner::WK{};
+
 }
+

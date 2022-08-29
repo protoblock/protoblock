@@ -41,15 +41,15 @@ namespace fantasybit
 Node::Node() { current_boot.set_blocknum(-1);}
 void Node::init() {
 
-#ifdef REMOVE_2021_LDB
+#ifdef REMOVE_2022_LDB
 {
-    QFileInfo check_file( (GET_ROOT_DIR() + "ldb2021.0").data ());
+    QFileInfo check_file( (GET_ROOT_DIR() + "ldb2022.0").data ());
     if (!check_file.exists() ) {
-        qDebug() <<  "ldb2021.0 not found- delete all" << current_hight;
+        qDebug() <<  "ldb2022.0 not found- delete all" << current_hight;
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "ldb2021.0").data () );
+        QFile file( (GET_ROOT_DIR() + "ldb2022.0").data () );
         file.open(QIODevice::WriteOnly);
     }
 }
@@ -159,13 +159,20 @@ void Node::init() {
 #endif
 
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
+    /*
+     * Local bootstrap is the state data stored in leveldb once a week, incase system dies during block process,
+     * the state would be invalid - so we start back from last weeks bootstrap
+     * current_boot is the latest state data we know about
+    */
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
     if ( current_boot.blocknum() > 0 ) {
+        auto current_lastblock = BlockRecorder::GetInitLastBlockProccsed();
         BlockRecorder::zeroblock = current_boot.blocknum();
-        if ( current_boot.blocknum() >= current_hight ) {
-            current_hight = current_boot.blocknum();
+        // if boot state is from after the last block prcessed
+        // we want to replace current state and jump to block from boot state
+        if ( current_boot.blocknum() > current_lastblock ) {
             LdbWriter ldb;
             ldb.init(Node::bootstrap.get());
             if (!BlockProcessor::verifyBootstrap(ldb,current_boot)) {
@@ -173,8 +180,10 @@ void Node::init() {
                 //return;
             }
             else {
-                current_hight = current_boot.blocknum();
-                auto sbgood = getLocalBlock(current_hight);
+                if ( current_hight < current_boot.blocknum())
+                    current_hight = current_boot.blocknum();
+
+                auto sbgood = getLocalBlock(current_boot.blocknum());
                 if ( !sbgood || current_boot.previd() != FantasyAgent::BlockHash(*sbgood) ) {
                     Block sb;
                     leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
@@ -183,9 +192,11 @@ void Node::init() {
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
+                pb::remove_all(Platform::instance()->getRootDir() + "trade/");
+
 
                 NFLStateData::InitCheckpoint();
-                BlockRecorder::InitCheckpoint(current_hight);
+                BlockRecorder::InitCheckpoint(current_boot.blocknum());
             }
         }
     }
@@ -193,12 +204,15 @@ void Node::init() {
 
 
 #ifndef NOUSE_GENESIS_BOOT
+    /*
+     *  single try to bootstrap using year+00 "202200"
+    */
     if ( current_hight == -1 ) {
         LdbWriter ldb;
         ldb.init(Node::bootstrap.get());
         current_boot = Commissioner::makeGenesisBoot(ldb);
-        if ( current_boot.blocknum() < 0 )
-            qCritical() << " !current_boot.blocknum() <= 0 ";
+        if ( current_boot.blocknum() <= 0 )
+            qDebug() << " !current_boot.blocknum() <= 0 ";
         else if (current_boot.blocknum() < current_hight)
             qCritical() << " current_boot.blocknum() < current_hight" << current_boot.blocknum() <<  current_hight;
         else {
@@ -217,22 +231,17 @@ void Node::init() {
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
-                NFLStateData::InitCheckpoint();
+                pb::remove_all(Platform::instance()->getRootDir() + "trade/");
 
-                BlockRecorder::InitCheckpoint(current_hight);
+                NFLStateData::InitCheckpoint();
+                BlockRecorder::InitCheckpoint(current_boot.blocknum());
             }
         }
     }
 #endif
 
-#ifndef USE_LOCAL_GENESIS
-    if (current_hight == -1)
-        qDebug() << " ERROR? - NO Boot - No Local Genesis!";
-    else
-        qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
-#else
     if (current_hight == -1) {
-        WK.SetSeason(2014);
+        Commissioner::WK.SetSeason(2014);
         auto  sb = Commissioner::makeGenesisBlock();
 
 #ifdef TRACEDEBUG
@@ -249,7 +258,6 @@ void Node::init() {
             current_hight = getLastLocalBlockNum();
         }
     }
-#endif
     qInfo() <<  "current_hight " << current_hight;
 }
 
@@ -530,13 +538,20 @@ int Node::getBootSeason() {
     auto sseason = jo.value("season").toString().toStdString();
 
     if ( sseason == "" )
-        return 2021;
+        return QDate::currentDate().year();
 
     return stoi(sseason);
 }
 
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
 Bootstrap Node::getLastLocalBoot() {
+    /*
+     * we dont know the current state - but we can find the last bootstrap
+     * we do this my figuring out the current season and week,
+     * and working backwords until we find a bootstrap
+     */
+
+
     QString links(PAPIURL.data());
     //QString links("https://158.222.102.83:4545");
     QString route("week");
@@ -566,7 +581,7 @@ Bootstrap Node::getLastLocalBoot() {
     //todo: season
     int sseason = getBootSeason();
 
-    WK.SetSeason(sseason);
+    Commissioner::WK.SetSeason(sseason);
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif
@@ -581,8 +596,9 @@ Bootstrap Node::getLastLocalBoot() {
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
-    string localhead = ldb.read("head");
 
+    //localhead is the last bootstrap that we stored in leveldb
+    string localhead = ldb.read("head");
     bool dateyear = QDate::currentDate().year();
     bool done = false;
     while ( !done ) {
@@ -592,12 +608,14 @@ Bootstrap Node::getLastLocalBoot() {
                 done = true;
                 break;
             }
-            WK.SetSeason(sseason);
-            week = WK.FFC;
+            Commissioner::WK.SetSeason(sseason);
+            week = Commissioner::WK.FFC;
         }
 
         string globalhead = to_string(sseason) + (week < 10 ?  + "0" : "") + to_string(week);
 
+        // if the global season + week is after the last local bootstrap
+        // we try to get a newer bootstrap from the disk and then from the server
         if ( globalhead > localhead  ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {

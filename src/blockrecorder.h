@@ -14,6 +14,7 @@ class BlockRecorder {
     int32_t lastBlock = -1;
 public:
     static void InitCheckpoint(int32_t);
+    static int32_t BlockRecorder::GetInitLastBlockProccsed();
 
 //public slots:
 

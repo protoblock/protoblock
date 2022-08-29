@@ -111,7 +111,7 @@ public:
     }
 
     static Block makeGenesisBlock();
-    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "202100");
+    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = to_string(QDate::currentDate().year()) + "00");
     static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;
@@ -194,6 +194,7 @@ public:
         return GENESIS_NFL_TEAMS;
     }
 
+    static NFL_Weeks WK;
 };
 
 }

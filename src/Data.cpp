@@ -127,6 +127,8 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     leveldb::DB *db5{};
     leveldb::DB::Open(options, filedir("namestore"), &db5);
     leveldb::DB *db6{};
+
+    pb::make_all(GET_ROOT_DIR() + "/trade");
     string file = GET_ROOT_DIR();
     file += "trade/posstore";
     leveldb::DB::Open(options, file, &db6);
@@ -138,11 +140,11 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     ldb.read(ldb.read(ldb.read("head")),head);
 
     if ( !onlyresult ) {
-        WK.SetSeason(head.season());
+        Commissioner::WK.SetSeason(head.season());
         GlobalState gs;
         gs.set_season(head.season());
         gs.set_week(head.week());
-        if ( gs.week() >= 1 && gs.week() <= WK.FFC)
+        if ( gs.week() >= 1 && gs.week() <= Commissioner::WK.FFC)
             gs.set_state(GlobalState_State_INSEASON);
         else
             gs.set_state(GlobalState_State_OFFSEASON);
@@ -155,7 +157,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
             pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
 
             std::unordered_map<int, unordered_map<int,WeeklySchedule>> wsm;
-            for ( auto p : mapt) {
+            for ( auto &p : mapt) {
                 GameStatusMeta &gsm = p.second;
                 auto its = wsm.find(gsm.season());
                 if ( its == end(wsm) )
@@ -173,9 +175,9 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
                     db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
                 }
             }
-            for ( auto wgs : wsm ) {
+            for ( auto &wgs : wsm ) {
                 int se = wgs.first;
-                for ( auto wg : wgs.second ) {
+                for ( auto &wg : wgs.second ) {
                     string key = to_string(se)  + "scheduleweek:" + to_string(wg.first);
                     db4->Put(write_sync, key,
                                    wg.second.SerializeAsString() );
@@ -189,7 +191,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
             std::vector< std::pair<std::string,  PlayerMeta> > mapt;
             pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
 
-            for ( auto p : mapt) {
+            for ( auto &p : mapt) {
                 PlayerMeta &pm = p.second;
                 if ( pm.has_player_status() )
                     db2->Put(write_sync, pm.playerid(),
@@ -256,7 +258,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
         std::vector< std::pair<std::string,  GameResult> > mapt;
         pb::loadMerkleMap(ldb,head.gameresultroot(),mtree,mapt);
 
-        for ( auto p : mapt) {
+        for ( auto &p : mapt) {
             GameResult &gr = p.second;
             string key = "gameresult:" + gr.gameid();
             db4->Put(write_sync, key,
@@ -405,9 +407,9 @@ void NFLStateData::init() {
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
         auto gs = GetGlobalState();
-        WK.SetSeason(gs.season());
+        Commissioner::WK.SetSeason(gs.season());
 
-        for (int i=1; i<=WK.NFL;i++) {
+        for (int i=1; i<=Commissioner::WK.NFL;i++) {
             string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
@@ -547,7 +549,7 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
 }
 
 void NFLStateData::OnSeasonEnd(int season) {
-    for ( int i=0;i<WK.FFC;i++) {
+    for ( int i=0;i<Commissioner::WK.FFC;i++) {
         auto ws = GetWeeklySchedule(season,i+1);
 
         string key = to_string(season) + "scheduleweek:" + to_string(i+1);

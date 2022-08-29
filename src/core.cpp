@@ -4,7 +4,7 @@
 //#include "mediator.h"
 
 Core::Core(){
-    WK.SetSeason(2014);
+//    Commissioner::WK.SetSeason(2014);
 }
 void Core::bootstrap(){
 

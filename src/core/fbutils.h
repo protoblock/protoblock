@@ -325,14 +325,10 @@ namespace fantasybit {
         char SUPERBOWL;
     };
 
-    static NFL_Weeks WK(2014);
-    static NFL_Weeks PRE2021(2014);
-    static NFL_Weeks POST2021(2021);
+//    static NFL_Weeks PRE2021(2014);
+//    static NFL_Weeks POST2021(2021);
     static NFL_Weeks WeekForSeason(int season) {
-        if ( season > 2020 )
-            return POST2021;
-
-        return PRE2021;
+        return NFL_Weeks(season);
     }
 }
 
